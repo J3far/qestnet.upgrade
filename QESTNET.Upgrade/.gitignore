@@ -1,0 +1,29 @@
+[Dd]ebug/
+[Rr]elease/
+build/
+[Bb]in/
+[Oo]bj/
+*.suo
+*.sln.cache
+*.user
+*.pdb
+*.bak
+*.backup
+*.InstallLog
+
+# ignore old SourceSafe files
+*.vspscc
+*.vssscc
+*.scc
+*.datasource
+
+# NCrunch
+*.ncrunch*
+_NCrunch*
+
+# Git temporary files during rebase/merge
+*.orig
+
+# ignore config files (these have defaults instead)
+*.config
+!packages.config
