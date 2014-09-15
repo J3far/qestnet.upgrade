@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -167,8 +168,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             if (ofd.ShowDialog() == DialogResult.Cancel)
                 return;
 
-            string cmd = string.Format(@"/C copy ""{0}"" ""{1}\data\data.object_types.qn.sql""", ofd.FileName, this.filePath);
-            System.Diagnostics.Process.Start("cmd.exe", cmd);
+            File.Copy(ofd.FileName, this.filePath + @"\data\data.object_types.qn.sql");
             this.FeedbackSetText("Written: data\\data.object_types.qn.sql");
         }
 

@@ -1,3 +1,6 @@
+
+@REM Note: this publishes to ADLS0003 from the individual project release bins
+
 xcopy ".\Scripts\*" "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\v1.0.0\Scripts" /S /I /R /Q /Y
 xcopy ".\QESTNET.Upgrade\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.dll" "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\v1.0.0" /R /Q /Y
 xcopy ".\QESTNET.Upgrade\QESTNET.Upgrade.ScriptWriter\bin\Release\QESTNET.Upgrade.ScriptWriter.dll" "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\v1.0.0" /R /Q /Y
