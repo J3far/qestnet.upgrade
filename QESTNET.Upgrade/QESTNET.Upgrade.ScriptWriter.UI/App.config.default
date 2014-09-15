@@ -5,7 +5,7 @@
     </startup>
 
   <appSettings>
-    <add key="upgradeScriptPath" value=""/>
+    <add key="upgradeScriptPath" value="./Scripts"/>
   </appSettings>
 
   <connectionStrings>
