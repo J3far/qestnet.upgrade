@@ -9,6 +9,7 @@
     </appSettings>
   
     <connectionStrings>
+      <!--<add name="Example" connectionString="data source=ADLS0007\CUSTOMER2008R2;initial catalog=QESTLab_EXAMPLE;integrated security=True;multipleactiveresultsets=True;App=QestnetUpgrade"/>-->
     </connectionStrings>
   
 </configuration>

@@ -168,7 +168,18 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             if (ofd.ShowDialog() == DialogResult.Cancel)
                 return;
 
-            File.Copy(ofd.FileName, this.filePath + @"\data\data.object_types.qn.sql");
+            var path = this.filePath + @"data\data.object_types.qn.sql";
+
+            // If there is a read-only file in the way, clear it
+            if (File.Exists(path)) 
+            {
+                var attrs = File.GetAttributes(path);
+                if (attrs.HasFlag(FileAttributes.ReadOnly))
+                    File.SetAttributes(path, attrs & ~FileAttributes.ReadOnly);
+            }
+
+            File.Copy(ofd.FileName, path, true);
+
             this.FeedbackSetText("Written: data\\data.object_types.qn.sql");
         }
 
