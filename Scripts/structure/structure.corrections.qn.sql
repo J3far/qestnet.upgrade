@@ -715,3 +715,15 @@ BEGIN
 	ALTER TABLE DocumentRelativeCompaction DROP CONSTRAINT FK_DocumentRelativeCompaction_SampleRegister
 END
 GO
+
+-- Cleanup of a badly named default
+IF EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF__qestRever__QestO__486B4D8B')	
+BEGIN 
+	ALTER TABLE qestReverseLookup DROP CONSTRAINT DF__qestRever__QestO__486B4D8B END
+GO
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_qestReverseLookup_qestReportMapping')
+BEGIN
+	ALTER TABLE qestReportMapping DROP CONSTRAINT FK_qestReverseLookup_qestReportMapping
+END
+GO

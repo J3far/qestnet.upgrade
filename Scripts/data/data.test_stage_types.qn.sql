@@ -184,3 +184,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000125, @TestQestID = 110919
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000126, @TestQestID = 110919, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
+
+-- Particle Density [ASTM D 854 - 2010]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000131, @TestQestID = 110908, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000132, @TestQestID = 110908, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000133, @TestQestID = 110908, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000135, @TestQestID = 110908, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000136, @TestQestID = 110908, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
