@@ -442,3 +442,9 @@ IF NOT EXISTS(SELECT 1 FROM qestEntity WHERE QestEntityUUID = '65013616-B10F-441
 ELSE 
 	BEGIN UPDATE qestEntity SET Name = 'MinAndMaxDensity', TypeName = 'Spectra.QESTLab.Entities.MinAndMaxDensity, QESTLab.Entities' WHERE QestEntityUUID = '65013616-B10F-441E-B842-A35D0095EE0D' END 
 GO
+
+IF NOT EXISTS(SELECT 1 FROM qestEntity WHERE QestEntityUUID = '03C0B590-6B94-4652-8E06-A3A800BB29B6') 
+	BEGIN INSERT INTO qestEntity (QestEntityUUID, Name, TypeName) VALUES ('03C0B590-6B94-4652-8E06-A3A800BB29B6', 'ParticleDensityPycnometer', 'Spectra.QESTLab.Entities.ParticleDensityPycnometer, QESTLab.Entities') END 
+ELSE 
+	BEGIN UPDATE qestEntity SET Name = 'ParticleDensityPycnometer', TypeName = 'Spectra.QESTLab.Entities.ParticleDensityPycnometer, QESTLab.Entities' WHERE QestEntityUUID = '03C0B590-6B94-4652-8E06-A3A800BB29B6' END 
+GO

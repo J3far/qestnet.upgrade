@@ -548,3 +548,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000414, @TestQestID = 111037
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000415, @TestQestID = 111037, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
+
+-- Density Moisture Content (111038)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000551, @TestQestID = 111038, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000552, @TestQestID = 111038, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000553, @TestQestID = 111038, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000554, @TestQestID = 111038, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000555, @TestQestID = 111038, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
