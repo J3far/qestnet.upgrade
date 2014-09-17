@@ -736,3 +736,66 @@ BEGIN
 	WHERE NOT EXISTS (SELECT 1 FROM Samples WHERE QestUUID = SampleArticleUUID)
 	AND SampleArticleUUID IS NOT NULL
 END
+
+--clean-up crappy suitability rule tables
+-- SuitabilityRuleConfigurationTestCondition -- replacement table is named "SuitabilityRuleConfigurationTestConditions" (note the "s" at the end)
+if exists (select * from information_schema.tables where table_name = 'SuitabilityRuleConfigurationTestCondition')
+begin
+  if not exists (select * from dbo.SuitabilityRuleConfigurationTestCondition)
+  begin
+    drop table dbo.SuitabilityRuleConfigurationTestCondition
+  end
+end
+GO
+-- MaterialCategoryTestTypeSuitability -- replacement table is named "SuitabilityTestTypeMaterialCategory"
+if exists (select * from information_schema.tables where table_name = 'MaterialCategoryTestTypeSuitability')
+begin
+  if not exists (select * from dbo.MaterialCategoryTestTypeSuitability)
+  begin
+    drop table dbo.MaterialCategoryTestTypeSuitability
+  end
+end
+GO
+--drop QestUniqueID (not needed -- we have QestUUID as the primary key)
+if exists (select * from sys.indexes where object_id = object_id(N'[dbo].[SuitabilityRuleConfiguration]') and name = N'IX_SuitabilityRuleConfiguration_QestUniqueID')
+  alter table [dbo].[SuitabilityRuleConfiguration] drop constraint [IX_SuitabilityRuleConfiguration_QestUniqueID]
+GO
+if exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'qestUniqueID')
+  alter table SuitabilityRuleConfiguration drop column qestUniqueID;
+GO
+--drop useless FK constraint
+if exists (select * from sys.foreign_keys where object_id = object_id(N'[dbo].[FK_SuitabilityRuleConfiguration_SuitabilityRuleConfiguration]') and parent_object_id = object_id(N'[dbo].[SuitabilityRuleConfiguration]'))
+  alter table [dbo].[SuitabilityRuleConfiguration] drop constraint [FK_SuitabilityRuleConfiguration_SuitabilityRuleConfiguration]
+GO
+--rename column from QestID to TestTypeQestID
+if exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'QestID')
+begin
+  if not exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'TestTypeQestID')
+  begin
+    exec sp_rename 'SuitabilityRuleConfiguration.QestID', 'TestTypeQestID', 'column'
+  end
+  else
+  begin
+    exec('update SuitabilityRuleConfiguration set TestTypeQestID = QestID where TestTypeQestID is null and QestID is not null;')
+    alter table SuitabilityRuleConfiguration drop column QestID;
+  end
+end
+GO
+
+--drop undesirable unique constraint/index on ListMaterialCategory.Code
+if exists(select 1 from information_schema.referential_constraints where constraint_name = 'FK_MaterialCategoryTestTypeSuitability_ListMaterialCategory')
+begin
+  alter table dbo.MaterialCategoryTestTypeSuitability drop constraint FK_MaterialCategoryTestTypeSuitability_ListMaterialCategory;
+end
+if exists (select * from sys.indexes where object_id = object_id(N'[dbo].[ListMaterialCategory]') and name = N'IX_ListMaterialCategory_Code' and is_unique_constraint = 1)
+begin
+  alter table [dbo].[ListMaterialCategory] drop constraint [IX_ListMaterialCategory_Code];
+end
+GO
+
+--Clean up funky data in qestReverseLookup.QestOwnerLabNo
+if exists (select * from qestReverseLookup where QestOwnerLabNo = -1)
+begin
+  update qestReverseLookup set QestOwnerLabNo = null where QestOwnerLabNo = -1
+end
+GO
