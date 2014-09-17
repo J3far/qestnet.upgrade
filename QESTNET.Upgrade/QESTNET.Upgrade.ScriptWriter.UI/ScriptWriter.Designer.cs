@@ -30,7 +30,6 @@
         {
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.buttonWrite = new System.Windows.Forms.Button();
-            this.labelFeedback = new System.Windows.Forms.Label();
             this.txtOutputFile = new System.Windows.Forms.TextBox();
             this.labOutputFile = new System.Windows.Forms.Label();
             this.labelConnectionString = new System.Windows.Forms.Label();
@@ -42,38 +41,29 @@
             this.fksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qestObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtOutput = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar
             // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 96);
+            this.progressBar.Location = new System.Drawing.Point(12, 78);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(612, 23);
+            this.progressBar.Size = new System.Drawing.Size(557, 27);
             this.progressBar.TabIndex = 0;
             // 
             // buttonWrite
             // 
-            this.buttonWrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonWrite.Location = new System.Drawing.Point(630, 80);
+            this.buttonWrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonWrite.Location = new System.Drawing.Point(575, 78);
             this.buttonWrite.Name = "buttonWrite";
-            this.buttonWrite.Size = new System.Drawing.Size(75, 39);
+            this.buttonWrite.Size = new System.Drawing.Size(75, 29);
             this.buttonWrite.TabIndex = 1;
             this.buttonWrite.Text = "Write";
             this.buttonWrite.UseVisualStyleBackColor = true;
             this.buttonWrite.Click += new System.EventHandler(this.buttonWrite_Click);
-            // 
-            // labelFeedback
-            // 
-            this.labelFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFeedback.BackColor = System.Drawing.SystemColors.Control;
-            this.labelFeedback.Location = new System.Drawing.Point(12, 80);
-            this.labelFeedback.Name = "labelFeedback";
-            this.labelFeedback.Size = new System.Drawing.Size(612, 13);
-            this.labelFeedback.TabIndex = 2;
             // 
             // txtOutputFile
             // 
@@ -82,7 +72,7 @@
             this.txtOutputFile.Location = new System.Drawing.Point(109, 53);
             this.txtOutputFile.Name = "txtOutputFile";
             this.txtOutputFile.ReadOnly = true;
-            this.txtOutputFile.Size = new System.Drawing.Size(515, 20);
+            this.txtOutputFile.Size = new System.Drawing.Size(460, 20);
             this.txtOutputFile.TabIndex = 3;
             // 
             // labOutputFile
@@ -110,13 +100,13 @@
             this.txtConnectionString.Location = new System.Drawing.Point(109, 27);
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.ReadOnly = true;
-            this.txtConnectionString.Size = new System.Drawing.Size(596, 20);
+            this.txtConnectionString.Size = new System.Drawing.Size(541, 20);
             this.txtConnectionString.TabIndex = 5;
             // 
             // buttonOutputPath
             // 
             this.buttonOutputPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOutputPath.Location = new System.Drawing.Point(630, 51);
+            this.buttonOutputPath.Location = new System.Drawing.Point(575, 51);
             this.buttonOutputPath.Name = "buttonOutputPath";
             this.buttonOutputPath.Size = new System.Drawing.Size(75, 23);
             this.buttonOutputPath.TabIndex = 7;
@@ -132,7 +122,7 @@
             this.importToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(717, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(662, 24);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -151,7 +141,7 @@
             this.tablesToolStripMenuItem.CheckOnClick = true;
             this.tablesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tablesToolStripMenuItem.Name = "tablesToolStripMenuItem";
-            this.tablesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.tablesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.tablesToolStripMenuItem.Text = "Tables";
             // 
             // fksToolStripMenuItem
@@ -160,7 +150,7 @@
             this.fksToolStripMenuItem.CheckOnClick = true;
             this.fksToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.fksToolStripMenuItem.Name = "fksToolStripMenuItem";
-            this.fksToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fksToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.fksToolStripMenuItem.Text = "Foreign Keys";
             // 
             // importToolStripMenuItem
@@ -174,21 +164,35 @@
             // qestObjectsToolStripMenuItem
             // 
             this.qestObjectsToolStripMenuItem.Name = "qestObjectsToolStripMenuItem";
-            this.qestObjectsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.qestObjectsToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.qestObjectsToolStripMenuItem.Text = "Qest Objects";
             this.qestObjectsToolStripMenuItem.Click += new System.EventHandler(this.qestObjectsToolStripMenuItem_Click);
+            // 
+            // txtOutput
+            // 
+            this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtOutput.BackColor = System.Drawing.SystemColors.Window;
+            this.txtOutput.Location = new System.Drawing.Point(12, 113);
+            this.txtOutput.Multiline = true;
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.ReadOnly = true;
+            this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtOutput.Size = new System.Drawing.Size(635, 318);
+            this.txtOutput.TabIndex = 15;
             // 
             // ScriptWriterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 131);
+            this.ClientSize = new System.Drawing.Size(662, 443);
+            this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.buttonOutputPath);
             this.Controls.Add(this.labelConnectionString);
             this.Controls.Add(this.txtConnectionString);
             this.Controls.Add(this.labOutputFile);
             this.Controls.Add(this.txtOutputFile);
-            this.Controls.Add(this.labelFeedback);
             this.Controls.Add(this.buttonWrite);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.menuStrip1);
@@ -207,7 +211,6 @@
 
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Button buttonWrite;
-        private System.Windows.Forms.Label labelFeedback;
         private System.Windows.Forms.TextBox txtOutputFile;
         private System.Windows.Forms.Label labOutputFile;
         private System.Windows.Forms.Label labelConnectionString;
@@ -219,6 +222,7 @@
         private System.Windows.Forms.ToolStripMenuItem fksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem qestObjectsToolStripMenuItem;
+        private System.Windows.Forms.TextBox txtOutput;
     }
 }
 

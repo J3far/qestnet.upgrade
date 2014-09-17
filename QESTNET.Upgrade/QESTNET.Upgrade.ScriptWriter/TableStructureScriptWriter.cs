@@ -75,7 +75,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
             var s = new SqlConnection(this.connectionString);
             Server srv = new Server(s.DataSource);
             var db = srv.Databases[s.Database];
-
+            db.DefaultSchema = "dbo";
             int tableCount = db.Tables.Count;
 
             using (StreamWriter fs = System.IO.File.CreateText(fileName))

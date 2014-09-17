@@ -42,7 +42,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
 
             if (this.cancelWrite != null)
             {
-                this.FeedbackSetText("Cancellation requested...");
+                this.FeedbackWriteLine("Cancellation requested...");
                 this.cancelWrite.Cancel();
                 return;
             }
@@ -72,19 +72,27 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
 
         private void WriteComplete(Task task)
         {
-            // Move into the next task if there is one
-            this.tasks.Remove(task);
-            if (this.tasks.Count > 0)
+            if (task.IsFaulted)
             {
-                this.tasks[0].Start();
-                return;
+                this.FeedbackWriteLine(task.Exception.ToString());
+                this.FeedbackSetProgress(0);
             }
-
-            this.FeedbackSetProgress(0);
-            if (this.cancelWrite.IsCancellationRequested)
-                this.FeedbackSetText("Script write cancelled. WARNING: Script is incomplete.");
             else
-                this.FeedbackSetText("Script write complete.");
+            {
+                // Move into the next task if there is one
+                this.tasks.Remove(task);
+                if (this.tasks.Count > 0)
+                {
+                    this.tasks[0].Start();
+                    return;
+                }
+
+                this.FeedbackSetProgress(0);
+                if (this.cancelWrite.IsCancellationRequested)
+                    this.FeedbackWriteLine("Script write cancelled. WARNING: Script is incomplete.");
+                else
+                    this.FeedbackWriteLine("Script write complete.");
+            }
 
             this.cancelWrite = null;
             this.ButtonSetText("Write");
@@ -93,19 +101,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
         protected void sw_ProgressWrite(object sender, ScriptWriteProgressEventArgs e)
         {
             this.FeedbackSetProgress((int)e.PercentProgress);
-            this.FeedbackSetText("Writing: " + e.ProgressText);
-        }
-
-        private void FeedbackSetText(string text)
-        {
-            if (this.labelFeedback.InvokeRequired)
-            {
-                this.Invoke(new Action<string>(this.FeedbackSetText), text);
-                return;
-            }
-
-            this.labelFeedback.Text = text;
-            this.labelFeedback.Update();
+            this.FeedbackWriteLine("Writing: " + e.ProgressText);
         }
 
         private void FeedbackSetProgress(int progress)
@@ -117,7 +113,17 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             }
 
             this.progressBar.Value = progress;
-            this.labelFeedback.Update();
+        }
+
+        private void FeedbackWriteLine(string text)
+        {
+            if (this.txtOutput.InvokeRequired)
+            {
+                this.Invoke(new Action<string>(FeedbackWriteLine), text);
+                return;
+            }
+
+            this.txtOutput.AppendText(string.Format("[{0}] {1}\r\n", DateTime.Now.ToString(), text));
         }
 
         private void ButtonSetText(string text)
@@ -180,7 +186,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
 
             File.Copy(ofd.FileName, path, true);
 
-            this.FeedbackSetText("Written: data\\data.object_types.qn.sql");
+            this.FeedbackWriteLine("Written: data\\data.object_types.qn.sql");
         }
 
     }
