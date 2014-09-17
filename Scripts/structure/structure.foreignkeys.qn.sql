@@ -172,9 +172,9 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_LTP_PlannedTestConditions_LTPPlannedTest')
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_LTP_PlannedTestConditions_LTP_PlannedTest')
 BEGIN
-	ALTER TABLE [dbo].[LTP_PlannedTestConditions] WITH CHECK ADD CONSTRAINT [FK_LTP_PlannedTestConditions_LTPPlannedTest] FOREIGN KEY([PlannedTestUUID]) REFERENCES [dbo].[LTP_PlannedTest] ([PlannedTestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
+	ALTER TABLE [dbo].[LTP_PlannedTestConditions] WITH CHECK ADD CONSTRAINT [FK_LTP_PlannedTestConditions_LTP_PlannedTest] FOREIGN KEY([PlannedTestUUID]) REFERENCES [dbo].[LTP_PlannedTest] ([PlannedTestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
 END
 GO
 
@@ -187,12 +187,6 @@ GO
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_LTP_TriaxialSet_LTP')
 BEGIN
 	ALTER TABLE [dbo].[LTP_TriaxialSet] WITH CHECK ADD CONSTRAINT [FK_LTP_TriaxialSet_LTP] FOREIGN KEY([LTPUUID]) REFERENCES [dbo].[LTP] ([LTPUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
-END
-GO
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_MaterialCategoryTestTypeSuitability_ListMaterialCategory')
-BEGIN
-	ALTER TABLE [dbo].[MaterialCategoryTestTypeSuitability] WITH CHECK ADD CONSTRAINT [FK_MaterialCategoryTestTypeSuitability_ListMaterialCategory] FOREIGN KEY([Code]) REFERENCES [dbo].[ListMaterialCategory] ([Code]) ON UPDATE NO ACTION ON DELETE NO ACTION
 END
 GO
 
@@ -346,15 +340,15 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_SuitabilityRuleConfigurationTestCondition_SuitabilityRuleConfiguration')
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_SuitabilityRuleConfigurationTestConditions_SuitabilityRuleConfiguration')
 BEGIN
-	ALTER TABLE [dbo].[SuitabilityRuleConfigurationTestCondition] WITH CHECK ADD CONSTRAINT [FK_SuitabilityRuleConfigurationTestCondition_SuitabilityRuleConfiguration] FOREIGN KEY([QestUniqueParentID]) REFERENCES [dbo].[SuitabilityRuleConfiguration] ([QestUniqueID]) ON UPDATE NO ACTION ON DELETE NO ACTION
+	ALTER TABLE [dbo].[SuitabilityRuleConfigurationTestConditions] WITH CHECK ADD CONSTRAINT [FK_SuitabilityRuleConfigurationTestConditions_SuitabilityRuleConfiguration] FOREIGN KEY([SuitabilityRuleConfigurationUUID]) REFERENCES [dbo].[SuitabilityRuleConfiguration] ([QestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_SuitabilityRuleConfigurationTestCondition_TestConditionField')
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_SuitabilityRuleConfigurationTestConditions_TestConditions')
 BEGIN
-	ALTER TABLE [dbo].[SuitabilityRuleConfigurationTestCondition] WITH CHECK ADD CONSTRAINT [FK_SuitabilityRuleConfigurationTestCondition_TestConditionField] FOREIGN KEY([TestConditionFieldID]) REFERENCES [dbo].[TestConditionField] ([TestConditionFieldID]) ON UPDATE NO ACTION ON DELETE NO ACTION
+	ALTER TABLE [dbo].[SuitabilityRuleConfigurationTestConditions] WITH CHECK ADD CONSTRAINT [FK_SuitabilityRuleConfigurationTestConditions_TestConditions] FOREIGN KEY([TestConditionUUID]) REFERENCES [dbo].[TestConditions] ([QestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
 END
 GO
 
