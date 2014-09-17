@@ -192,7 +192,31 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000132, @TestQestID = 110908
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000133, @TestQestID = 110908, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000135, @TestQestID = 110908, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000134, @TestQestID = 110908, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000136, @TestQestID = 110908, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000135, @TestQestID = 110908, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Density [BS 1377-2: 1990 cl 8.3]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000141, @TestQestID = 110909, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000142, @TestQestID = 110909, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000143, @TestQestID = 110909, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000144, @TestQestID = 110909, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000145, @TestQestID = 110909, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Density [BS 1377-2: 1990 cl 8.4]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000151, @TestQestID = 110913, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000152, @TestQestID = 110913, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000153, @TestQestID = 110913, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000154, @TestQestID = 110913, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000155, @TestQestID = 110913, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
