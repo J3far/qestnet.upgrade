@@ -220,3 +220,243 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000154, @TestQestID = 110913
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000155, @TestQestID = 110913, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
+
+-- Triaxial CIU - Consolidated Isotropically Undrained Compression [ASTM D 4767] 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000161, @TestQestID = 110822, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000162, @TestQestID = 110822, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000163, @TestQestID = 110822, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000164, @TestQestID = 110822, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000165, @TestQestID = 110822, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000166, @TestQestID = 110822, @Idx = 5, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000167, @TestQestID = 110822, @Idx = 6, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000168, @TestQestID = 110822, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000169, @TestQestID = 110822, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000170, @TestQestID = 110822, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000171, @TestQestID = 110822, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CIU - Consolidated Isotropically Undrained Compression [BS 1377, 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000181, @TestQestID = 110823, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000182, @TestQestID = 110823, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000183, @TestQestID = 110823, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000184, @TestQestID = 110823, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000185, @TestQestID = 110823, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000186, @TestQestID = 110823, @Idx = 5, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000187, @TestQestID = 110823, @Idx = 6, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000188, @TestQestID = 110823, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000189, @TestQestID = 110823, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000190, @TestQestID = 110823, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000191, @TestQestID = 110823, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CID - Consolidated Isotropically Drained Compression [ASTM D 7181]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000201, @TestQestID = 110824, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000202, @TestQestID = 110824, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000203, @TestQestID = 110824, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000204, @TestQestID = 110824, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000205, @TestQestID = 110824, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000206, @TestQestID = 110824, @Idx = 5, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000207, @TestQestID = 110824, @Idx = 6, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000208, @TestQestID = 110824, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000209, @TestQestID = 110824, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000210, @TestQestID = 110824, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000211, @TestQestID = 110824, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CID - Consolidated Isotropically Drained Compression [BS 1377, 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000221, @TestQestID = 110825, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000222, @TestQestID = 110825, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000223, @TestQestID = 110825, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000224, @TestQestID = 110825, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000225, @TestQestID = 110825, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000226, @TestQestID = 110825, @Idx = 5, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000227, @TestQestID = 110825, @Idx = 6, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000228, @TestQestID = 110825, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000229, @TestQestID = 110825, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000230, @TestQestID = 110825, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000231, @TestQestID = 110825, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CAU - Consolidated Anisotropically Undrained Compression [ASTM D 4767] 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000241, @TestQestID = 110826, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000242, @TestQestID = 110826, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000243, @TestQestID = 110826, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000244, @TestQestID = 110826, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000245, @TestQestID = 110826, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000246, @TestQestID = 110826, @Idx = 5, @Code = 'AC', @Name = 'Anisotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000247, @TestQestID = 110826, @Idx = 6, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000248, @TestQestID = 110826, @Idx = 7, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000249, @TestQestID = 110826, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000250, @TestQestID = 110826, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000251, @TestQestID = 110826, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000252, @TestQestID = 110826, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CAD - Consolidated Anisotropically Drained Compression [ASTM D 7181]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000261, @TestQestID = 110827, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000262, @TestQestID = 110827, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000263, @TestQestID = 110827, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000264, @TestQestID = 110827, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000265, @TestQestID = 110827, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000266, @TestQestID = 110827, @Idx = 5, @Code = 'AC', @Name = 'Anisotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000267, @TestQestID = 110827, @Idx = 6, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000268, @TestQestID = 110827, @Idx = 7, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000269, @TestQestID = 110827, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000270, @TestQestID = 110827, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000271, @TestQestID = 110827, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000272, @TestQestID = 110827, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CAD - Consolidated Anisotropically Drained Compression [BS 1377, 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000281, @TestQestID = 110830, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000282, @TestQestID = 110830, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000283, @TestQestID = 110830, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000284, @TestQestID = 110830, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000285, @TestQestID = 110830, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000286, @TestQestID = 110830, @Idx = 5, @Code = 'AC', @Name = 'Anisotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000287, @TestQestID = 110830, @Idx = 6, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000288, @TestQestID = 110830, @Idx = 7, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000289, @TestQestID = 110830, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000290, @TestQestID = 110830, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000291, @TestQestID = 110830, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000292, @TestQestID = 110830, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial CAU - Consolidated Anisotropically Undrained Compression [BS 1377, 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000301, @TestQestID = 110831, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000302, @TestQestID = 110831, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000303, @TestQestID = 110831, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000304, @TestQestID = 110831, @Idx = 3, @Code = 'S', @Name = 'Saturation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000305, @TestQestID = 110831, @Idx = 4, @Code = 'IC', @Name = 'Isotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000306, @TestQestID = 110831, @Idx = 5, @Code = 'AC', @Name = 'Anisotropic Consolidation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000307, @TestQestID = 110831, @Idx = 6, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000308, @TestQestID = 110831, @Idx = 7, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000309, @TestQestID = 110831, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000310, @TestQestID = 110831, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000311, @TestQestID = 110831, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000312, @TestQestID = 110831, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial UU - Unconsolidated Undrained Compression [ASTM D 2850]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000321, @TestQestID = 110828, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000322, @TestQestID = 110828, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000323, @TestQestID = 110828, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000324, @TestQestID = 110828, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000325, @TestQestID = 110828, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000326, @TestQestID = 110828, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000327, @TestQestID = 110828, @Idx = 6, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000328, @TestQestID = 110828, @Idx = 7, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000329, @TestQestID = 110828, @Idx = 8, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Triaxial UU - Unconsolidated Undrained Compression [BS 1377 Part 7, cl.8]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000331, @TestQestID = 110829, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000332, @TestQestID = 110829, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000333, @TestQestID = 110829, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000334, @TestQestID = 110829, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000335, @TestQestID = 110829, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000336, @TestQestID = 110829, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000337, @TestQestID = 110829, @Idx = 6, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000338, @TestQestID = 110829, @Idx = 7, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000339, @TestQestID = 110829, @Idx = 8, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
