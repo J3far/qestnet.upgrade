@@ -238,11 +238,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000167, @TestQestID = 110822
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000168, @TestQestID = 110822, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000169, @TestQestID = 110822, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000172, @TestQestID = 110822, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000170, @TestQestID = 110822, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000169, @TestQestID = 110822, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000171, @TestQestID = 110822, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000170, @TestQestID = 110822, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000171, @TestQestID = 110822, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CIU - Consolidated Isotropically Undrained Compression [BS 1377, 1990]
@@ -262,11 +264,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000187, @TestQestID = 110823
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000188, @TestQestID = 110823, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000189, @TestQestID = 110823, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000192, @TestQestID = 110823, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000190, @TestQestID = 110823, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000189, @TestQestID = 110823, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000191, @TestQestID = 110823, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000190, @TestQestID = 110823, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000191, @TestQestID = 110823, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CID - Consolidated Isotropically Drained Compression [ASTM D 7181]
@@ -286,11 +290,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000207, @TestQestID = 110824
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000208, @TestQestID = 110824, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000209, @TestQestID = 110824, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000212, @TestQestID = 110824, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000210, @TestQestID = 110824, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000209, @TestQestID = 110824, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000211, @TestQestID = 110824, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000210, @TestQestID = 110824, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000211, @TestQestID = 110824, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CID - Consolidated Isotropically Drained Compression [BS 1377, 1990]
@@ -310,11 +316,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000227, @TestQestID = 110825
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000228, @TestQestID = 110825, @Idx = 7, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000229, @TestQestID = 110825, @Idx = 8, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000232, @TestQestID = 110825, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000230, @TestQestID = 110825, @Idx = 9, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000229, @TestQestID = 110825, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000231, @TestQestID = 110825, @Idx = 10, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000230, @TestQestID = 110825, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000231, @TestQestID = 110825, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CAU - Consolidated Anisotropically Undrained Compression [ASTM D 4767] 
@@ -336,11 +344,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000248, @TestQestID = 110826
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000249, @TestQestID = 110826, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000250, @TestQestID = 110826, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000253, @TestQestID = 110826, @Idx = 9, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000251, @TestQestID = 110826, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000250, @TestQestID = 110826, @Idx = 10, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000252, @TestQestID = 110826, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000251, @TestQestID = 110826, @Idx = 11, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000252, @TestQestID = 110826, @Idx = 12, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CAD - Consolidated Anisotropically Drained Compression [ASTM D 7181]
@@ -362,11 +372,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000268, @TestQestID = 110827
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000269, @TestQestID = 110827, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000270, @TestQestID = 110827, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000273, @TestQestID = 110827, @Idx = 9, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000271, @TestQestID = 110827, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000270, @TestQestID = 110827, @Idx = 10, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000272, @TestQestID = 110827, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000271, @TestQestID = 110827, @Idx = 11, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000272, @TestQestID = 110827, @Idx = 12, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CAD - Consolidated Anisotropically Drained Compression [BS 1377, 1990]
@@ -388,11 +400,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000288, @TestQestID = 110830
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000289, @TestQestID = 110830, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000290, @TestQestID = 110830, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000293, @TestQestID = 110830, @Idx = 9, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000291, @TestQestID = 110830, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000290, @TestQestID = 110830, @Idx = 10, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000292, @TestQestID = 110830, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000291, @TestQestID = 110830, @Idx = 11, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000292, @TestQestID = 110830, @Idx = 12, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial CAU - Consolidated Anisotropically Undrained Compression [BS 1377, 1990]
@@ -414,11 +428,13 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000308, @TestQestID = 110831
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000309, @TestQestID = 110831, @Idx = 8, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000310, @TestQestID = 110831, @Idx = 9, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000313, @TestQestID = 110831, @Idx = 9, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000311, @TestQestID = 110831, @Idx = 10, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000310, @TestQestID = 110831, @Idx = 10, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000312, @TestQestID = 110831, @Idx = 11, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000311, @TestQestID = 110831, @Idx = 11, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000312, @TestQestID = 110831, @Idx = 12, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial UU - Unconsolidated Undrained Compression [ASTM D 2850]
@@ -434,29 +450,77 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000325, @TestQestID = 110828
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000326, @TestQestID = 110828, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000327, @TestQestID = 110828, @Idx = 6, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000330, @TestQestID = 110828, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000328, @TestQestID = 110828, @Idx = 7, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000327, @TestQestID = 110828, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000329, @TestQestID = 110828, @Idx = 8, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000328, @TestQestID = 110828, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000329, @TestQestID = 110828, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial UU - Unconsolidated Undrained Compression [BS 1377 Part 7, cl.8]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000331, @TestQestID = 110829, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000341, @TestQestID = 110829, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000332, @TestQestID = 110829, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000342, @TestQestID = 110829, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000333, @TestQestID = 110829, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000343, @TestQestID = 110829, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000334, @TestQestID = 110829, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000344, @TestQestID = 110829, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000335, @TestQestID = 110829, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000345, @TestQestID = 110829, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000336, @TestQestID = 110829, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000346, @TestQestID = 110829, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000337, @TestQestID = 110829, @Idx = 6, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000350, @TestQestID = 110829, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000338, @TestQestID = 110829, @Idx = 7, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000347, @TestQestID = 110829, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000339, @TestQestID = 110829, @Idx = 8, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000348, @TestQestID = 110829, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000349, @TestQestID = 110829, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Incremental Oedometer [ASTM D 2435] 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000361, @TestQestID = 110920, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000362, @TestQestID = 110920, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000363, @TestQestID = 110920, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000364, @TestQestID = 110920, @Idx = 3, @Code = 'LS', @Name = 'Load stage'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000365, @TestQestID = 110920, @Idx = 4, @Code = 'FDM', @Name = 'Final Density Measurement/Entry'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000366, @TestQestID = 110920, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000367, @TestQestID = 110920, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000368, @TestQestID = 110920, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000369, @TestQestID = 110920, @Idx = 8, @Code = 'I', @Name = 'Interpretation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000371, @TestQestID = 110920, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+GO
+
+-- Incremental Oedometer [BS 1377-5: 1990] 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000381, @TestQestID = 110921, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000382, @TestQestID = 110921, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000383, @TestQestID = 110921, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000384, @TestQestID = 110921, @Idx = 3, @Code = 'LS', @Name = 'Load stage'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000385, @TestQestID = 110921, @Idx = 4, @Code = 'FDM', @Name = 'Final Density Measurement/Entry'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000386, @TestQestID = 110921, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000387, @TestQestID = 110921, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000388, @TestQestID = 110921, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000389, @TestQestID = 110921, @Idx = 8, @Code = 'I', @Name = 'Interpretation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000391, @TestQestID = 110921, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
