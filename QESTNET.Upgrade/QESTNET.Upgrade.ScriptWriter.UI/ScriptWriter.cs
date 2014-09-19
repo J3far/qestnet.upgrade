@@ -174,7 +174,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             if (ofd.ShowDialog() == DialogResult.Cancel)
                 return;
 
-            var path = this.filePath + @"data\data.object_types.qn.sql";
+            var path = Path.Combine(this.filePath, @"data\data.object_types.qn.sql");
 
             // If there is a read-only file in the way, clear it
             if (File.Exists(path)) 
