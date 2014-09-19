@@ -524,3 +524,27 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000389, @TestQestID = 110921
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000391, @TestQestID = 110921, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
+
+-- Incremental Oedometer Initial Moisture Content
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000401, @TestQestID = 111036, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000402, @TestQestID = 111036, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000403, @TestQestID = 111036, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000404, @TestQestID = 111036, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000405, @TestQestID = 111036, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Incremental Oedometer Final Moisture Content 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000411, @TestQestID = 111037, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000412, @TestQestID = 111037, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000413, @TestQestID = 111037, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000414, @TestQestID = 111037, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000415, @TestQestID = 111037, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
