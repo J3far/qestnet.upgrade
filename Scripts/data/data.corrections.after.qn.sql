@@ -1,8 +1,8 @@
 
 -- FIXME:  Need to figure out how to resolve these properly!!
 DELETE FROM DocumentExternal WHERE QestID = 18230 AND QestParentID = 20002
-DELETE FROM qestReverseLookup WHERE QestID = 18230 AND QestParentID = 20002
 DELETE FROM qestReportMapping WHERE TestQestID = 18230
+DELETE FROM qestReverseLookup WHERE QestID = 18230 AND QestParentID = 20002
 GO
 
 -- QEST OBEJCTS

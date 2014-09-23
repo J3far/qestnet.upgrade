@@ -28,15 +28,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000021, @TestQestID = 110942
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000022, @TestQestID = 110942, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000023, @TestQestID = 110942, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000023, @TestQestID = 110942, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000024, @TestQestID = 110942, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000024, @TestQestID = 110942, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000025, @TestQestID = 110942, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000025, @TestQestID = 110942, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000026, @TestQestID = 110942, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000026, @TestQestID = 110942, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000027, @TestQestID = 110942, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000027, @TestQestID = 110942, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Atterberg Limits [BS 1377-2: 1990 cl 4.5]
@@ -44,15 +44,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000031, @TestQestID = 110943
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000032, @TestQestID = 110943, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000033, @TestQestID = 110943, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000033, @TestQestID = 110943, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000034, @TestQestID = 110943, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000034, @TestQestID = 110943, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000035, @TestQestID = 110943, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000035, @TestQestID = 110943, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000036, @TestQestID = 110943, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000036, @TestQestID = 110943, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000037, @TestQestID = 110943, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000037, @TestQestID = 110943, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Atterberg Limits CP [BS 1377-2: 1990 cl 4.3]
@@ -60,15 +60,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000041, @TestQestID = 110944
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000042, @TestQestID = 110944, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000043, @TestQestID = 110944, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000043, @TestQestID = 110944, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000044, @TestQestID = 110944, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000044, @TestQestID = 110944, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000045, @TestQestID = 110944, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000045, @TestQestID = 110944, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000046, @TestQestID = 110944, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000046, @TestQestID = 110944, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000047, @TestQestID = 110944, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000047, @TestQestID = 110944, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Atterberg Limits CP [BS 1377-2: 1990 cl 4.4]
@@ -76,15 +76,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000051, @TestQestID = 110945
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000052, @TestQestID = 110945, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000053, @TestQestID = 110945, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000053, @TestQestID = 110945, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000054, @TestQestID = 110945, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000054, @TestQestID = 110945, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000055, @TestQestID = 110945, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000055, @TestQestID = 110945, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000056, @TestQestID = 110945, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000056, @TestQestID = 110945, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000057, @TestQestID = 110945, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000057, @TestQestID = 110945, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Atterberg Limits [ASTM D 4318]
@@ -92,15 +92,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000061, @TestQestID = 110946
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000062, @TestQestID = 110946, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000063, @TestQestID = 110946, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000063, @TestQestID = 110946, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000064, @TestQestID = 110946, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000064, @TestQestID = 110946, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000065, @TestQestID = 110946, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000065, @TestQestID = 110946, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000066, @TestQestID = 110946, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000066, @TestQestID = 110946, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000067, @TestQestID = 110946, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000067, @TestQestID = 110946, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Atterberg Limits [ASTM D 4318 B]
@@ -108,15 +108,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000071, @TestQestID = 110947
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000072, @TestQestID = 110947, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000073, @TestQestID = 110947, @Idx = 1, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000073, @TestQestID = 110947, @Idx = 2, @Code = 'PLWW', @Name = 'Plastic Limit Wet Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000074, @TestQestID = 110947, @Idx = 2, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000074, @TestQestID = 110947, @Idx = 3, @Code = 'LLDW', @Name = 'Liquid Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000075, @TestQestID = 110947, @Idx = 2, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000075, @TestQestID = 110947, @Idx = 4, @Code = 'PLDW', @Name = 'Plastic Limit Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000076, @TestQestID = 110947, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000076, @TestQestID = 110947, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000077, @TestQestID = 110947, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000077, @TestQestID = 110947, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Triaxial Initial Moisture Content
@@ -192,9 +192,9 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000132, @TestQestID = 110908
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000133, @TestQestID = 110908, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000134, @TestQestID = 110908, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000134, @TestQestID = 110908, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000135, @TestQestID = 110908, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000135, @TestQestID = 110908, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Particle Density [BS 1377-2: 1990 cl 8.3]
@@ -204,9 +204,9 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000142, @TestQestID = 110909
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000143, @TestQestID = 110909, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000144, @TestQestID = 110909, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000144, @TestQestID = 110909, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000145, @TestQestID = 110909, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000145, @TestQestID = 110909, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Particle Density [BS 1377-2: 1990 cl 8.4]
@@ -216,9 +216,9 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000152, @TestQestID = 110913
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000153, @TestQestID = 110913, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000154, @TestQestID = 110913, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000154, @TestQestID = 110913, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000155, @TestQestID = 110913, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000155, @TestQestID = 110913, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Triaxial CIU - Consolidated Isotropically Undrained Compression [ASTM D 4767] 
@@ -547,6 +547,15 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000414, @TestQestID = 111037, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000415, @TestQestID = 111037, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+
+-- PSD TEST (FIXME: Only framework stages added, update QestIDs on the entities if they get shuffled around
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000421, @TestQestID = 110932, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000422, @TestQestID = 110932, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000423, @TestQestID = 110932, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Density Moisture Content (111038)

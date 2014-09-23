@@ -327,7 +327,7 @@ BEGIN
 END
 GO
 
-ALTER PROCEDURE dbo.qest_SetIndex(@TableName nvarchar(255), @IndexName nvarchar(255), @OrdinalColumns nvarchar(512), @IncludeColumns nvarchar(512) = NULL)
+ALTER PROCEDURE dbo.qest_SetIndex(@TableName nvarchar(255), @IndexName nvarchar(255), @OrdinalColumns nvarchar(512), @IncludeColumns nvarchar(512) = NULL, @IsUnique bit = 0)
 AS
 BEGIN
 	DECLARE @CreateSQL nvarchar(MAX)
@@ -338,12 +338,18 @@ BEGIN
 		PRINT 'Index ''' + @IndexName + ''' on table ''' + @TableName + ''' is unecessary due to the existing primary key (ignored).' 
 	END
 	ELSE
-	BEGIN	
+	BEGIN
+		SET @CreateSQL = 'CREATE '
+		IF ISNULL(@IsUnique, 0) = 1
+		BEGIN
+			SET @CreateSQL = @CreateSQL + 'UNIQUE ' 
+		END
+				
 		IF NOT @IncludeColumns IS NULL
 		BEGIN
-			SET @CreateSQL = 'CREATE NONCLUSTERED INDEX [' + @IndexName + '] ON [' + @TableName + '] ([' + REPLACE(@OrdinalColumns,',','] ASC, [') + '] ASC) INCLUDE ([' + REPLACE(@IncludeColumns,',','], [') + '])'
+			SET @CreateSQL = @CreateSQL + 'NONCLUSTERED INDEX [' + @IndexName + '] ON [' + @TableName + '] ([' + REPLACE(@OrdinalColumns,',','] ASC, [') + '] ASC) INCLUDE ([' + REPLACE(@IncludeColumns,',','], [') + '])'
 		END ELSE BEGIN
-			SET @CreateSQL = 'CREATE NONCLUSTERED INDEX [' + @IndexName + '] ON [' + @TableName + '] ([' + REPLACE(@OrdinalColumns,',','] ASC, [') + '] ASC)'
+			SET @CreateSQL = @CreateSQL + 'NONCLUSTERED INDEX [' + @IndexName + '] ON [' + @TableName + '] ([' + REPLACE(@OrdinalColumns,',','] ASC, [') + '] ASC)'
 		END
 
 		IF NOT EXISTS(SELECT 1 FROM [dbo].[qest_IndexInfo] WHERE TableName = @TableName AND IndexName = @IndexName)

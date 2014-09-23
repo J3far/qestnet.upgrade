@@ -173,7 +173,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
 	            T.[name] AS TableName, 
 	            I.[name] AS IndexName, 
 	            I.[type_desc] As IndexType,
-                I.[is_unique_constraint] As IsUnique,
+                I.[is_unique] As IsUnique,
                 I.[is_primary_key] AS IsPrimaryKey
 	            FROM sys.tables T 
 	            INNER JOIN sys.indexes I ON I.[object_id] = T.[object_id] 
@@ -224,10 +224,10 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
                     fs.Write(string.Format("IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = '{0}' AND CONSTRAINT_TYPE = 'UNIQUE')\r\n", idx.IndexName));
                     fs.Write("BEGIN\r\n");
                     fs.Write(string.Format("\tEXEC qest_DropIndex '{0}', '{1}'\r\n", idx.TableName, idx.IndexName));
-                    fs.Write(string.Format("\tALTER TABLE {0} ADD CONSTRAINT {1} UNIQUE ({2})\r\n",
+                    fs.Write(string.Format("\tALTER TABLE [dbo].[{0}] ADD CONSTRAINT [{1}] UNIQUE ({2})\r\n",
                         idx.TableName,
                         idx.IndexName,
-                        string.Join(",", idx.OrdinalColumns)
+                        this.sqlFormatColumnNames(idx.OrdinalColumns)
                     ));
                     fs.Write("END\r\n");
                 }
@@ -252,6 +252,11 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
                 return "NULL";
 
             return string.Format("'{0}'", str.Replace("'", "''"));
+        }
+
+        private string sqlFormatColumnNames(IEnumerable<string> columnNames)
+        {
+            return string.Format("[{0}]", string.Join("],[", columnNames));
         }
     }
 }

@@ -737,6 +737,15 @@ BEGIN
 	AND SampleArticleUUID IS NOT NULL
 END
 
+-- Correct nullable qestReverseLookup.QestOwnerLabNo
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
+BEGIN 
+	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestOwnerLabNo'
+	UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
+	ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL
+END
+GO
+
 --clean-up crappy suitability rule tables
 -- SuitabilityRuleConfigurationTestCondition -- replacement table is named "SuitabilityRuleConfigurationTestConditions" (note the "s" at the end)
 if exists (select * from information_schema.tables where table_name = 'SuitabilityRuleConfigurationTestCondition')
@@ -793,9 +802,35 @@ begin
 end
 GO
 
---Clean up funky data in qestReverseLookup.QestOwnerLabNo
-if exists (select * from qestReverseLookup where QestOwnerLabNo = -1)
-begin
-  update qestReverseLookup set QestOwnerLabNo = null where QestOwnerLabNo = -1
-end
+-- Clean up funky data in qestReverseLookup.QestOwnerLabNo
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestOwnerLabNo')
+BEGIN
+	IF EXISTS (SELECT * FROM qestReverseLookup WHERE QestOwnerLabNo = -1)
+	BEGIN
+	  UPDATE qestReverseLookup SET QestOwnerLabNo = NULL WHERE QestOwnerLabNo = -1
+	END
+END
+GO
+
+-- Correct incorrect unique constraint
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME = 'TestStageData' AND CONSTRAINT_NAME = 'IX_TestStageData_QestParentUUID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
+BEGIN
+	ALTER TABLE TestStageData DROP CONSTRAINT IX_TestStageData_QestParentUUID_Idx
+END
+
+-- Rename:  TestStageData.Idx to TestStageData.PerformOrder
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'Idx')
+BEGIN
+	EXEC sp_rename
+		@objname = 'TestStageData.Idx',
+		@newname = 'PerformOrder',
+		@objtype = 'COLUMN'
+END
+
+-- Correct nullable qestReverseLookup.QestOwnerLabNo
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'PerformOrder' AND IS_NULLABLE = 'YES')
+BEGIN 
+	UPDATE TestStageData SET PerformOrder = 0 WHERE PerformOrder IS NULL
+	ALTER TABLE TestStageData ALTER COLUMN PerformOrder int NOT NULL
+END
 GO
