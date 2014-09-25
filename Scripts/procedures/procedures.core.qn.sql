@@ -9,11 +9,11 @@ GO
 CREATE PROCEDURE [dbo].[qest_UpdateLaboratoryMappings]
 AS
 BEGIN
-	INSERT INTO LaboratoryMapping (LocationUUID, LocationQestID, LabNo)
-	SELECT QestUUID, QestID, LabNo FROM Laboratory WHERE LabNo < 998 AND LabNo >= 0 AND ISNULL([Owner], 0) = 1 
+	INSERT INTO LaboratoryMapping (LocationID, LocationUUID, LocationQestID, LabNo)
+	SELECT QestUniqueID, QestUUID, QestID, LabNo FROM Laboratory WHERE LabNo < 998 AND LabNo >= 0 AND ISNULL([Owner], 0) = 1 
 		AND NOT QestUUID IN (SELECT LocationUUID FROM LaboratoryMapping)
 	UNION 
-	SELECT TOP 1 QestUUID, QestID, 0 FROM Laboratory WHERE ISNULL(IsGlobal, 0) = 1 
+	SELECT TOP 1 QestUniqueID, QestUUID, QestID, 0 FROM Laboratory WHERE ISNULL(IsGlobal, 0) = 1 
 		AND NOT QestUUID IN (SELECT LocationUUID FROM LaboratoryMapping)
 END
 GO
