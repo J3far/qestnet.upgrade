@@ -19,14 +19,27 @@ BEGIN
 	-- VALIDATION: Check for zero QestUniqueIDs
 	IF EXISTS(SELECT 1 FROM qestReverseLookup WHERE QestUniqueID = 0)
 	BEGIN
-		RAISERROR ('qestReverseLookup corruption detected. Zero-value QestUniqueIDs exist: for the relevant document tables check 
-					that QestUniqueID is set identity and the *_Insert_UniqueID trigger is operational.', 16, 0)
+	  declare @list_of_tables nvarchar(4000)
+    select @list_of_tables = substring((select ', ' + convert(nvarchar(8), rl.QestID) + coalesce(' - ' + tn.Value, '')
+      from (select distinct QestID from qestReverseLookup where QestUniqueID = 0) rl
+      left join qestObjects tn on rl.QestID = tn.QestID and tn.Property = 'tablename'
+      for xml path ('') ), 3, 4000)
+
+		RAISERROR ('qestReverseLookup corruption detected. Zero-value QestUniqueIDs exist for the following object types: %s
+  For each document table, check that QestUniqueID column marked as the identity column and the *_Insert_UniqueID trigger is operational.', 16, 0, @list_of_tables)
 	END
 
 	-- VALIDATION: Check for duplicate QestID, QestUniqueID pairs
 	IF EXISTS(SELECT 1 FROM qestReverseLookup GROUP BY QestUniqueID, QestID HAVING COUNT(*) > 1)
 	BEGIN
-		RAISERROR ('qestReverseLookup corruption detected. Duplicate QestID/QestUniqueID pairs found.', 16, 0)
+	  declare @number_of_duplicates int;
+	  select @number_of_duplicates = count(*) from (SELECT 1 X FROM qestReverseLookup GROUP BY QestUniqueID, QestID HAVING COUNT(*) > 1) X
+		RAISERROR ('qestReverseLookup corruption detected. %d Duplicate QestID/QestUniqueID pairs found.
+	You can list them using:
+	  select QestID, QestUniqueID, count(*)
+	  from qestReverseLookup
+	  having count(*) > 1
+	', 16, 0, @number_of_duplicates)
 	END
 
 	EXEC qest_GenerateQestUUID 'qestReverseLookup'

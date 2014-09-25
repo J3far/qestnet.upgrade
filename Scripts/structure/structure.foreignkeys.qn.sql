@@ -16,6 +16,12 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_DocumentBulkDensityDirectMeasurement_qestReverseLookup')
+BEGIN
+	ALTER TABLE [dbo].[DocumentBulkDensityDirectMeasurement] WITH CHECK ADD CONSTRAINT [FK_DocumentBulkDensityDirectMeasurement_qestReverseLookup] FOREIGN KEY([QestUUID]) REFERENCES [dbo].[qestReverseLookup] ([QestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION
+END
+GO
+
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_DocumentIncrementalOedometerLoadStage_qestReverseLookup')
 BEGIN
 	ALTER TABLE [dbo].[DocumentIncrementalOedometerLoadStage] WITH CHECK ADD CONSTRAINT [FK_DocumentIncrementalOedometerLoadStage_qestReverseLookup] FOREIGN KEY([QestUUID]) REFERENCES [dbo].[qestReverseLookup] ([QestUUID]) ON UPDATE NO ACTION ON DELETE NO ACTION

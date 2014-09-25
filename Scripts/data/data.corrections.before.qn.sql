@@ -15,10 +15,16 @@ END
 GO
 
 -- Delete any stage definitions not in use - genuine ones will be added again in later script
-DELETE FROM qestTestStage WHERE TestStageQestID NOT IN (SELECT QestID FROM TestStageData)
+if exists (select * from information_schema.tables where table_name = 'qestTestStage')
+  and exists (select * from information_schema.tables where table_name = 'TestStageData')
+begin
+  DELETE FROM qestTestStage WHERE TestStageQestID NOT IN (SELECT QestID FROM TestStageData)
+end
+GO
 
 -- Fix any duplicate test stage indexes if the unique index is not in place (shifts them up to high number to be corrected in later script)
-IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name = 'IX_qestTestStage_TestQestID_Idx' AND is_unique = 1)
+if exists (select * from information_schema.tables where table_name = 'qestTestStage')
+  and NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name = 'IX_qestTestStage_TestQestID_Idx' AND is_unique = 1)
 BEGIN 
 	UPDATE T SET Idx = 9999 + S.Idx + S.rk
 	FROM qestTestStage T INNER JOIN

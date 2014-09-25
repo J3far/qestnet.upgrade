@@ -1,5 +1,5 @@
 
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping')
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EquipmentTestMapping')
 BEGIN
 	EXEC qest_GenerateQestUUID 'EquipmentTestMapping'
 	
@@ -18,26 +18,30 @@ END
 GO
 
 -- Set EquipmentQestUUID if there is a qestReverseLookup match
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'EquipmentQestUUID')
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'EquipmentQestUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
 	UPDATE EquipmentTestMapping SET EquipmentQestUUID = R.QestUUID FROM EquipmentTestMapping M
 	INNER JOIN qestReverseLookup R ON M.EquipmentQestID = R.QestID AND M.EquipmentQestUniqueID = R.QestUniqueID
 	WHERE M.EquipmentQestUUID IS NULL
 	
 	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_Equipment'
+	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_EquipmentQestUUID'
+
 	DELETE FROM EquipmentTestMapping WHERE EquipmentQestUUID IS NULL
 	ALTER TABLE EquipmentTestMapping ALTER COLUMN EquipmentQestUUID uniqueidentifier NOT NULL 
 END
 GO
 
 -- Set TestQestUUID if there is a qestReverseLookup match
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'TestQestUUID')
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'TestQestUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
 	UPDATE EquipmentTestMapping SET TestQestUUID = R.QestUUID FROM EquipmentTestMapping M
 	INNER JOIN qestReverseLookup R ON M.TestQestID = R.QestID AND M.TestQestUniqueID = R.QestUniqueID
 	WHERE M.TestQestUUID IS NULL
 	
 	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_Test'
+	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_TestQestUUID'
+
 	DELETE FROM EquipmentTestMapping WHERE TestQestUUID IS NULL
 	ALTER TABLE EquipmentTestMapping ALTER COLUMN TestQestUUID uniqueidentifier NOT NULL 
 END

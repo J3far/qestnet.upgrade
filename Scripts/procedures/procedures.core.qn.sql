@@ -33,13 +33,14 @@ CREATE PROCEDURE [dbo].[qest_InsertUpdateTestStage]
 	@Name nvarchar(100),
 	@IsCheckStage bit = 0
 AS
-BEGIN	
+BEGIN TRY
+
 	-- Ensure QES FIXME
 	IF NOT EXISTS (SELECT 1 FROM qestObjects WHERE QestID = @TestStageQestID AND Property = 'TableName')
 	BEGIN
-		INSERT INTO qestObjects (QestID, Property, Value) VALUES (@TestStageQestID, 'TableName', 'TestStageData')	
+		INSERT INTO qestObjects (QestID, Property, Value) VALUES (@TestStageQestID, 'TableName', 'TestStageData')
 	END
-	
+
 	IF EXISTS (SELECT 1 FROM qestTestStage WHERE TestStageQestID = @TestStageQestID)
 	BEGIN	
 		UPDATE qestTestStage SET TestQestID = @TestQestID, Idx = @Idx, Code = @Code, Name = @Name, IsCheckStage = @IsCheckStage
@@ -50,5 +51,11 @@ BEGIN
 		VALUES 
 		(@TestStageQestID, @TestQestID, @Idx, @Code, @Name, @IsCheckStage, 0, 0)		
 	END
-END
-GO
+END TRY
+BEGIN CATCH
+  declare @errSeverity int, @errState int, @errProcedure sysname, @errMessage as nvarchar(max)
+  select @errSeverity = ERROR_SEVERITY(), @errState = ERROR_STATE(), @errProcedure = ERROR_PROCEDURE(), @errMessage = ERROR_MESSAGE();
+  raiserror('Failed to insert/update test stage [TestStageQestID: %d; TestQestID: %d; Idx: %d]
+  Error Message: %s
+  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @TestQestID, @Idx, @errMessage, @errProcedure);
+END CATCH

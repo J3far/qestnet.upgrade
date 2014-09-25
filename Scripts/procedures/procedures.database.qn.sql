@@ -262,9 +262,26 @@ GO
 ALTER PROCEDURE dbo.qest_DropIndex(@TableName nvarchar(255), @IndexName nvarchar(255))
 AS
 BEGIN
-	IF [dbo].[qest_IndexExists](@TableName, @IndexName) = 1
+  set nocount on;
+  --If the index is associated with a unique constraint, you need to use 'DROP CONSTRAINT' instead of 'DROP INDEX'.
+  declare @is_unique_constraint bit, @index_exists bit;
+
+  SELECT @index_exists = 1, @is_unique_constraint = is_unique_constraint
+    FROM sys.schemas S
+    INNER JOIN sys.tables T ON T.[schema_id] = S.[schema_id]
+    INNER JOIN sys.indexes I ON T.[object_id] = I.[object_id]
+    WHERE S.name = 'dbo' AND T.[name] = @TableName AND I.[name] = @IndexName
+
+  declare @sql_to_execute nvarchar(max);
+  if @is_unique_constraint = 1
+  BEGIN
+    set @sql_to_execute = 'ALTER TABLE [dbo].' + quotename(@TableName) + ' DROP CONSTRAINT ' + quotename(@IndexName);
+    EXEC sp_executesql @sql_to_execute
+	END
+	else IF [dbo].[qest_IndexExists](@TableName, @IndexName) = 1
 	BEGIN
-		EXEC('DROP INDEX ['+ @IndexName +'] ON ['+ @TableName +']')
+	  set @sql_to_execute = 'DROP INDEX '+ quotename(@IndexName) +' ON [dbo].'+ quotename(@TableName);
+		EXEC sp_executesql @sql_to_execute
 	END
 END
 GO

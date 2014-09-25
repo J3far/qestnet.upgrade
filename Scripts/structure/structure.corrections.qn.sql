@@ -305,6 +305,7 @@ GO
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestTestStage' AND COLUMN_NAME = 'TestQestID' AND IS_NULLABLE = 'YES')
 BEGIN
 	EXEC qest_DropIndex 'qestTestStage', 'IX_qestTestStage_TestQestID' 
+	EXEC [dbo].[qest_DropIndex] 'qestTestStage', 'IX_qestTestStage_TestQestID_Idx'
 	ALTER TABLE dbo.qestTestStage ALTER COLUMN TestQestID int NOT NULL
 END
 GO
@@ -766,11 +767,11 @@ begin
 end
 GO
 --drop QestUniqueID (not needed -- we have QestUUID as the primary key)
-if exists (select * from sys.indexes where object_id = object_id(N'[dbo].[SuitabilityRuleConfiguration]') and name = N'IX_SuitabilityRuleConfiguration_QestUniqueID')
-  alter table [dbo].[SuitabilityRuleConfiguration] drop constraint [IX_SuitabilityRuleConfiguration_QestUniqueID]
-GO
 if exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'qestUniqueID')
+begin
+  exec [dbo].[qest_DropIndex] 'SuitabilityRuleConfiguration', 'IX_SuitabilityRuleConfiguration_QestUniqueID'
   alter table SuitabilityRuleConfiguration drop column qestUniqueID;
+end
 GO
 --drop useless FK constraint
 if exists (select * from sys.foreign_keys where object_id = object_id(N'[dbo].[FK_SuitabilityRuleConfiguration_SuitabilityRuleConfiguration]') and parent_object_id = object_id(N'[dbo].[SuitabilityRuleConfiguration]'))
@@ -826,6 +827,7 @@ BEGIN
 		@newname = 'PerformOrder',
 		@objtype = 'COLUMN'
 END
+GO
 
 -- Correct nullable qestReverseLookup.QestOwnerLabNo
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'PerformOrder' AND IS_NULLABLE = 'YES')
