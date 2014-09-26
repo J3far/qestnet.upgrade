@@ -283,7 +283,7 @@ CREATE procedure [dbo].[qest_GetOptionValue]
 AS
 BEGIN
 	SELECT TOP 1 O.QestUniqueID, O.OptionValue FROM Options O
-	LEFT JOIN
+	INNER JOIN
 	(
 		SELECT l2.QestUniqueID As LocationID, l2.Lvl As Lvl
 		FROM Laboratory l1
