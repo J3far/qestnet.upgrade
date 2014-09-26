@@ -413,6 +413,18 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SuitabilityRuleConfigurationTestCondition' AND COLUMN_NAME = 'SuitabilityRuleConfigurationUUID' AND IS_NULLABLE = 'YES')
+BEGIN 
+	ALTER TABLE dbo.SuitabilityRuleConfigurationTestCondition ALTER COLUMN SuitabilityRuleConfigurationUUID int NOT NULL
+END
+GO
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SuitabilityRuleConfigurationTestCondition' AND COLUMN_NAME = 'TestConditionUUID' AND IS_NULLABLE = 'YES')
+BEGIN 
+	ALTER TABLE dbo.SuitabilityRuleConfigurationTestCondition ALTER COLUMN TestConditionUUID int NOT NULL
+END
+GO
+
 -- Set qestWorkflowStage.WorkflowUUID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestWorkflowStage' AND COLUMN_NAME = 'WorkflowUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
