@@ -590,6 +590,14 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000533, @TestQestID = 110917, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Unit Weight [ASTM D 7263 - Method A] (110948)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000541, @TestQestID = 110948, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000542, @TestQestID = 110948, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000543, @TestQestID = 110948, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Density Moisture Content (111038)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000551, @TestQestID = 111038, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
@@ -600,4 +608,12 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000554, @TestQestID = 111038, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000555, @TestQestID = 111038, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+--Unit Weight [ASTM D 7263 - Method B] (110949)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000561, @TestQestID = 110949, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000562, @TestQestID = 110949, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000563, @TestQestID = 110949, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
