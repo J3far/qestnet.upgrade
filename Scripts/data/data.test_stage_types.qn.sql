@@ -558,6 +558,38 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000423, @TestQestID = 110932, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Bulk Density [BS 1377-2: 1990 cl 7.3] (110929)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000501, @TestQestID = 110929, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000502, @TestQestID = 110929, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000503, @TestQestID = 110929, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Bulk Density [BS 1377-2: 1990 cl 7.4] (110939)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000511, @TestQestID = 110939, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000512, @TestQestID = 110939, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000513, @TestQestID = 110939, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Unit Weight [ASTM D 7263 - 2009] (110922)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000521, @TestQestID = 110922, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000522, @TestQestID = 110922, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000523, @TestQestID = 110922, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Bulk Density [BS 1377-2: 1990 cl 7.2] (110917)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000531, @TestQestID = 110917, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000532, @TestQestID = 110917, @Idx = 1, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000533, @TestQestID = 110917, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Density Moisture Content (111038)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000551, @TestQestID = 111038, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
