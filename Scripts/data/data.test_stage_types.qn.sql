@@ -617,3 +617,23 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000562, @TestQestID = 110949
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000563, @TestQestID = 110949, @Idx = 2, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
+
+-- Pocket Penetrometer 
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000571, @TestQestID = 110910, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000572, @TestQestID = 110910, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000573, @TestQestID = 110910, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000574, @TestQestID = 110910, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Torvane
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000581, @TestQestID = 110911, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000582, @TestQestID = 110911, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000583, @TestQestID = 110911, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000584, @TestQestID = 110911, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
