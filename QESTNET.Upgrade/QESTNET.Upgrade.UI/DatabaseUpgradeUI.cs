@@ -28,6 +28,8 @@ namespace Spectra.QESTNET.Upgrade.UI
         {
             InitializeComponent();
 
+            this.txtOutput.KeyUp += TextboxCopyPaste_KeyUp;
+
             this.config = ConfigurationManager.OpenExeConfiguration(null);
 
             cmbConnectionString.DataSource = this.config.ConnectionStrings.ConnectionStrings.OfType<ConnectionStringSettings>()
@@ -42,6 +44,33 @@ namespace Spectra.QESTNET.Upgrade.UI
             generateStructureScriptsToolStripMenuItem.Visible = this.exeScriptWriter != null;
         }
 
+        void TextboxCopyPaste_KeyUp(object sender, KeyEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox == null) return;
+            if (e.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.A:
+                        textBox.SelectAll();
+                        break;
+                    case Keys.C:
+                        textBox.Copy();
+                        break;
+                    case Keys.V:
+                        if (textBox.Enabled && !textBox.ReadOnly)
+                            textBox.Paste();
+                        break;
+                    case Keys.X:
+                        if (textBox.Enabled && !textBox.ReadOnly)
+                            textBox.Cut();
+                        else
+                            textBox.Copy();
+                        break;
+                }
+            }
+        }
 
         private void RefreshControls()
         {
