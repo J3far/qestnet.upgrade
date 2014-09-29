@@ -849,3 +849,11 @@ BEGIN
 	ALTER TABLE TestStageData ALTER COLUMN PerformOrder int NOT NULL
 END
 GO
+
+-- Correct nullable qestTestStage.IsCheckStage
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestTestStage' AND COLUMN_NAME = 'IsCheckStage' AND IS_NULLABLE = 'YES')
+BEGIN 
+	UPDATE dbo.qestTestStage SET IsCheckStage = 0 WHERE IsCheckStage IS NULL
+	ALTER TABLE dbo.qestTestStage ALTER COLUMN IsCheckStage bit NOT NULL
+END
+GO

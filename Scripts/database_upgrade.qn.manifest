@@ -11,6 +11,7 @@ upgrade/upgrade.procedures.qn.sql
 upgrade/upgrade.remove_foreignkeys.qn.sql
 upgrade/upgrade.core.qn.sql
 upgrade/upgrade.activities.qn.sql
+upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.document_relationships.qn.sql

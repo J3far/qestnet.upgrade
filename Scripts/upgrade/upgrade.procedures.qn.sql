@@ -304,4 +304,3 @@ BEGIN
 	DEALLOCATE tableCursor
 END
 GO
-
