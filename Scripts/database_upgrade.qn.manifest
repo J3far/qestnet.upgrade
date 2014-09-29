@@ -30,6 +30,7 @@ procedures/procedures.triggers.core.qn.sql
 procedures/procedures.qestnet.qn.sql
 procedures/procedures.workflows.qn.sql
 procedures/procedures.test_methods.qn.sql
+procedures/procedures.suitability_rule_config.qn.sql
 
 // Data
 data/data.corrections.after.qn.sql
