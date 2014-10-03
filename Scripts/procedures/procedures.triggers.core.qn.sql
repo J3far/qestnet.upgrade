@@ -114,3 +114,22 @@ AS
 	AuditTrail A INNER JOIN inserted I ON A.QestUniqueID = I.QestUniqueID
 	WHERE A.ObjectKey IS NULL AND A.ObjectQestUUID IS NOT NULL 
 GO
+
+-- Add trigger to set work progress ids
+IF OBJECT_ID('TR_WorkProgress_Insert_UniqueIDs', 'TR') IS NOT NULL
+	DROP TRIGGER TR_WorkProgress_Insert_UniqueIDs
+GO
+
+CREATE TRIGGER [dbo].[TR_WorkProgress_Insert_UniqueIDs]
+ON [dbo].[WorkProgress] AFTER INSERT
+AS
+	-- Set core IDs from reverseLookups
+	UPDATE D SET
+	QestID = RL.QestID, 
+	QestUniqueID = RL.QestUniqueID,
+	QestUniqueParentID = RL.QestUniqueParentID, 
+	QestParentID = RL.QestParentID
+	FROM qestReverseLookup RL 
+	INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
+	INNER JOIN WorkProgress D ON D.QestUUID = RL.QestUUID
+GO
