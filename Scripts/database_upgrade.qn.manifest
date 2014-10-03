@@ -17,6 +17,7 @@ upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.document_relationships.qn.sql
 upgrade/upgrade.report_mappings.qn.sql
 upgrade/upgrade.equipment_test_mapping.qn.sql
+upgrade/upgrade.work_progress.qn.sql
 
 // Structure - Tables
 structure/structure.tables.qn.sql

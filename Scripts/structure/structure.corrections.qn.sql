@@ -749,13 +749,14 @@ BEGIN
 	WHERE NOT EXISTS (SELECT 1 FROM Samples WHERE QestUUID = SampleArticleUUID)
 	AND SampleArticleUUID IS NOT NULL
 END
+GO
 
 -- Correct nullable qestReverseLookup.QestOwnerLabNo
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
-BEGIN 
+BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestOwnerLabNo'
-	UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
-	ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL
+	EXEC('UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL')
+	EXEC('ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL')
 END
 GO
 
@@ -769,6 +770,7 @@ begin
   end
 end
 GO
+
 -- MaterialCategoryTestTypeSuitability -- replacement table is named "SuitabilityTestTypeMaterialCategory"
 if exists (select * from information_schema.tables where table_name = 'MaterialCategoryTestTypeSuitability')
 begin
@@ -778,6 +780,7 @@ begin
   end
 end
 GO
+
 --drop QestUniqueID (not needed -- we have QestUUID as the primary key)
 if exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'qestUniqueID')
 begin
@@ -785,10 +788,12 @@ begin
   alter table SuitabilityRuleConfiguration drop column qestUniqueID;
 end
 GO
+
 --drop useless FK constraint
 if exists (select * from sys.foreign_keys where object_id = object_id(N'[dbo].[FK_SuitabilityRuleConfiguration_SuitabilityRuleConfiguration]') and parent_object_id = object_id(N'[dbo].[SuitabilityRuleConfiguration]'))
   alter table [dbo].[SuitabilityRuleConfiguration] drop constraint [FK_SuitabilityRuleConfiguration_SuitabilityRuleConfiguration]
 GO
+
 --rename column from QestID to TestTypeQestID
 if exists (select * from information_schema.columns where table_name = 'SuitabilityRuleConfiguration' and column_name = 'QestID')
 begin
@@ -818,10 +823,12 @@ GO
 -- Clean up funky data in qestReverseLookup.QestOwnerLabNo
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestOwnerLabNo')
 BEGIN
-	IF EXISTS (SELECT * FROM qestReverseLookup WHERE QestOwnerLabNo = -1)
-	BEGIN
-	  UPDATE qestReverseLookup SET QestOwnerLabNo = NULL WHERE QestOwnerLabNo = -1
-	END
+	EXEC('
+		IF EXISTS (SELECT * FROM qestReverseLookup WHERE QestOwnerLabNo = -1)
+		BEGIN
+		  UPDATE qestReverseLookup SET QestOwnerLabNo = NULL WHERE QestOwnerLabNo = -1
+		END
+	')
 END
 GO
 
@@ -845,15 +852,22 @@ GO
 -- Correct nullable qestReverseLookup.QestOwnerLabNo
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'PerformOrder' AND IS_NULLABLE = 'YES')
 BEGIN 
-	UPDATE TestStageData SET PerformOrder = 0 WHERE PerformOrder IS NULL
-	ALTER TABLE TestStageData ALTER COLUMN PerformOrder int NOT NULL
+	EXEC('UPDATE TestStageData SET PerformOrder = 0 WHERE PerformOrder IS NULL')
+	EXEC('ALTER TABLE TestStageData ALTER COLUMN PerformOrder int NOT NULL')
 END
 GO
 
 -- Correct nullable qestTestStage.IsCheckStage
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestTestStage' AND COLUMN_NAME = 'IsCheckStage' AND IS_NULLABLE = 'YES')
 BEGIN 
-	UPDATE dbo.qestTestStage SET IsCheckStage = 0 WHERE IsCheckStage IS NULL
-	ALTER TABLE dbo.qestTestStage ALTER COLUMN IsCheckStage bit NOT NULL
+	EXEC('UPDATE dbo.qestTestStage SET IsCheckStage = 0 WHERE IsCheckStage IS NULL')
+	EXEC('ALTER TABLE dbo.qestTestStage ALTER COLUMN IsCheckStage bit NOT NULL')
+END
+GO
+
+-- Ensure QestOwnerLabNo - ok to add it NULL will be fixed by upgrade
+IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'QestOwnerLabNo')
+BEGIN 
+	ALTER TABLE dbo.TestStageData ADD QestOwnerLabNo int NULL
 END
 GO

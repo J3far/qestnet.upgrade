@@ -37,3 +37,8 @@ BEGIN
 	WHERE S.rk > 1
 END
 
+-- Correct QestID for specimen table with QestID column already present
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentAsphaltPrepCompactionSingle')
+BEGIN
+	UPDATE DocumentAsphaltPrepCompactionSingle SET QestID = 111233 WHERE QestID <= 0
+END 

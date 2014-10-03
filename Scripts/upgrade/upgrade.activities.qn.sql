@@ -17,8 +17,6 @@ EXEC qest_EnableActivityForQestnet 'ListContainerType'
 GO
 EXEC qest_EnableActivityForQestnet 'ListMaterialCategory'
 GO
-EXEC qest_EnableActivityForQestnet 'WorkProgress'
-GO
 EXEC qest_EnableActivityForQestnet 'WorkTemplates'
 GO
 EXEC qest_EnableActivityForQestnet 'Defaults'

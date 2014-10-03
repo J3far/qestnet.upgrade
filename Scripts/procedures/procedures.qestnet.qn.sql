@@ -1,4 +1,20 @@
 
+-- Procedure for returning work progress rules
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetWorkProgressRules' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_GetWorkProgressRules]
+END
+GO
+
+CREATE PROCEDURE [dbo].[qest_GetWorkProgressRules] @QestID int
+AS
+BEGIN
+	SELECT Stage, PercentComplete, Criteria, Predicate FROM qestWorkProgressRulesByQestID WHERE 
+	NOT Stage IS NULL AND NOT PercentComplete IS NULL AND NOT Criteria IS NULL AND QestID = @QestID
+	ORDER BY Stage
+END
+GO
+
 -- Procedure for returning permission values
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetPermissionMaps' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN

@@ -20,7 +20,7 @@ BEGIN
 	IF EXISTS(SELECT 1 FROM qestReverseLookup WHERE QestUniqueID = 0)
 	BEGIN
 	  declare @list_of_tables nvarchar(4000)
-    select @list_of_tables = substring((select ', ' + convert(nvarchar(8), rl.QestID) + coalesce(' - ' + tn.Value, '')
+      select @list_of_tables = substring((select ', ' + convert(nvarchar(8), rl.QestID) + coalesce(' - ' + tn.Value, '')
       from (select distinct QestID from qestReverseLookup where QestUniqueID = 0) rl
       left join qestObjects tn on rl.QestID = tn.QestID and tn.Property = 'tablename'
       for xml path ('') ), 3, 4000)
@@ -38,6 +38,7 @@ BEGIN
 	You can list them using:
 	  select QestID, QestUniqueID, count(*)
 	  from qestReverseLookup
+	  group by QestID, QestUniqueID
 	  having count(*) > 1
 	', 16, 0, @number_of_duplicates)
 	END

@@ -40,6 +40,11 @@ BEGIN TRY
 	BEGIN
 		INSERT INTO qestObjects (QestID, Property, Value) VALUES (@TestStageQestID, 'TableName', 'TestStageData')
 	END
+	
+	IF NOT EXISTS (SELECT 1 FROM qestObjects WHERE QestID = @TestStageQestID AND Property = 'ActivityParent')
+	BEGIN
+		INSERT INTO qestObjects (QestID, Property, Value) VALUES (@TestStageQestID, 'ActivityParent', '14')
+	END
 
 	IF EXISTS (SELECT 1 FROM qestTestStage WHERE TestStageQestID = @TestStageQestID)
 	BEGIN	
