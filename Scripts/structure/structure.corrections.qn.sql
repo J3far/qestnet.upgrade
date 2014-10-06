@@ -871,3 +871,60 @@ BEGIN
 	ALTER TABLE dbo.TestStageData ADD QestOwnerLabNo int NULL
 END
 GO
+
+-- Correction to data type for suitability rule configuration -- float -> real
+-- Required for some development databases from when the database template was incorrect during early development.
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'DefaultDiameter' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [DefaultDiameter] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'LengthConstant' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [LengthConstant] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'LengthDiameterRatio' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [LengthDiameterRatio] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'MinimumAbsoluteLength' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [MinimumAbsoluteLength] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'MinimumDiameter' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [MinimumDiameter] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'MinimumMass' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [MinimumMass] real null;
+end
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'SuitabilityRuleConfiguration' and column_name = 'TrimmingTolerance' and data_type = 'float')
+begin
+  alter table [dbo].[SuitabilityRuleConfiguration] alter column [TrimmingTolerance] real null;
+end
+GO
+
+
+--Rename column (SamplingDeviceDescription -> SamplingDeviceName)
+if exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'ListSampleLocation' and COLUMN_NAME = 'SamplingDeviceDescription')
+begin
+  if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'ListSampleLocation' and COLUMN_NAME = 'SamplingDeviceName')
+  begin
+    exec sp_rename 'dbo.ListSampleLocation.SamplingDeviceDescription', 'SamplingDeviceName', 'column'
+  end
+  else
+  begin
+    alter table ListSampleLocation drop column SamplingDeviceDescription
+  end
+end
+if exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'ListSamplingDevice' and COLUMN_NAME = 'SamplingDeviceDescription')
+begin
+  if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'ListSamplingDevice' and COLUMN_NAME = 'SamplingDeviceName')
+  begin
+    exec sp_rename 'dbo.ListSamplingDevice.SamplingDeviceDescription', 'SamplingDeviceName', 'column'
+  end
+  else
+  begin
+    alter table ListSamplingDevice drop column SamplingDeviceDescription
+  end
+end

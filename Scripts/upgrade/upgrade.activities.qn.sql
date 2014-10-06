@@ -13,6 +13,8 @@ EXEC qest_EnableActivityForQestnet 'ListProject'
 GO
 EXEC qest_EnableActivityForQestnet 'ListSampleLocation'
 GO
+EXEC qest_EnableActivityForQestnet 'ListSamplingDevice'
+GO
 EXEC qest_EnableActivityForQestnet 'ListContainerType'
 GO
 EXEC qest_EnableActivityForQestnet 'ListMaterialCategory'
