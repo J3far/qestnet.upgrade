@@ -20,6 +20,17 @@ UPDATE BarcodeRegister SET RefQestUUID = R.QestUUID FROM BarcodeRegister B
 INNER JOIN qestReverseLookup R ON B.RefQestID = R.QestID AND B.RefQestUniqueID = R.QestUniqueID
 WHERE B.RefQestUUID IS NULL
 GO
+-- Ensure BarcodeRegister.RefQestUUID is set for documents with a Sample match
+UPDATE BarcodeRegister SET RefQestUUID = S.QestUUID FROM BarcodeRegister B
+INNER JOIN Samples S ON B.RefQestID = S.QestID AND B.RefQestUniqueID = S.QestUniqueID
+WHERE B.RefQestUUID IS NULL
+GO
+-- Ensure BarcodeRegister.RefQestUUID is set for documents with a Person match
+UPDATE BarcodeRegister SET RefQestUUID = P.QestUUID FROM BarcodeRegister B
+INNER JOIN People P ON B.RefQestID = P.QestID AND B.RefQestUniqueID = P.QestUniqueID
+WHERE B.RefQestUUID IS NULL
+GO
+
 
 -- AUDIT TRAIL
 -- For a given QestUUID generate the new-format audit key.  Returns null if the object doesn't exists in qestReverseLookup.
