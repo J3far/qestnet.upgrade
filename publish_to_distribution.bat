@@ -11,7 +11,7 @@ copy ".\QESTNET.Upgrade\QESTNET.Upgrade.UI\App.config.default" ".\temp\QESTNET.U
 copy ".\QESTNET.Upgrade\QESTNET.Upgrade.ScriptWriter.UI\App.config.default" ".\temp\QESTNET.Upgrade.ScriptWriter.UI.exe.config" /Y
 
 @REM  FIXME:  Get the version number automatically
-"C:\Program Files (x86)\7-Zip\7z.exe" a -t7z "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade v1.0.0.4.7z" ".\temp\*"
+"C:\Program Files (x86)\7-Zip\7z.exe" a -t7z "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade v1.0.0.5.7z" ".\temp\*"
 
 rmdir "./temp" /S /Q
 @pause
