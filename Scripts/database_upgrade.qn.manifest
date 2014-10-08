@@ -28,6 +28,7 @@ upgrade/upgrade.documents.qn.sql
 // Procedures
 procedures/procedures.core.qn.sql
 procedures/procedures.triggers.core.qn.sql
+procedures/procedures.triggers.userdocs.qn.sql
 procedures/procedures.qestnet.qn.sql
 procedures/procedures.workflows.qn.sql
 procedures/procedures.test_methods.qn.sql
