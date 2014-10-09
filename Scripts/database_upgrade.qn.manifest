@@ -23,6 +23,8 @@ upgrade/upgrade.work_progress.qn.sql
 structure/structure.tables.qn.sql
 
 // Re-do these to pick up new tables - lazy/slow way of doing this
+upgrade/upgrade.activities.qn.sql
+upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 
 // Procedures
