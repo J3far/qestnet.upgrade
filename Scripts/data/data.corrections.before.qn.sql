@@ -18,7 +18,9 @@ GO
 if exists (select * from information_schema.tables where table_name = 'qestTestStage')
   and exists (select * from information_schema.tables where table_name = 'TestStageData')
 begin
-  DELETE FROM qestTestStage WHERE TestStageQestID NOT IN (SELECT QestID FROM TestStageData)
+  DELETE FROM qestTestStage 
+  WHERE TestStageQestID NOT IN (SELECT QestID FROM TestStageData)
+  AND TestStageQestID NOT IN (SELECT TestStageQestID FROM LTP_PlannedTestStages)
 end
 GO
 
