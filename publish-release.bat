@@ -1,0 +1,13 @@
+
+xcopy ".\Scripts\*" ".\temp\Scripts" /S /I /R /Q /Y
+xcopy ".\Libraries\QESTNET.Upgrade\Release\QESTNET.Upgrade.dll" ".\temp" /R /Q /Y
+xcopy ".\Libraries\QESTNET.Upgrade\Release\QESTNET.Upgrade.UI.exe" ".\temp" /R /Q /Y
+
+copy ".\QESTNET.Upgrade\QESTNET.Upgrade.UI\App.config.default" ".\temp\QESTNET.Upgrade.UI.exe.config" /Y
+
+@REM  FIXME:  Get the version number automatically
+del /Q "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade v1.0.0.7z"
+"C:\Program Files (x86)\7-Zip\7z.exe" a -t7z "\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade v1.0.0.7z" ".\temp\*"
+
+rmdir "./temp" /S /Q
+@pause
