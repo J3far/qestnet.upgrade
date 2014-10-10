@@ -31,7 +31,7 @@ namespace Spectra.QESTNET.Upgrade
 
             this.file = file;
             this.connection = connection;
-            var script = File.ReadAllText(this.file.FullName);
+            var script = File.ReadAllText(this.file.FullName, Encoding.GetEncoding(1252)); // Default Windows ANSI code page (allows cubed etc).
             this.queries = this.regexSplitOnGo.Split(script).Where(q => !string.IsNullOrWhiteSpace(q)).ToArray(); 
         }
 
