@@ -7,6 +7,10 @@ ON UserDocumentBase AFTER INSERT
 AS
   set nocount on
   
+  -- ensure this trigger is only activated by a direct SQL statement, and not by another trigger
+  if trigger_nestlevel() > 1
+    return
+  
   create table #tmpTableSync_Insert
   (
     QestID int null,
@@ -83,7 +87,6 @@ AS
   from
     inserted i
   inner join qestObjects qo_table on qo_table.QestID = i.QestID and qo_table.Property = 'TableName'
-  where isnull(i.SuppressSyncTrigger,0) = 0 and i.QestUUID is not null
     
   declare @sqlexec table
   (
@@ -115,8 +118,7 @@ AS
       QestStatusFlags,
       QestUrgent,
       QestLabNo,
-      QestUUID,
-      SuppressSyncTrigger)
+      QestUUID)
     select QestID,
       QestTier,
       QestParentID,
@@ -137,8 +139,7 @@ AS
       QestStatusFlags,
       QestUrgent,
       QestLabNo,
-      QestUUID,
-      1 as SuppressSyncTrigger
+      QestUUID
     from #tmpTableSync_Insert i
     where not exists (select 1 from ' + TableName + N' u where u.QestUUID = i.QestUUID);'
     , TableName
@@ -149,13 +150,23 @@ AS
 	declare @rowcount int
 	declare @table_name nvarchar(128)
 	declare @sql nvarchar(4000)
+	declare @ident_current_sql nvarchar(500)
+	declare @ident_current int
 	while (select count(*) from @sqlexec s) > 0
-	begin
+	begin	
 	  select top 1 @id = ID, @sql = SQLText, @table_name = TableName from @sqlexec
+	  
+	  set @ident_current_sql = N'select @retval = IDENT_CURRENT(''' + @table_name + N''')'
+    exec sp_executesql @ident_current_sql, N'@retval int OUTPUT', @retval = @ident_current OUTPUT
+	  
 	  exec sp_executesql @sql
 	  set @rowcount = @@ROWCOUNT
-	  set @sql = 'set identity_insert '+ @table_name + N' off;'
+	  set @sql = N'set identity_insert '+ @table_name + N' off;'
 	  exec sp_executesql @sql
+	  
+	  set @sql = N'dbcc checkident (''' + @table_name + ''', RESEED, ' + convert(nvarchar(10), @ident_current) + ')'
+	  exec sp_executesql @sql
+	  
 	  if @rowcount > 0
 	    raiserror(N'Synced table %s from UserDocumentBase, %i records inserted.', 0, 1, @table_name, @rowcount)
 	  delete from @sqlexec where ID = @id
@@ -170,6 +181,10 @@ CREATE TRIGGER TR_UserDocumentBase_TableSync_Update
 ON UserDocumentBase AFTER UPDATE
 AS
   set nocount on
+  
+  -- ensure this trigger is only activated by a direct SQL statement, and not by another trigger
+  if trigger_nestlevel() > 1
+    return
   
   create table #tmpTableSync_Update
   (
@@ -247,7 +262,6 @@ AS
   from 
     inserted i
   inner join qestObjects qo_table on qo_table.QestID = i.QestID and qo_table.Property = 'TableName'
-  where isnull(i.SuppressSyncTrigger,0) = 0 and i.QestUUID is not null
   
   declare @sqlexec table
   (
@@ -277,8 +291,7 @@ AS
       QestStatusFlags = i.QestStatusFlags,
       QestUrgent = i.QestUrgent,
       QestLabNo = i.QestLabNo,
-      QestUUID = i.QestUUID,
-      SuppressSyncTrigger = 1
+      QestUUID = i.QestUUID
     from ' + TableName + ' u
       inner join #tmpTableSync_Update i on i.QestUUID = u.QestUUID',
     TableName
@@ -322,7 +335,6 @@ AS
   from 
     deleted d
   inner join qestObjects qo_table on qo_table.QestID = d.QestID and qo_table.Property = 'TableName'
-  where d.QestUUID is not null
  
   declare @sqlexec table
   (
@@ -413,6 +425,12 @@ select
     set nocount on
     declare @rowcount int
     
+    -- ensure this trigger is only activated by a direct SQL statement, and not by another trigger
+    if trigger_nestlevel() > 1
+      return;
+    
+    set identity_insert UserDocumentBase on;
+    
     insert into UserDocumentBase (
       QestID,
       QestTier,
@@ -434,8 +452,7 @@ select
       QestStatusFlags,
       QestUrgent,
       QestLabNo,
-      QestUUID,
-      SuppressSyncTrigger)
+      QestUUID)
     select
       QestID,
       QestTier,
@@ -457,16 +474,16 @@ select
       QestStatusFlags,
       QestUrgent,
       QestLabNo,
-      QestUUID,
-      1 as SuppressSyncTrigger
+      QestUUID
     from inserted i
     where not exists (select 1 from UserDocumentBase udb where udb.QestUUID = i.QestUUID)
-    and isnull(i.SuppressSyncTrigger, 0) = 0
     and i.QestID between 19000 and 19999
     
     set @rowcount = @@ROWCOUNT
     if @rowcount > 0
-      raiserror(N''Synced table UserDocumentBase from ' + qo_table.Value + ', %i records inserted.'', 0, 1, @rowcount)',
+      raiserror(N''Synced table UserDocumentBase from ' + qo_table.Value + ', %i records inserted.'', 0, 1, @rowcount)
+      
+    set identity_insert UserDocumentBase off;',
   N'IF OBJECT_ID(''TR_' + qo_table.Value + '_TableSync_Update'', ''TR'') IS NOT NULL
 	  DROP TRIGGER TR_' + qo_table.Value + '_TableSync_Update',
   N'CREATE TRIGGER TR_' + qo_table.Value + '_TableSync_Update
@@ -474,6 +491,10 @@ select
   AS
     set nocount on
     declare @rowcount int
+
+    -- ensure this trigger is only activated by a direct SQL statement, and not by another trigger
+    if trigger_nestlevel() > 1
+      return;
 
     update UserDocumentBase
     set QestID = i.QestID,
@@ -495,11 +516,9 @@ select
         QestStatusFlags = i.QestStatusFlags,
         QestUrgent = i.QestUrgent,
         QestLabNo = i.QestLabNo,
-        QestUUID = i.QestUUID,
-        SuppressSyncTrigger = 1
+        QestUUID = i.QestUUID
     from inserted i
     where UserDocumentBase.QestUUID = i.QestUUID 
-    and isnull(i.SuppressSyncTrigger, 0) = 0
     and i.QestID between 19000 and 19999
     
     set @rowcount = @@ROWCOUNT
@@ -521,7 +540,11 @@ select
     set @rowcount = @@ROWCOUNT
     if @rowcount > 0
       raiserror(N''Synced table UserDocumentBase from ' + qo_table.Value + ', %i records deleted.'', 0, 1, @rowcount)',
-  N'insert into UserDocumentBase (
+  N'set identity_insert UserDocumentBase on;
+  
+    disable trigger TR_UserDocumentBase_TableSync_Insert ON UserDocumentBase;
+  
+    insert into UserDocumentBase (
     QestID,
     QestTier,
     QestParentID,
@@ -542,8 +565,7 @@ select
     QestStatusFlags,
     QestUrgent,
     QestLabNo,
-    QestUUID,
-    SuppressSyncTrigger)
+    QestUUID)
   select
     QestID,
     QestTier,
@@ -565,11 +587,15 @@ select
     QestStatusFlags,
     QestUrgent,
     QestLabNo,
-    QestUUID,
-    1 as SuppressSyncTrigger
+    QestUUID
   from ' + qo_table.Value + N' u
   where not exists (select 1 from UserDocumentBase udb where udb.QestUUID = u.QestUUID)
-  and u.QestID between 19000 and 19999',
+  and u.QestID between 19000 and 19999;
+  
+  select @rows = @@rowcount;
+
+  enable trigger TR_UserDocumentBase_TableSync_Insert ON UserDocumentBase;
+  set identity_insert UserDocumentBase off',
   qo_table.Value
 from qestObjects qo_table
 where qo_table.QestID between 19000 and 19999
@@ -608,8 +634,8 @@ begin
   exec sp_executesql @sql_tr_u_create
   exec sp_executesql @sql_tr_d_drop
   exec sp_executesql @sql_tr_d_create
-  exec sp_executesql @sql_insert
-  set @rowcount = @@ROWCOUNT
+  exec sp_executesql @sql_insert, N'@rows int OUTPUT', @rows = @rowcount OUTPUT;
+  
   raiserror(N'Syncing records from table %s to UserDocumentBase, %i records inserted.', 0, 1, @table_name, @rowcount)
   delete from @sqlexec where ID = @id
 end
