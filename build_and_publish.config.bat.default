@@ -1,0 +1,3 @@
+SET buildexe=C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
+SET sevenzipexe=C:\Program Files\7-Zip\7z.exe
+SET publishfolder=\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade

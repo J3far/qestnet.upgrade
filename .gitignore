@@ -4,3 +4,6 @@
 *.backup
 *.bak
 *.orig
+
+#local configuration files
+build_and_publish.config.bat
