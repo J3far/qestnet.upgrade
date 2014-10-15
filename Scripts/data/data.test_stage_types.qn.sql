@@ -469,9 +469,9 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000330, @TestQestID = 110828
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000327, @TestQestID = 110828, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000328, @TestQestID = 110828, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000328 --, @TestQestID = 110828, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000329, @TestQestID = 110828, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_DeleteTestStage @TestStageQestID = 2000329 --, @TestQestID = 110828, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Triaxial UU - Unconsolidated Undrained Compression [BS 1377 Part 7, cl.8]
@@ -491,9 +491,9 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000350, @TestQestID = 110829
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000347, @TestQestID = 110829, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000348, @TestQestID = 110829, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000348 --, @TestQestID = 110829, @Idx = 8, @Code = 'I', @Name = 'Interpretation - Mohr Circle'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000349, @TestQestID = 110829, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
+EXEC qest_DeleteTestStage @TestStageQestID = 2000349 --, @TestQestID = 110829, @Idx = 9, @Code = 'QCI', @Name = 'QC Check on Interpretation', @IsCheckStage = 1
 GO
 
 -- Incremental Oedometer [ASTM D 2435] 

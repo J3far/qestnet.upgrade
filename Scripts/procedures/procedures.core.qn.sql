@@ -64,3 +64,28 @@ BEGIN CATCH
   Error Message: %s
   Procedure: %s', @errSeverity, @errState, @TestStageQestID, @TestQestID, @Idx, @errMessage, @errProcedure);
 END CATCH
+GO
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_DeleteTestStage' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_DeleteTestStage]
+END
+GO
+
+CREATE PROCEDURE [dbo].[qest_DeleteTestStage] 
+	@TestStageQestID int
+AS
+BEGIN TRY
+		DELETE FROM qestObjects WHERE QestID = @TestStageQestID
+		DELETE FROM LTP_PlannedTestStages WHERE TestStageQestID = @TestStageQestID
+		DELETE FROM TestStageData WHERE QestID = @TestStageQestID
+		DELETE FROM qestTestStage WHERE TestStageQestID = @TestStageQestID
+END TRY
+BEGIN CATCH
+  declare @errSeverity int, @errState int, @errProcedure sysname, @errMessage as nvarchar(max)
+  select @errSeverity = ERROR_SEVERITY(), @errState = ERROR_STATE(), @errProcedure = ERROR_PROCEDURE(), @errMessage = ERROR_MESSAGE();
+  raiserror('Failed to delete test stage [TestStageQestID: %d]
+  Error Message: %s
+  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @errMessage, @errProcedure);
+END CATCH
+GO
