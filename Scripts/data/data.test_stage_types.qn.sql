@@ -677,6 +677,15 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000584, @TestQestID = 110911, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Carbonate Content [ASTM D 4373] (110900)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000591, @TestQestID = 110900, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000592, @TestQestID = 110900, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000593, @TestQestID = 110900, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000594, @TestQestID = 110900, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
 
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
