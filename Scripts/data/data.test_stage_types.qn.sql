@@ -687,6 +687,99 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000594, @TestQestID = 110900, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Particle Size Analysis of Soils - Hydrometer [ASTM D 422]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000651, @TestQestID = 110938, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000652, @TestQestID = 110938, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000653, @TestQestID = 110938, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000654, @TestQestID = 110938, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Analysis of Soils - Sieve & Hydrometer [ASTM D 422]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000660, @TestQestID = 110936, @Idx = 0, @Code = 'SM', @Name = 'Selection Methods'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000661, @TestQestID = 110936, @Idx = 1, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000662, @TestQestID = 110936, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000663, @TestQestID = 110936, @Idx = 3, @Code = 'MCWW', @Name = 'Moisture Content Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000664, @TestQestID = 110936, @Idx = 4, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000665, @TestQestID = 110936, @Idx = 5, @Code = 'SACF', @Name = 'Sieve Analysis Coarse Fraction'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000666, @TestQestID = 110936, @Idx = 6, @Code = 'SR', @Name = 'Sedimentation Readings'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000667, @TestQestID = 110936, @Idx = 7, @Code = 'SAFF', @Name = 'Sieve Analysis Fine Fraction'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000668, @TestQestID = 110936, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000669, @TestQestID = 110936, @Idx = 9, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Analysis of Soils [ASTM D 422 - 07]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000670, @TestQestID = 110935, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000671, @TestQestID = 110935, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000672, @TestQestID = 110935, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000673, @TestQestID = 110935, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Distribution - Dry Method [BS 1377-2: 1990 cl 9.3]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000681, @TestQestID = 110933, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000682, @TestQestID = 110933, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000683, @TestQestID = 110933, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000684, @TestQestID = 110933, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Distribution - Hydrometer [BS 1377-2: 1990 cl 9.5]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000691, @TestQestID = 110931, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000692, @TestQestID = 110931, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000693, @TestQestID = 110931, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000694, @TestQestID = 110931, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Distribution - Sieving Method [NEN-EN 933-1]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000701, @TestQestID = 110934, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000702, @TestQestID = 110934, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000703, @TestQestID = 110934, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000704, @TestQestID = 110934, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Distribution - Wet Method [BS 1377-2: 1990 cl 9.2]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000711, @TestQestID = 110930, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000712, @TestQestID = 110930, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000713, @TestQestID = 110930, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000714, @TestQestID = 110930, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Sieve Analysis [ASTM D 6913]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000721, @TestQestID = 110937, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000722, @TestQestID = 110937, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000723, @TestQestID = 110937, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000724, @TestQestID = 110937, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
