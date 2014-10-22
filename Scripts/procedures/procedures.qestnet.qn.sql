@@ -305,7 +305,7 @@ BEGIN
 		FROM Laboratory l1
 			INNER JOIN Laboratory l2 ON (l1.Lft BETWEEN l2.Lft AND l2.Rgt)
 		WHERE l1.QestUniqueID = @LocationID
-	) L ON L.LocationID = O.LocationID
+	) L ON L.LocationID = O.LocationID OR (O.LocationID IS NULL AND L.Lvl = 1)
 	WHERE O.OptionName = @Name AND (ISNULL(O.QestID, 0) = @QestID) 
 	ORDER BY L.Lvl DESC
 END
