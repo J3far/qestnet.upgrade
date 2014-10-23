@@ -779,6 +779,17 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000724, @TestQestID = 110937, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Fallcone
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000731, @TestQestID = 110901, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000732, @TestQestID = 110901, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000733, @TestQestID = 110901, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000734, @TestQestID = 110901, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+
 
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
