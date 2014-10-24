@@ -908,7 +908,53 @@ GO
 -- EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000791, @TestQestID = 110903, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 -- GO
 
+-- Liquid Limit
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000801, @TestQestID = 111000, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000802, @TestQestID = 111000, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000803, @TestQestID = 111000, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000804, @TestQestID = 111000, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000805, @TestQestID = 111000, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
 
+-- Plastic Limit
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000811, @TestQestID = 111001, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000812, @TestQestID = 111001, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000813, @TestQestID = 111001, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000814, @TestQestID = 111001, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000815, @TestQestID = 111001, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Liquid Limit CP
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000821, @TestQestID = 111002, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000822, @TestQestID = 111002, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000823, @TestQestID = 111002, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000824, @TestQestID = 111002, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000825, @TestQestID = 111002, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Plastic Limit CP
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000831, @TestQestID = 111003, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000832, @TestQestID = 111003, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000833, @TestQestID = 111003, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000834, @TestQestID = 111003, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000835, @TestQestID = 111003, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
 
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
@@ -916,4 +962,4 @@ BEGIN
 	ALTER TABLE [dbo].[qestTestStage] ADD CONSTRAINT [IX_qestTestStage_TestQestID_Idx] UNIQUE ([TestQestID],[Idx])
 END
 GO
-
+ 
