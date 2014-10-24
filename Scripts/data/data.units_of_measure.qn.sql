@@ -96,6 +96,12 @@ exec dbo.qest_AddUnitOfMeasure @quantity = 'ratio', @code = @permilleSymbol, @sl
 exec dbo.qest_AddUnitOfMeasure @quantity = 'ratio', @code = @permyriadSymbol, @slope = 0.0001, @description = 'parts per ten thousand  (permyriad)';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'ratio', @code = 'ppm', @slope = 0.000001, @description = 'parts per million';
 
+--Miscellanous units of measure -- these are NOT units of measure for the same quantity, so be careful when converting from one unit in this group to another.
+exec dbo.qest_AddUnitOfMeasure @quantity = 'miscellaneous', @code = 'm²/yr', @slope = 0.0000000317097919837645865043125, @description = 'Coefficient of Consolidation (m²/yr)';       -- 1 / 31536000
+exec dbo.qest_AddUnitOfMeasure @quantity = 'miscellaneous', @code = 'ft²/yr', @slope = 0.0000000002945936073059360730593607, @description = 'Coefficient of Consolidation (ft²/yr)';  -- (0.3048 * 0.3048) / 31536000
+exec dbo.qest_AddUnitOfMeasure @quantity = 'miscellaneous', @code = 'm²/MN', @slope = 0.000001, @description = 'Coefficient of Volume Compressibility (m²/MN)';                       -- 1 / 1000000
+exec dbo.qest_AddUnitOfMeasure @quantity = 'miscellaneous', @code = 'ft²/lbf', @slope = 0.020885434233150126982210, @description = 'Coefficient of Compressibility (ft²/lbf)';        -- (0.3048 * 0.3048) / (0.45359237 * 9.80665)
+
 GO
 
 /*

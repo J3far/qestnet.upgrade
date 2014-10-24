@@ -931,3 +931,10 @@ begin
     alter table ListSamplingDevice drop column SamplingDeviceDescription
   end
 end
+
+-- Bad particle density field fix :-D
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentParticleDensity' and column_name = 'ContainerCode' and data_type = 'real')
+begin
+  alter table [dbo].DocumentParticleDensity alter column ContainerCode nvarchar(15) null;
+end
+go
