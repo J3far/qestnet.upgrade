@@ -761,6 +761,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000682, @TestQestID = 110933
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000683, @TestQestID = 110933, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000684
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000685, @TestQestID = 110933, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000686, @TestQestID = 110933, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -770,6 +772,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000691, @TestQestID = 110931, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000692, @TestQestID = 110931, @Idx = 1, @Code = 'P', @Name = 'Preparation'
+GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000693
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000694, @TestQestID = 110931, @Idx = 2, @Code = 'SR', @Name = 'Sedimentation Readings'
 GO
@@ -785,6 +789,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000702, @TestQestID = 110934
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000703, @TestQestID = 110934, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000704
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000705, @TestQestID = 110934, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000706, @TestQestID = 110934, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -797,6 +803,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000712, @TestQestID = 110930
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000713, @TestQestID = 110930, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000714
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000715, @TestQestID = 110930, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000716, @TestQestID = 110930, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -808,6 +816,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000722, @TestQestID = 110937, @Idx = 1, @Code = 'P', @Name = 'Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000723, @TestQestID = 110937, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
+GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000724
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000725, @TestQestID = 110937, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
@@ -824,7 +834,41 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000734, @TestQestID = 110901, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Unconfined Compressive Strength [ASTM D 2166]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000741, @TestQestID = 110912, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000742, @TestQestID = 110912, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000743, @TestQestID = 110912, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000744, @TestQestID = 110912, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000745, @TestQestID = 110912, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000746, @TestQestID = 110912, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000747, @TestQestID = 110912, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000748, @TestQestID = 110912, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
 
+-- Unconfined Compressive Strength [BS 1377-7: 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000751, @TestQestID = 110914, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000752, @TestQestID = 110914, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000753, @TestQestID = 110914, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000754, @TestQestID = 110914, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000755, @TestQestID = 110914, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000756, @TestQestID = 110914, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000757, @TestQestID = 110914, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000758, @TestQestID = 110914, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
 
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
