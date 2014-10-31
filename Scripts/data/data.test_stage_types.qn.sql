@@ -870,6 +870,26 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000758, @TestQestID = 110914, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
 GO
 
+-- Organic Content by Ignition [ASTM D 2974]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000761, @TestQestID = 110906, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000762, @TestQestID = 110906, @Idx = 1, @Code = 'O', @Name = 'Organic Matter'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000763, @TestQestID = 110906, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000764, @TestQestID = 110906, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Organic Content by Ignition [BS 1377-3: 1990 cl 4]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000771, @TestQestID = 110907, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000772, @TestQestID = 110907, @Idx = 1, @Code = 'O', @Name = 'Organic Matter'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000773, @TestQestID = 110907, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000774, @TestQestID = 110907, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
