@@ -890,23 +890,28 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000774, @TestQestID = 110907, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
-
 -- Laboratory Vane [ASTM D 4648 - 2005] (110902)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000781, @TestQestID = 110902, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
--- EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000781, @TestQestID = 110902, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
--- GO
--- EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000781, @TestQestID = 110902, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
--- GO
-
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000782, @TestQestID = 110902, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000783, @TestQestID = 110902, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000788, @TestQestID = 110902, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000789, @TestQestID = 110902, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
 
 -- Laboratory Vane [BS 1377-7: 1990 cl 3] (110903)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000791, @TestQestID = 110903, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
--- EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000791, @TestQestID = 110903, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
--- GO
--- EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000791, @TestQestID = 110903, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
--- GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000792, @TestQestID = 110903, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000793, @TestQestID = 110903, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000798, @TestQestID = 110903, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000799, @TestQestID = 110903, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 
 -- Liquid Limit
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000801, @TestQestID = 111000, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
@@ -956,10 +961,23 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000835, @TestQestID = 111003, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Shear Strength Moisture Content (111106)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000841, @TestQestID = 111106, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000842, @TestQestID = 111106, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000843, @TestQestID = 111106, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000844, @TestQestID = 111106, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000845, @TestQestID = 111106, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
 	ALTER TABLE [dbo].[qestTestStage] ADD CONSTRAINT [IX_qestTestStage_TestQestID_Idx] UNIQUE ([TestQestID],[Idx])
 END
 GO
- 
+
