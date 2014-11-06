@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="SetVersion;RebuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks" />
+
+  <Target Name="RebuildAll">
+    <MSBuild 
+      Projects="
+        $(MSBuildProjectDirectory)\QESTNET.Upgrade\QESTNET.Upgrade.csproj;
+        $(MSBuildProjectDirectory)\QESTNET.Upgrade.UI\QESTNET.Upgrade.UI.csproj;
+        $(MSBuildProjectDirectory)\QESTNET.Upgrade.ScriptWriter\QESTNET.Upgrade.ScriptWriter.csproj;
+        $(MSBuildProjectDirectory)\QESTNET.Upgrade.ScriptWriter.UI\QESTNET.Upgrade.ScriptWriter.UI.csproj;
+      "
+      Targets="Clean;Build"
+      Properties="OutputPath=$(MSBuildProjectDirectory)\bin\$(Configuration)" />
+  </Target>
+  
+  <!-- Setting Version Number - install: ..\Libraries\MSBuild.Community.Tasks\MSBuild.Community.Tasks.v1.4.0.78.msi -->
+  <ItemGroup>
+    <AssemblyVersionFiles Include="$(MSBuildProjectDirectory)\**\AssemblyVersion.cs" />
+  </ItemGroup>
+
+  <Target Name="SetVersion" 
+          Inputs="@(AssemblyVersionFiles)" 
+          Outputs="UpdatedAssemblyVersionFiles">
+
+    <AssemblyInfo CodeLanguage="CS" 
+                  AssemblyVersion="$(MajorVersion).$(MinorVersion).$(BuildVersion)" 
+                  AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(BuildVersion).$(RevisionVersion)" 
+                  OutputFile="%(AssemblyVersionFiles.FullPath)">
+        <Output TaskParameter="OutputFile" 
+                ItemName="UpdatedAssemblyVersionFiles" />
+    </AssemblyInfo>
+  </Target>
+
+
+  <Target Name="Publish">
+
+    <PropertyGroup>
+      <PublishToDirectory>$(MSBuildProjectDirectory)\..\Libraries\QESTNET.Upgrade\v$(MajorVersion).$(MinorVersion).$(BuildVersion).$(RevisionVersion)\$(Configuration)</PublishToDirectory>
+    </PropertyGroup>
+    
+    <Copy
+	  OverwriteReadOnlyFiles="True"
+      SourceFiles="
+        $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.dll;
+        $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.UI.exe;
+        $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.dll;
+        $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.UI.exe;
+      "    
+      DestinationFolder="$(PublishToDirectory)" />
+  </Target>
+  
+</Project>
