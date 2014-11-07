@@ -938,3 +938,21 @@ begin
   alter table [dbo].DocumentParticleDensity alter column ContainerCode nvarchar(15) null;
 end
 go
+
+-- Remove the old laboratory vane table (created in advance for fugro) if it exists
+if (exists(select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'DocumentLaboratoryVane'))
+begin
+	begin transaction;
+		declare @docs table (uuid uniqueidentifier);
+
+		insert into @docs (uuid)
+		select QestUUID
+		from DocumentLaboratoryVane;
+
+		delete from DocumentLaboratoryVane;
+		delete from qestReportMapping where TestQestUUID in (select uuid from @docs);
+		delete from qestReverseLookup where QestUUID in (select uuid from @docs);
+		
+		drop table DocumentLaboratoryVane;
+	commit transaction;
+end

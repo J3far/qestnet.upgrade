@@ -761,6 +761,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000682, @TestQestID = 110933
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000683, @TestQestID = 110933, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000684
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000685, @TestQestID = 110933, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000686, @TestQestID = 110933, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -770,6 +772,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000691, @TestQestID = 110931, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000692, @TestQestID = 110931, @Idx = 1, @Code = 'P', @Name = 'Preparation'
+GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000693
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000694, @TestQestID = 110931, @Idx = 2, @Code = 'SR', @Name = 'Sedimentation Readings'
 GO
@@ -785,6 +789,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000702, @TestQestID = 110934
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000703, @TestQestID = 110934, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000704
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000705, @TestQestID = 110934, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000706, @TestQestID = 110934, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -797,6 +803,8 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000712, @TestQestID = 110930
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000713, @TestQestID = 110930, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000714
+GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000715, @TestQestID = 110930, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000716, @TestQestID = 110930, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
@@ -808,6 +816,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000722, @TestQestID = 110937, @Idx = 1, @Code = 'P', @Name = 'Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000723, @TestQestID = 110937, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
+GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000724
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000725, @TestQestID = 110937, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
@@ -822,6 +832,157 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000733, @TestQestID = 110901, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000734, @TestQestID = 110901, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Unconfined Compressive Strength [ASTM D 2166]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000741, @TestQestID = 110912, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000742, @TestQestID = 110912, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000743, @TestQestID = 110912, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000744, @TestQestID = 110912, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000745, @TestQestID = 110912, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000746, @TestQestID = 110912, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000747, @TestQestID = 110912, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000748, @TestQestID = 110912, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+
+-- Unconfined Compressive Strength [BS 1377-7: 1990]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000751, @TestQestID = 110914, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000752, @TestQestID = 110914, @Idx = 1, @Code = 'P', @Name = 'Preparation & Initial water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000753, @TestQestID = 110914, @Idx = 2, @Code = 'IWC', @Name = 'Initial water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000754, @TestQestID = 110914, @Idx = 3, @Code = 'SH', @Name = 'Shearing'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000755, @TestQestID = 110914, @Idx = 4, @Code = 'F', @Name = 'Specimen Failure/Final water content wet weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000756, @TestQestID = 110914, @Idx = 5, @Code = 'FWC', @Name = 'Final water content dry weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000757, @TestQestID = 110914, @Idx = 6, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000758, @TestQestID = 110914, @Idx = 7, @Code = 'QCT', @Name = 'QC Check on Entirety of Test', @IsCheckStage = 1
+GO
+
+-- Organic Content by Ignition [ASTM D 2974]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000761, @TestQestID = 110906, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000762, @TestQestID = 110906, @Idx = 1, @Code = 'O', @Name = 'Organic Matter'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000763, @TestQestID = 110906, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000764, @TestQestID = 110906, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Organic Content by Ignition [BS 1377-3: 1990 cl 4]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000771, @TestQestID = 110907, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000772, @TestQestID = 110907, @Idx = 1, @Code = 'O', @Name = 'Organic Matter'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000773, @TestQestID = 110907, @Idx = 2, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000774, @TestQestID = 110907, @Idx = 3, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Laboratory Vane [ASTM D 4648 - 2005] (110902)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000781, @TestQestID = 110902, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000782, @TestQestID = 110902, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000783, @TestQestID = 110902, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000788, @TestQestID = 110902, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000789, @TestQestID = 110902, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Laboratory Vane [BS 1377-7: 1990 cl 3] (110903)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000791, @TestQestID = 110903, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000792, @TestQestID = 110903, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000793, @TestQestID = 110903, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000798, @TestQestID = 110903, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000799, @TestQestID = 110903, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+
+-- Liquid Limit
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000801, @TestQestID = 111000, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000802, @TestQestID = 111000, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000803, @TestQestID = 111000, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000804, @TestQestID = 111000, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000805, @TestQestID = 111000, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Plastic Limit
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000811, @TestQestID = 111001, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000812, @TestQestID = 111001, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000813, @TestQestID = 111001, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000814, @TestQestID = 111001, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000815, @TestQestID = 111001, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Liquid Limit CP
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000821, @TestQestID = 111002, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000822, @TestQestID = 111002, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000823, @TestQestID = 111002, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000824, @TestQestID = 111002, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000825, @TestQestID = 111002, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Plastic Limit CP
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000831, @TestQestID = 111003, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000832, @TestQestID = 111003, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000833, @TestQestID = 111003, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000834, @TestQestID = 111003, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000835, @TestQestID = 111003, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Shear Strength Moisture Content (111106)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000841, @TestQestID = 111106, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000842, @TestQestID = 111106, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000843, @TestQestID = 111106, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000844, @TestQestID = 111106, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000845, @TestQestID = 111106, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Maximum Dry Density Specimen
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000851, @TestQestID = 111221, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000852, @TestQestID = 111221, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000853, @TestQestID = 111221, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000854, @TestQestID = 111221, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000855, @TestQestID = 111221, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 

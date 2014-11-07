@@ -319,14 +319,14 @@
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // generateStructureScriptsToolStripMenuItem
             // 
             this.generateStructureScriptsToolStripMenuItem.Name = "generateStructureScriptsToolStripMenuItem";
-            this.generateStructureScriptsToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.generateStructureScriptsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.generateStructureScriptsToolStripMenuItem.Text = "Script Writer";
             this.generateStructureScriptsToolStripMenuItem.Click += new System.EventHandler(this.generateStructureScriptsToolStripMenuItem_Click);
             // 
