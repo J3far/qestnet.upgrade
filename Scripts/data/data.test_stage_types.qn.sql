@@ -986,41 +986,41 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000855, @TestQestID = 111221
 GO
 
 -- Incremental Oedometer Pocket Penetrometer 
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000861, @TestQestID = 111040, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000861 -- , @TestQestID = 111040, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000862, @TestQestID = 111040, @Idx = 1, @Code = 'M', @Name = 'Measurement'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000863, @TestQestID = 111040, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000863 -- , @TestQestID = 111040, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000864, @TestQestID = 111040, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Incremental Oedometer Triaxial Torvane
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000871, @TestQestID = 111041, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000871 -- , @TestQestID = 111041, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000872, @TestQestID = 111041, @Idx = 1, @Code = 'M', @Name = 'Measurement'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000873, @TestQestID = 111041, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000873 -- , @TestQestID = 111041, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000874, @TestQestID = 111041, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Triaxial Pocket Penetrometer 
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000881, @TestQestID = 111042, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000881 -- , @TestQestID = 111042, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000882, @TestQestID = 111042, @Idx = 1, @Code = 'M', @Name = 'Measurement'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000883, @TestQestID = 111042, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000883 -- , @TestQestID = 111042, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000884, @TestQestID = 111042, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Triaxial Torvane
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000891, @TestQestID = 111043, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000891 -- , @TestQestID = 111043, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000892, @TestQestID = 111043, @Idx = 1, @Code = 'M', @Name = 'Measurement'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000893, @TestQestID = 111043, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000893 -- , @TestQestID = 111043, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000894, @TestQestID = 111043, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
