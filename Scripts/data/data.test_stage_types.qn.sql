@@ -30,8 +30,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000015, @TestQestID = 110941, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits [BS 1377-2: 1990 cl 4.6]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000021, @TestQestID = 110942, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid Limit - One Point Casagrande [BS 1377-2: 1990 cl 4.6] (110942)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000021, @TestQestID = 110942, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000022, @TestQestID = 110942, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
@@ -46,8 +46,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000027, @TestQestID = 110942, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits [BS 1377-2: 1990 cl 4.5]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000031, @TestQestID = 110943, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid Limit - Casagrande [BS 1377-2: 1990 cl 4.5] (110943)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000031, @TestQestID = 110943, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000032, @TestQestID = 110943, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
@@ -62,8 +62,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000037, @TestQestID = 110943, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits CP [BS 1377-2: 1990 cl 4.3]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000041, @TestQestID = 110944, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid Limit - Cone Penetrometer [BS 1377-2: 1990 cl 4.3] (110944)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000041, @TestQestID = 110944, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000042, @TestQestID = 110944, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
@@ -78,8 +78,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000047, @TestQestID = 110944, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits CP [BS 1377-2: 1990 cl 4.4]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000051, @TestQestID = 110945, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid Limit - One Point Cone Penetrometer [BS 1377-2: 1990 cl 4.4] (110945)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000051, @TestQestID = 110945, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000052, @TestQestID = 110945, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
@@ -94,8 +94,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000057, @TestQestID = 110945, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits [ASTM D 4318]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000061, @TestQestID = 110946, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid & Plastic Limit (Multi-point – Method A) [ASTM D 4318] (110946)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000061, @TestQestID = 110946, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000062, @TestQestID = 110946, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
@@ -110,8 +110,8 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000067, @TestQestID = 110946, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
--- Atterberg Limits [ASTM D 4318 B]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000071, @TestQestID = 110947, @Idx = 0, @Code = 'P', @Name = 'Preparation'
+-- Liquid & Plastic Limit (One-point – Method B) [ASTM D 4318] (110947)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000071, @TestQestID = 110947, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000072, @TestQestID = 110947, @Idx = 1, @Code = 'LLWW', @Name = 'Liquid Limit Wet Weights'
 GO
