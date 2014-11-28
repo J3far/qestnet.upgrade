@@ -81,3 +81,11 @@ UPDATE AuditTrail SET ObjectKey = RIGHT('00000000' + CAST(QestID As nvarchar(12)
 WHERE ObjectKey IS NULL AND ObjectQestUUID IS NOT NULL
 GO
 
+-- Samples.SampleType
+if exists(select * from Samples where SampleType is null)
+begin
+  update Samples set Disturbed = 0 where Disturbed is null;
+  update Samples set SampleType = 0 where Disturbed = 0 and (SampleType is null or SampleType <> 0);
+  update Samples set SampleType = 1 where Disturbed = 1 and (SampleType is null or SampleType = 0);
+end
+GO

@@ -76,16 +76,19 @@ CREATE PROCEDURE [dbo].[qest_DeleteTestStage]
 	@TestStageQestID int
 AS
 BEGIN TRY
+		BEGIN TRANSACTION
 		DELETE FROM qestObjects WHERE QestID = @TestStageQestID
 		DELETE FROM LTP_PlannedTestStages WHERE TestStageQestID = @TestStageQestID
 		DELETE FROM TestStageData WHERE QestID = @TestStageQestID
 		DELETE FROM qestTestStage WHERE TestStageQestID = @TestStageQestID
+		COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
-  declare @errSeverity int, @errState int, @errProcedure sysname, @errMessage as nvarchar(max)
-  select @errSeverity = ERROR_SEVERITY(), @errState = ERROR_STATE(), @errProcedure = ERROR_PROCEDURE(), @errMessage = ERROR_MESSAGE();
-  raiserror('Failed to delete test stage [TestStageQestID: %d]
-  Error Message: %s
-  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @errMessage, @errProcedure);
+	  ROLLBACK TRANSACTION
+	  declare @errSeverity int, @errState int, @errProcedure sysname, @errMessage as nvarchar(max)
+	  select @errSeverity = ERROR_SEVERITY(), @errState = ERROR_STATE(), @errProcedure = ERROR_PROCEDURE(), @errMessage = ERROR_MESSAGE();
+	  raiserror('Failed to delete test stage [TestStageQestID: %d]
+	  Error Message: %s
+	  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @errMessage, @errProcedure);
 END CATCH
 GO
