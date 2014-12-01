@@ -18,7 +18,7 @@
     <!-- Set the version in the script manifest -->
     <FileUpdate
       Files="$(MSBuildProjectDirectory)\Scripts\database_upgrade.qn.manifest"
-      Regex="^#.*$"
+      Regex="#(\d+)\.(\d+)\.(\d+)"
       ReplacementText="#$(MajorVersion).$(MinorVersion).$(BuildVersion)"
       Multiline="true"
     />
