@@ -1025,6 +1025,17 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000894, @TestQestID = 111043, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Maximum Index Density
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000901, @TestQestID = 110924, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000902, @TestQestID = 110924, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000903, @TestQestID = 110924, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000904, @TestQestID = 110924, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000905, @TestQestID = 110924, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
 
 
 -- Restore uniqueness constraint
