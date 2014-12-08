@@ -65,11 +65,14 @@ BEGIN
 		-- UPDATE
 		DECLARE @PrevLength int
 		DECLARE @PrevTypeName nvarchar(128)	
-		SELECT @PrevLength = CHARACTER_MAXIMUM_LENGTH, @PrevTypeName = DATA_TYPE
+		DECLARE @PrevNullable nvarchar(12)	
+		
+		SELECT @PrevLength = CHARACTER_MAXIMUM_LENGTH, @PrevTypeName = DATA_TYPE,
+		@PrevNullable = CASE IS_NULLABLE WHEN 'YES' THEN 'NULL' ELSE 'NOT NULL' END
 		FROM INFORMATION_SCHEMA.TABLES T
 		INNER JOIN INFORMATION_SCHEMA.COLUMNS C ON T.TABLE_NAME = C.TABLE_NAME
 		WHERE T.TABLE_NAME = @TableName AND C.COLUMN_NAME = @ColumnName
-
+		
 		-- Only includes length extensions and changes TO nullable
 		IF (@TypeName = @PrevTypeName AND ISNULL(@Length,0) > ISNULL(@PrevLength,0))
 		BEGIN
@@ -77,10 +80,10 @@ BEGIN
 			BEGIN
 				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' NULL'	
 			END ELSE BEGIN
-				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL	
+				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' ' + @PrevNullable	
 			END						
 		END
-			
+
 		EXEC(@SQL)
 		EXEC qest_SetDefault @TableName, @ColumnName, @DefaultValue
 			
