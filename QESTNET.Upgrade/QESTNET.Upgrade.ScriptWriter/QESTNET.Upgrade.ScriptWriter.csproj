@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="ForeignKeysScriptWriter.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
+    <Compile Include="QestObjectsScriptWriter.cs" />
     <Compile Include="ScriptWriterBase.cs" />
     <Compile Include="TableStructureScriptWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
