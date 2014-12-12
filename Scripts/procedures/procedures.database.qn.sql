@@ -38,7 +38,6 @@ end
 
 if @sql_to_execute <> ''
 begin
-  print @sql_to_execute;
   exec sp_executesql @sql_to_execute;
 end
 GO
