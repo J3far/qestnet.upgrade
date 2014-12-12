@@ -64,10 +64,10 @@ GO
 -- Set UUID for Object if we can figure it out - only applied to QF2/QF3 audit rows which had a ObjectQestUniqueID column
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AuditTrail' AND COLUMN_NAME = 'ObjectQestUniqueID')
 BEGIN 
-	UPDATE A SET ObjectQestUUID = R.QestUUID 
+	EXEC('UPDATE A SET ObjectQestUUID = R.QestUUID 
 	FROM AuditTrail A 
 	INNER JOIN qestReverseLookup R ON R.QestID = A.QestID AND R.QestUniqueID = A.ObjectQestUniqueID 
-	WHERE A.ObjectQestUUID IS NULL
+	WHERE A.ObjectQestUUID IS NULL')
 END
 GO
 

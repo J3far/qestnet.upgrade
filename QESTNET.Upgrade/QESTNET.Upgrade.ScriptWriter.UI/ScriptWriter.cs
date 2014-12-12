@@ -18,6 +18,7 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
     {
         private readonly string connectionString;
         private string filePath;
+        private string qestlabQesPath;
         private CancellationTokenSource cancelWrite;
         private Configuration config;
         private List<Task> tasks;
@@ -33,6 +34,9 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
 
             var utsp = this.config.AppSettings.Settings["upgradeScriptPath"];
             this.SetOutputPath(utsp == null? null : utsp.Value);
+
+            var qesPath = this.config.AppSettings.Settings["qestlabQesPath"];
+            this.SetQestlabQesPath(qesPath == null ? null : qesPath.Value);
         }
 
         private void buttonWrite_Click(object sender, EventArgs e)
@@ -54,6 +58,9 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
 
             if (fksToolStripMenuItem.Checked)
                 writers.Add(new ForeignKeysScriptWriter(this.connectionString, this.filePath + "\\structure\\structure.foreignkeys.qn.sql"));
+
+            if (qestObjectsToolStripMenuItem.Checked)
+                writers.Add(new QestObjectsScriptWriter(this.qestlabQesPath, this.filePath + @"\data\data.object_types.qn.sql", Path.Combine(Path.GetDirectoryName(this.qestlabQesPath), "QESTLabObjects.sql")));
 
             if (writers.Count() == 0)
                 return;
@@ -149,6 +156,17 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             this.config.Save();
         }
 
+        private void SetQestlabQesPath(string path)
+        {
+            this.qestlabQesPath = path;
+            txtQestlabQesPath.Text = path;
+
+            // Save path to config
+            this.config.AppSettings.Settings.Remove("qestlabQesPath");
+            this.config.AppSettings.Settings.Add("qestlabQesPath", this.qestlabQesPath);
+            this.config.Save();
+        }
+
         private void buttonOutputPath_Click(object sender, EventArgs e)
         {
             var fbd = new FolderBrowserDialog()
@@ -187,6 +205,21 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter.UI
             File.Copy(ofd.FileName, path, true);
 
             this.FeedbackWriteLine("Written: data\\data.object_types.qn.sql");
+        }
+
+        private void buttonQestlabQes_Click(object sender, EventArgs e)
+        {
+            var ofd = new OpenFileDialog()
+            {
+                Title = "Select QESTLab.qes source file",
+                Filter = "QESTLab.qes (QESTLab.qes)|QESTLab.qes",
+                InitialDirectory = Path.GetDirectoryName(qestlabQesPath)
+            };
+
+            if (ofd.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            SetQestlabQesPath(ofd.FileName);
         }
 
     }

@@ -8,25 +8,40 @@ BEGIN
 END
 GO
 
-ALTER PROCEDURE dbo.qest_SetDefault(@TableName nvarchar(128), @ColumnName nvarchar(128), @DefaultValue nvarchar(128))
-AS
-BEGIN
-	DECLARE @DefaultName nvarchar(300)
-	SET @DefaultName = 'DF_' + @TableName + '_' + @ColumnName
-	
-	-- Remove existing
-	IF EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = @DefaultName)	
-	BEGIN 
-		EXEC('ALTER TABLE [' + @TableName + '] DROP CONSTRAINT [' + @DefaultName +']')
-	END 
-	
-	-- Add if non-null value
-	IF (NOT @DefaultValue IS NULL)
-	BEGIN
-		EXEC('ALTER TABLE [' + @TableName + '] ADD CONSTRAINT [' + @DefaultName + '] DEFAULT ' + @DefaultValue + ' FOR [' + @ColumnName + ']')
-	END	
-END
+alter procedure dbo.qest_SetDefault(@TableName nvarchar(128), @ColumnName nvarchar(128), @DefaultValue nvarchar(128))
+as
+set nocount on;
+declare @existingDefaultName sysname, @existingDefaultValue nvarchar(max), @defaultName sysname, @sql_to_execute nvarchar(max);
+
+select @existingDefaultName = d.name, @existingDefaultValue = d.definition
+  from sys.default_constraints d
+  inner join sys.columns c on c.object_id = d.parent_object_id and c.column_id = d.parent_column_id
+  where parent_object_id = object_id('[dbo].' + QUOTENAME(@tableName), N'U') and c.name = @columnName
+
+set @defaultName = 'DF_' + @tableName + '_' + @columnName;
+
+if @existingDefaultName = @defaultName and @existingDefaultValue = coalesce(@defaultValue, '')
+begin
+  --nothing to do
+  return 0;
+end
+select CHAR(13) + CHAR(10)
+set @sql_to_execute = '';
+if @existingDefaultName is not null
+begin
+  set @sql_to_execute = @sql_to_execute + 'alter table [dbo].' + quotename(@tableName) + ' drop constraint ' + quotename(@existingDefaultName) + ';' + CHAR(13) + CHAR(10);
+end
+if @defaultValue is not null
+begin
+  set @sql_to_execute = @sql_to_execute + 'alter table [dbo].' + quotename(@tableName) + ' add constraint ' + quotename(@defaultName) + ' default ' + @defaultValue + ' for ' + quotename(@columnName) + ';' + CHAR(13) + CHAR(10);
+end
+
+if @sql_to_execute <> ''
+begin
+  exec sp_executesql @sql_to_execute;
+end
 GO
+
 
 -------------------------------------------------
 -- qest_InsertUpdateColumn function
@@ -65,11 +80,14 @@ BEGIN
 		-- UPDATE
 		DECLARE @PrevLength int
 		DECLARE @PrevTypeName nvarchar(128)	
-		SELECT @PrevLength = CHARACTER_MAXIMUM_LENGTH, @PrevTypeName = DATA_TYPE
+		DECLARE @PrevNullable nvarchar(12)	
+		
+		SELECT @PrevLength = CHARACTER_MAXIMUM_LENGTH, @PrevTypeName = DATA_TYPE,
+		@PrevNullable = CASE IS_NULLABLE WHEN 'YES' THEN 'NULL' ELSE 'NOT NULL' END
 		FROM INFORMATION_SCHEMA.TABLES T
 		INNER JOIN INFORMATION_SCHEMA.COLUMNS C ON T.TABLE_NAME = C.TABLE_NAME
 		WHERE T.TABLE_NAME = @TableName AND C.COLUMN_NAME = @ColumnName
-
+		
 		-- Only includes length extensions and changes TO nullable
 		IF (@TypeName = @PrevTypeName AND ISNULL(@Length,0) > ISNULL(@PrevLength,0))
 		BEGIN
@@ -77,10 +95,10 @@ BEGIN
 			BEGIN
 				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' NULL'	
 			END ELSE BEGIN
-				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL	
+				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' ' + @PrevNullable	
 			END						
 		END
-			
+
 		EXEC(@SQL)
 		EXEC qest_SetDefault @TableName, @ColumnName, @DefaultValue
 			

@@ -711,7 +711,7 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000658, @TestQestID = 110938
 GO
 
 -- Particle Size Analysis of Soils - Sieve & Hydrometer [ASTM D 422]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000660, @TestQestID = 110936, @Idx = 0, @Code = 'SM', @Name = 'Selection Methods'
+EXEC qest_DeleteTestStage @TestStageQestID = 2000660 -- @TestQestID = 110936, @Idx = 0, @Code = 'SM', @Name = 'Selection Methods'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000661, @TestQestID = 110936, @Idx = 1, @Code = 'MP', @Name = 'Material Preparation'
 GO

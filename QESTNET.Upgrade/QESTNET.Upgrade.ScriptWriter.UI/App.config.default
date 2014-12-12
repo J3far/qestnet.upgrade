@@ -6,6 +6,7 @@
 
   <appSettings>
     <add key="upgradeScriptPath" value="./Scripts"/>
+    <add key="qestlabQesPath" value="C:\Development Offline\Product Development\QEST Lab\Database Template\QestLab.qes"/>
   </appSettings>
 
   <connectionStrings>

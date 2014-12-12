@@ -39,9 +39,11 @@
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qestObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtOutput = new System.Windows.Forms.TextBox();
+            this.buttonQestlabQes = new System.Windows.Forms.Button();
+            this.labelQestlabQes = new System.Windows.Forms.Label();
+            this.txtQestlabQesPath = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,7 +51,7 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 78);
+            this.progressBar.Location = new System.Drawing.Point(12, 105);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(557, 27);
             this.progressBar.TabIndex = 0;
@@ -57,7 +59,7 @@
             // buttonWrite
             // 
             this.buttonWrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonWrite.Location = new System.Drawing.Point(575, 78);
+            this.buttonWrite.Location = new System.Drawing.Point(575, 105);
             this.buttonWrite.Name = "buttonWrite";
             this.buttonWrite.Size = new System.Drawing.Size(75, 29);
             this.buttonWrite.TabIndex = 1;
@@ -69,7 +71,7 @@
             // 
             this.txtOutputFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtOutputFile.Location = new System.Drawing.Point(109, 53);
+            this.txtOutputFile.Location = new System.Drawing.Point(109, 80);
             this.txtOutputFile.Name = "txtOutputFile";
             this.txtOutputFile.ReadOnly = true;
             this.txtOutputFile.Size = new System.Drawing.Size(460, 20);
@@ -78,7 +80,7 @@
             // labOutputFile
             // 
             this.labOutputFile.AutoSize = true;
-            this.labOutputFile.Location = new System.Drawing.Point(9, 56);
+            this.labOutputFile.Location = new System.Drawing.Point(9, 83);
             this.labOutputFile.Name = "labOutputFile";
             this.labOutputFile.Size = new System.Drawing.Size(82, 13);
             this.labOutputFile.TabIndex = 4;
@@ -106,11 +108,11 @@
             // buttonOutputPath
             // 
             this.buttonOutputPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOutputPath.Location = new System.Drawing.Point(575, 51);
+            this.buttonOutputPath.Location = new System.Drawing.Point(575, 78);
             this.buttonOutputPath.Name = "buttonOutputPath";
             this.buttonOutputPath.Size = new System.Drawing.Size(75, 23);
             this.buttonOutputPath.TabIndex = 7;
-            this.buttonOutputPath.Text = "Browse";
+            this.buttonOutputPath.Text = "Browse...";
             this.buttonOutputPath.UseVisualStyleBackColor = true;
             this.buttonOutputPath.Click += new System.EventHandler(this.buttonOutputPath_Click);
             // 
@@ -118,8 +120,7 @@
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.scriptsToolStripMenuItem,
-            this.importToolStripMenuItem});
+            this.scriptsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(662, 24);
@@ -130,7 +131,8 @@
             // 
             this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tablesToolStripMenuItem,
-            this.fksToolStripMenuItem});
+            this.fksToolStripMenuItem,
+            this.qestObjectsToolStripMenuItem});
             this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
             this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.scriptsToolStripMenuItem.Text = "Scripts";
@@ -153,20 +155,14 @@
             this.fksToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.fksToolStripMenuItem.Text = "Foreign Keys";
             // 
-            // importToolStripMenuItem
-            // 
-            this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.qestObjectsToolStripMenuItem});
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-            this.importToolStripMenuItem.Text = "Import";
-            // 
             // qestObjectsToolStripMenuItem
             // 
+            this.qestObjectsToolStripMenuItem.Checked = true;
+            this.qestObjectsToolStripMenuItem.CheckOnClick = true;
+            this.qestObjectsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.qestObjectsToolStripMenuItem.Name = "qestObjectsToolStripMenuItem";
             this.qestObjectsToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.qestObjectsToolStripMenuItem.Text = "Qest Objects";
-            this.qestObjectsToolStripMenuItem.Click += new System.EventHandler(this.qestObjectsToolStripMenuItem_Click);
             // 
             // txtOutput
             // 
@@ -174,19 +170,52 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtOutput.BackColor = System.Drawing.SystemColors.Window;
-            this.txtOutput.Location = new System.Drawing.Point(12, 113);
+            this.txtOutput.Location = new System.Drawing.Point(12, 141);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ReadOnly = true;
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(635, 318);
+            this.txtOutput.Size = new System.Drawing.Size(635, 290);
             this.txtOutput.TabIndex = 15;
+            // 
+            // buttonQestlabQes
+            // 
+            this.buttonQestlabQes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonQestlabQes.Location = new System.Drawing.Point(575, 51);
+            this.buttonQestlabQes.Name = "buttonQestlabQes";
+            this.buttonQestlabQes.Size = new System.Drawing.Size(75, 23);
+            this.buttonQestlabQes.TabIndex = 18;
+            this.buttonQestlabQes.Text = "Browse...";
+            this.buttonQestlabQes.UseVisualStyleBackColor = true;
+            this.buttonQestlabQes.Click += new System.EventHandler(this.buttonQestlabQes_Click);
+            // 
+            // labelQestlabQes
+            // 
+            this.labelQestlabQes.AutoSize = true;
+            this.labelQestlabQes.Location = new System.Drawing.Point(9, 56);
+            this.labelQestlabQes.Name = "labelQestlabQes";
+            this.labelQestlabQes.Size = new System.Drawing.Size(77, 13);
+            this.labelQestlabQes.TabIndex = 17;
+            this.labelQestlabQes.Text = "QESTLab.qes:";
+            // 
+            // txtQestlabQesPath
+            // 
+            this.txtQestlabQesPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQestlabQesPath.Location = new System.Drawing.Point(109, 53);
+            this.txtQestlabQesPath.Name = "txtQestlabQesPath";
+            this.txtQestlabQesPath.ReadOnly = true;
+            this.txtQestlabQesPath.Size = new System.Drawing.Size(460, 20);
+            this.txtQestlabQesPath.TabIndex = 16;
             // 
             // ScriptWriterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 443);
+            this.Controls.Add(this.buttonQestlabQes);
+            this.Controls.Add(this.labelQestlabQes);
+            this.Controls.Add(this.txtQestlabQesPath);
             this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.buttonOutputPath);
             this.Controls.Add(this.labelConnectionString);
@@ -220,9 +249,11 @@
         private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tablesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem qestObjectsToolStripMenuItem;
         private System.Windows.Forms.TextBox txtOutput;
+        private System.Windows.Forms.ToolStripMenuItem qestObjectsToolStripMenuItem;
+        private System.Windows.Forms.Button buttonQestlabQes;
+        private System.Windows.Forms.Label labelQestlabQes;
+        private System.Windows.Forms.TextBox txtQestlabQesPath;
     }
 }
 
