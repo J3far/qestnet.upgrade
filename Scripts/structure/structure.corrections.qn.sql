@@ -956,3 +956,17 @@ begin
 		drop table DocumentLaboratoryVane;
 	commit transaction;
 end
+
+-- Change DocumentPocketPenetrometer.ReadingPrecision to nvarchar(50)
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentPocketPenetrometer' AND COLUMN_NAME = 'ReadingPrecision')
+BEGIN
+	ALTER TABLE dbo.DocumentPocketPenetrometer ALTER COLUMN ReadingPrecision nvarchar(50)
+END
+GO
+
+-- Change DocumentTorvane.ReadingPrecision to nvarchar(50)
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentTorvane' AND COLUMN_NAME = 'ReadingPrecision')
+BEGIN
+	ALTER TABLE dbo.DocumentTorvane ALTER COLUMN ReadingPrecision nvarchar(50)
+END
+GO
