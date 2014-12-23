@@ -931,6 +931,7 @@ begin
     alter table ListSamplingDevice drop column SamplingDeviceDescription
   end
 end
+GO
 
 -- Bad particle density field fix :-D
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentParticleDensity' and column_name = 'ContainerCode' and data_type = 'real')
@@ -956,6 +957,7 @@ begin
 		drop table DocumentLaboratoryVane;
 	commit transaction;
 end
+GO
 
 -- Change DocumentPocketPenetrometer.ReadingPrecision to nvarchar(50)
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentPocketPenetrometer' AND COLUMN_NAME = 'ReadingPrecision')
