@@ -53,12 +53,12 @@ namespace Spectra.QESTNET.Upgrade
                             {
                                 queryTask.Wait(cancellationToken); // run only one query at a time
                             }
-                            catch (OperationCanceledException e)
+                            catch (OperationCanceledException)
                             {
                                 this.Message("   File execution cancelled.");
                                 return;
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 throw;
                             }

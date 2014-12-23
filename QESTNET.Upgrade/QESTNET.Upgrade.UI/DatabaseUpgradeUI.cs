@@ -19,7 +19,6 @@ namespace Spectra.QESTNET.Upgrade.UI
     {
         UpgradeManifest manifest;
         CancellationTokenSource cancelUpgrade;
-        ConnectionStringSettingsCollection csSettings;
         FileSystemWatcher fileWatcher;
         Configuration config;
         FileInfo exeScriptWriter;
