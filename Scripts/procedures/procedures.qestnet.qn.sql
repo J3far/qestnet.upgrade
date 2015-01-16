@@ -76,7 +76,7 @@ BEGIN
 END
 GO
 
-CREATE FUNCTION CSVTable(@Str varchar(7000))
+CREATE FUNCTION dbo.CSVTable(@Str varchar(7000))
 RETURNS @t table (numberval int, stringval varchar(100), DateVal datetime)
 AS
 BEGIN
