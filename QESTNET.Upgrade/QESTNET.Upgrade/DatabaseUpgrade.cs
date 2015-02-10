@@ -114,7 +114,7 @@ namespace Spectra.QESTNET.Upgrade
         // fixme: parameterise etc
         protected void SetOption(string name, string value)
         {
-            QestlabDatabaseHelper.SetSystemValue(this.connectionString, name, value);
+            QestlabDatabaseHelper.SetSystemValue(this.connectionString, "QestnetUpgradeOption_" + name, value);
             this.Message(string.Format("Set upgrade option '{0}' = '{1}',", "QestnetUpgradeOption_" + name, value));
         }
 

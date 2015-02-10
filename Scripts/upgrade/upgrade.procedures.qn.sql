@@ -122,11 +122,7 @@ BEGIN
 	DECLARE @PKNAME varchar(255)
 	SET @PKNAME = 'PK_' + @TableName	
 	EXEC qest_SetPrimaryKey @TableName = @TableName, @KeyName = @PKNAME, @Columns = 'QestUUID'
-	
-	-- Add FK to ReverseLookups
-	EXEC('IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = ''FK_' + @TableName + '_qestReverseLookup'')
-		BEGIN ALTER TABLE ' + @TableName + ' ADD CONSTRAINT FK_' + @TableName + '_qestReverseLookup FOREIGN KEY (QestUUID) REFERENCES qestReverseLookup(QestUUID) END')
-
+		
 	-- Set qestReverseLookup.QestOwnerLabNo
 	EXEC('UPDATE R SET QestOwnerLabNo = D.QestOwnerLabNo FROM qestReverseLookup R INNER JOIN ' + @TableName + ' D 
 	ON D.QestUUID = R.QestUUID WHERE D.QestOwnerLabNo <> R.QestOwnerLabNo')
@@ -244,42 +240,43 @@ BEGIN
 		BEGIN
 			EXEC('ALTER TABLE ' + @TableName + ' ADD QestStatusFlags int NULL')
 		END
+		
+		---- Remove FK to ReverseLookups if it exists
+		EXEC('IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = ''FK_' + @TableName + '_qestReverseLookup'')
+			BEGIN ALTER TABLE ' + @TableName + ' DROP CONSTRAINT FK_' + @TableName + '_qestReverseLookup END')
 			
-		IF ISNULL(@Repair,0) = 1 OR NOT EXISTS(SELECT 1 FROM sys.foreign_keys K
-			INNER JOIN sys.foreign_key_columns KC ON K.object_id = KC.constraint_object_id
-			INNER JOIN sys.columns C ON C.object_id = KC.parent_object_id AND C.column_id = KC.parent_column_id
-			WHERE K.object_id = OBJECT_ID('FK_' + @TableName + '_qestReverseLookup', 'F') AND C.name = 'QestUUID')
+		-- Use the presence of the trigger to delineate what has been converted so far (for performance reasons)
+		IF (ISNULL(@Repair,0) = 1 OR OBJECT_ID('TR_' + @TableName + '_Insert_UniqueIDs', 'TR') IS NULL)
 		BEGIN
 			PRINT 'Connecting document table to reverse lookups'
 			EXEC qest_ConnectDocumentToReverseLookups @TableName
+
+			-- Create/update the trigger to maintain unique ids
+			DECLARE @Trigger nvarchar(MAX)
+			SET @Trigger = CASE WHEN OBJECT_ID('TR_' + @TableName + '_Insert_UniqueIDs', 'TR') IS NULL THEN 'CREATE' ELSE 'ALTER' END
+			+ ' TRIGGER TR_' + @TableName + '_Insert_UniqueIDs
+			ON ' + @TableName + ' AFTER INSERT
+			AS
+				-- Set QestUniqueID in qestReverseLookup from document
+				UPDATE RL SET QestUniqueID = I.QestUniqueID
+				FROM qestReverseLookup RL 
+				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
+
+				-- Set QestUniqueParentID in qestReverseLookup from parent qestReverseLookup
+				UPDATE RL SET QestUniqueParentID = P.QestUniqueID, QestParentID = P.QestID
+				FROM qestReverseLookup RL 
+				INNER JOIN qestReverseLookup P ON P.QestUUID = RL.QestParentUUID
+				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
+				
+				-- Set QestUniqueParentID in document from qestReverseLookup
+				UPDATE D SET QestUniqueParentID = RL.QestUniqueParentID, QestParentID = RL.QestParentID
+				FROM qestReverseLookup RL 
+				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
+				INNER JOIN ' + @TableName + ' D ON D.QestUUID = RL.QestUUID'
+
+			EXEC sp_executesql @Trigger
 		END
-		
-		-- Create/update the trigger to maintain unique ids
-		DECLARE @Trigger nvarchar(MAX)
-			
-		SET @Trigger = CASE WHEN OBJECT_ID('TR_' + @TableName + '_Insert_UniqueIDs', 'TR') IS NULL THEN 'CREATE' ELSE 'ALTER' END
-		+ ' TRIGGER TR_' + @TableName + '_Insert_UniqueIDs
-		ON ' + @TableName + ' AFTER INSERT
-		AS
-			-- Set QestUniqueID in qestReverseLookup from document
-			UPDATE RL SET QestUniqueID = I.QestUniqueID
-			FROM qestReverseLookup RL 
-			INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
-
-			-- Set QestUniqueParentID in qestReverseLookup from parent qestReverseLookup
-			UPDATE RL SET QestUniqueParentID = P.QestUniqueID, QestParentID = P.QestID
-			FROM qestReverseLookup RL 
-			INNER JOIN qestReverseLookup P ON P.QestUUID = RL.QestParentUUID
-			INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
-			
-			-- Set QestUniqueParentID in document from qestReverseLookup
-			UPDATE D SET QestUniqueParentID = RL.QestUniqueParentID, QestParentID = RL.QestParentID
-			FROM qestReverseLookup RL 
-			INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
-			INNER JOIN ' + @TableName + ' D ON D.QestUUID = RL.QestUUID'
-
-		EXEC sp_executesql @Trigger
-		
+					
 		-- Ensure QestUniqueID has a nonclustered index
 		IF ISNULL(dbo.qest_IndexExists(@TableName, 'IX_' + @TableName + '_QestUniqueID'),0) = 0
 		BEGIN
