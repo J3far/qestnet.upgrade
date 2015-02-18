@@ -310,3 +310,50 @@ BEGIN
 	ORDER BY L.Lvl DESC
 END
 GO
+
+-- Procedure for getting the next counter number and incrementing
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetNextCounterNumber' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_GetNextCounterNumber]
+END
+GO
+
+CREATE procedure [dbo].[qest_GetNextCounterNumber]
+	@QestUniqueParentID int,
+	@LabNo int = NULL,
+	@GroupingFieldValue1 nvarchar(50) = NULL,
+	@GroupingFieldValue2 nvarchar(50) = NULL,
+	@GroupingFieldValue3 nvarchar(50) = NULL,
+	@GroupingFieldValue4 nvarchar(50) = NULL,
+	@GroupingFieldValue5 nvarchar(50) = NULL
+AS
+BEGIN
+	
+	DECLARE @NN int
+	DECLARE @UID int 
+	
+	-- Get existing value
+	SELECT TOP 1 @UID = QestUniqueID, @NN = NextNumber FROM CounterValues WHERE 
+		QestUniqueParentID = @QestUniqueParentID AND
+		(QestOwnerLabNo = @LabNo OR (QestOwnerLabNo IS NULL AND @LabNo IS NULL)) AND
+		(GroupingFieldValue1 = @GroupingFieldValue1 OR (GroupingFieldValue1 IS NULL AND @GroupingFieldValue1 IS NULL)) AND
+		(GroupingFieldValue2 = @GroupingFieldValue2 OR (GroupingFieldValue2 IS NULL AND @GroupingFieldValue2 IS NULL)) AND
+		(GroupingFieldValue3 = @GroupingFieldValue3 OR (GroupingFieldValue3 IS NULL AND @GroupingFieldValue3 IS NULL)) AND
+		(GroupingFieldValue4 = @GroupingFieldValue4 OR (GroupingFieldValue4 IS NULL AND @GroupingFieldValue4 IS NULL)) AND
+		(GroupingFieldValue5 = @GroupingFieldValue5 OR (GroupingFieldValue5 IS NULL AND @GroupingFieldValue5 IS NULL))
+
+	IF (@UID IS NULL)
+	BEGIN		
+		-- Insert new row and return NextNumber 1
+		INSERT INTO CounterValues (QestUniqueParentID, NextNumber, QESTOwnerLabNo, GroupingFieldValue1, GroupingFieldValue2, GroupingFieldValue3, GroupingFieldValue4, GroupingFieldValue5)
+		VALUES (@QestUniqueParentID, 2, @LabNo, @GroupingFieldValue1, @GroupingFieldValue2, @GroupingFieldValue3, @GroupingFieldValue4, @GroupingFieldValue5)	
+		SET @NN = 1
+	
+	END ELSE BEGIN	
+		-- Increment NextNumber
+		UPDATE CounterValues SET NextNumber = @NN + 1 WHERE QestUniqueID = @UID			
+	END
+	
+	SELECT @NN -- Return next number
+END
+GO
