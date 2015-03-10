@@ -65,7 +65,12 @@ BEGIN
 	SET @COL = '[' + @ColumnName + '] ' + @TypeName 	
 	IF(@TypeName IN ('varbinary', 'varchar', 'binary', 'char', 'nvarchar', 'nchar'))
 	BEGIN
-		SET @COL = @COL + '(' + CAST(@Length As nvarchar(12)) + ')'
+		IF(ISNULL(@Length,0) = -1)
+		BEGIN
+			SET @COL = @COL + '(max)'
+		END ELSE BEGIN
+			SET @COL = @COL + '(' + CAST(@Length As nvarchar(12)) + ')'
+		END
 	END
 				
 	DECLARE @SQL nvarchar(max)	
@@ -89,7 +94,7 @@ BEGIN
 		WHERE T.TABLE_NAME = @TableName AND C.COLUMN_NAME = @ColumnName
 		
 		-- Only includes length extensions and changes TO nullable
-		IF (@TypeName = @PrevTypeName AND ISNULL(@Length,0) > ISNULL(@PrevLength,0))
+		IF (@TypeName = @PrevTypeName AND (ISNULL(@Length,0) > ISNULL(@PrevLength,0) OR (ISNULL(@Length,0) = -1 AND ISNULL(@Length,0) != ISNULL(@PrevLength,0))))
 		BEGIN
 			IF(@IsNullable = 'YES')
 			BEGIN
