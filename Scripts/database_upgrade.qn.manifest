@@ -29,6 +29,7 @@ structure/structure.tables.qn.sql
 upgrade/upgrade.activities.qn.sql
 upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
+upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.user_documents_base.qn.sql
 
 // Procedures
