@@ -39,6 +39,17 @@ begin
   raiserror('Resetting seed on UserDocumentBase to 50000001 to accomodate sharing with UserDocumentN tables', 0, 1)
   truncate table UserDocumentBase
   alter table UserDocumentBase add QestUniqueID_tmp int identity (50000001, 1) not null
+
+  if exists (select 1 from sys.indexes i where i.object_id = OBJECT_ID('UserDocumentBase') and i.name = 'IX_UserDocumentBase_QestUniqueID')
+  begin
+    drop index UserDocumentBase.IX_UserDocumentBase_QestUniqueID
+  end
+
+  if exists (select 1 from sys.indexes i where i.object_id = OBJECT_ID('UserDocumentBase') and i.name = 'IX_UserDocumentBase_QestUniqueID_QestID')
+  begin
+    drop index UserDocumentBase.IX_UserDocumentBase_QestUniqueID_QestID
+  end
+
   alter table UserDocumentBase drop column QestUniqueID
   exec sp_rename 'UserDocumentBase.QestUniqueID_tmp', 'QestUniqueID', 'column'
 end
