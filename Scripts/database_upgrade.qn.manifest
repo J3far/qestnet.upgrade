@@ -6,6 +6,9 @@ procedures/procedures.corrections.qn.sql
 procedures/procedures.database.qn.sql
 structure/structure.corrections.qn.sql
 
+// qestids required for upgrade.documents
+data/data.object_types.qn.sql
+
 // Upgrade
 upgrade/upgrade.procedures.qn.sql
 upgrade/upgrade.remove_foreignkeys.qn.sql

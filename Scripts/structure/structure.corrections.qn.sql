@@ -701,6 +701,16 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentFracturedFacesSingle')
+BEGIN
+	UPDATE DocumentFracturedFacesSingle SET QestID = 111249 WHERE ISNULL(QestID, 0) = 0
+END
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentElongatedSingle')
+BEGIN
+	UPDATE DocumentElongatedSingle SET QestID = 111247 WHERE ISNULL(QestID, 0) = 0
+END
+
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'EquipmentQestID' AND IS_NULLABLE = 'YES')
 BEGIN 
 	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_Equipment'
@@ -941,22 +951,24 @@ end
 go
 
 -- Remove the old laboratory vane table (created in advance for fugro) if it exists
-if (exists(select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'DocumentLaboratoryVane'))
-begin
-	begin transaction;
+IF EXISTS(select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'DocumentLaboratoryVane')
+BEGIN
+	EXEC('
+		begin transaction;
+	
 		declare @docs table (uuid uniqueidentifier);
 
 		insert into @docs (uuid)
 		select QestUUID
-		from DocumentLaboratoryVane;
+		from dbo.DocumentLaboratoryVane;
 
-		delete from DocumentLaboratoryVane;
-		delete from qestReportMapping where TestQestUUID in (select uuid from @docs);
-		delete from qestReverseLookup where QestUUID in (select uuid from @docs);
+		delete from dbo.DocumentLaboratoryVane;
+		delete from dbo.qestReportMapping where TestQestUUID in (select uuid from @docs);
+		delete from dbo.qestReverseLookup where QestUUID in (select uuid from @docs);
 		
 		drop table DocumentLaboratoryVane;
-	commit transaction;
-end
+		commit transaction;')
+END
 GO
 
 -- Change DocumentPocketPenetrometer.ReadingPrecision to nvarchar(50)

@@ -67,8 +67,9 @@ namespace Spectra.QESTNET.Upgrade
 
                         try
                         {
-                            using (var ts = new TransactionScope(TransactionScopeOption.Required, new TimeSpan(1, 0, 0)))
-                            {
+                            // Transaction scope only supports maximum 10 minutes - PSI individual scripts take longer than that
+                            //using (var ts = new TransactionScope(TransactionScopeOption.Required, new TimeSpan(1, 0, 0)))
+                            //{
                                 using (var conn = new SqlConnection(connectionString))
                                 {
                                     conn.InfoMessage += this.PrintInfoMessage;
@@ -87,8 +88,8 @@ namespace Spectra.QESTNET.Upgrade
                                     }
                                 }
 
-                                ts.Complete();
-                            }
+                            //    ts.Complete();
+                            //}
                         }
                         catch (Exception e)
                         {

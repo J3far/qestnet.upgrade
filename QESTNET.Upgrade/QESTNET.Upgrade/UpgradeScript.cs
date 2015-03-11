@@ -45,7 +45,7 @@ namespace Spectra.QESTNET.Upgrade
 
                         using (var cmd = new SqlCommand(queries[i], this.connection))
                         {
-                            cmd.CommandTimeout = Convert.ToInt32(new TimeSpan(1, 0, 0).TotalSeconds); // hour timeout
+                            cmd.CommandTimeout = Convert.ToInt32(new TimeSpan(10, 0, 0).TotalSeconds); // 10 hour timeout (due to PSI document upgrades taking a long time)
                             cmd.CommandType = CommandType.Text;
                             var queryTask = cmd.ExecuteNonQueryAsync();
 
