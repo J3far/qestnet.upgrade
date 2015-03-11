@@ -984,3 +984,10 @@ BEGIN
 	ALTER TABLE dbo.DocumentTorvane ALTER COLUMN ReadingPrecision nvarchar(50)
 END
 GO
+
+--Change DocumentConcreteDestructive.ReturnedLoad to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentConcreteDestructive' AND COLUMN_NAME = 'ReturnedLoad' AND DATA_TYPE = 'int')
+BEGIN
+  ALTER TABLE [dbo].[DocumentConcreteDestructive] ALTER COLUMN [ReturnedLoad] real NULL;
+END
+GO
