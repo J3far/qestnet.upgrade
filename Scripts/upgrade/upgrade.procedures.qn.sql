@@ -147,7 +147,11 @@ BEGIN
 	EXEC('UPDATE R SET QestModifiedDate = D.QestModifiedDate FROM qestReverseLookup R INNER JOIN ' + @TableName + ' D 
 	ON D.QestUUID = R.QestUUID WHERE R.QestModifiedDate IS NULL')	
 	
+	-- Enable Triggers
 	EXEC('ALTER TABLE ' + @TableName + ' ENABLE TRIGGER ALL')
+
+	-- Rebuild indexes
+	EXEC('ALTER INDEX ALL ON ' + @TableName + ' REBUILD')
 END
 GO
 
@@ -283,8 +287,6 @@ BEGIN
 			EXEC('CREATE NONCLUSTERED INDEX IX_' + @TableName + '_QestUniqueID ON ' + @TableName + ' (QestUniqueID)')
 		END
 
-		EXEC('ALTER INDEX ALL ON ' + @TableName + ' REBUILD')
-		
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
