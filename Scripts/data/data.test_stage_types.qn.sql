@@ -1,10 +1,12 @@
 
 -- Remove the uniqueness constraint while the stages run in
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
+IF EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_qestTestStage_TestQestID_Idx' AND is_unique = 1)
 BEGIN
 	EXEC qest_DropIndex 'qestTestStage', 'IX_qestTestStage_TestQestID_Idx'
 END
 GO
+
+
 
 -- Moisture Content [ASTM D 2166]
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000001, @TestQestID = 110940, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
