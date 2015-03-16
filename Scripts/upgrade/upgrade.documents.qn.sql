@@ -5,8 +5,9 @@ EXEC qest_EnableDocumentForQestnet 'SampleRegister' -- PSI: 00:08:33
 GO
 EXEC qest_EnableDocumentForQestnet 'Equipment' -- PSI: 00:00:10
 GO
-
 EXEC qest_EnableDocumentForQestnet_TableNameLike 'TestAnalysis%'
+GO
+EXEC qest_EnableDocumentForQestnet_TableNameLike 'Inspection%'
 GO
 
 ---- The A-Z of Document Tables - these groups vary in runtime greatly
