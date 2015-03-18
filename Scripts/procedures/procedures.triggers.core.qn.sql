@@ -18,7 +18,7 @@ CREATE TRIGGER TR_qestObjects_QestObjectID
 ON qestObjects INSTEAD OF INSERT
 AS
 	INSERT INTO qestObject (QestID) SELECT QestID FROM inserted WHERE NOT QestID IN (SELECT QestID FROM qestObject)
-	INSERT INTO qestObjects (QestID, QestActive, QestExtra, [Property], [Value]) SELECT QestID, QestActive, QestExtra,[Property], [Value] FROM inserted
+	INSERT INTO qestObjects (QestID, QestActive, QestExtra, [Property], [Value], [ValueText]) SELECT QestID, QestActive, QestExtra,[Property], [Value], [ValueText] FROM inserted
 GO
 
 
