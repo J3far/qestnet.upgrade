@@ -54,6 +54,12 @@ BEGIN
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedBy', 'int', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedDate', 'datetime', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestStatusFlags', 'int', NULL, 'YES', NULL
+		
+	-- Ensure index on QestUniqueID & QestID, important for update performance
+	IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_qestReverseLookup_QestUniqueID_QestID')
+	BEGIN
+		CREATE INDEX IX_qestReverseLookup_QestUniqueID_QestID ON qestReverseLookup ([QestUniqueID],[QestID])
+	END
 END
 GO
 

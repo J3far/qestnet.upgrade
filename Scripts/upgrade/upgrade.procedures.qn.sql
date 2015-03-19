@@ -106,10 +106,6 @@ BEGIN
 	-- Set the QestUUIDs to match ReverseLookups
 	EXEC('UPDATE ' + @TableName + ' SET QestUUID = R.QestUUID FROM ' + @TableName + ' D INNER JOIN qestReverseLookup R 
 		ON D.QestID = R.QestID AND D.QestUniqueID = R.QestUniqueID WHERE D.QestUUID IS NULL OR NOT D.QestUUID = R.QestUUID')
-
-	-- Mark deleted any ReverseLookups where the source row is missing
-	EXEC('DELETE qestReverseLookup FROM qestReverseLookup R LEFT JOIN ' + @TableName + ' D
-	ON R.QestUUID = D.QestUUID WHERE D.QestUUID IS NULL AND R.QestID IN (SELECT DISTINCT QestID FROM ' + @TableName + ')')
 		
 	-- Make QestUUID non-nullable (will fail if anything was not in RL)
 	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
@@ -147,6 +143,10 @@ BEGIN
 	EXEC('UPDATE R SET QestModifiedDate = D.QestModifiedDate FROM qestReverseLookup R INNER JOIN ' + @TableName + ' D 
 	ON D.QestUUID = R.QestUUID WHERE R.QestModifiedDate IS NULL')	
 	
+	-- Delete any ReverseLookups where the source row is now missing
+	EXEC('DELETE qestReverseLookup FROM qestReverseLookup R LEFT JOIN ' + @TableName + ' D
+	ON R.QestUUID = D.QestUUID WHERE D.QestUUID IS NULL AND R.QestID IN (SELECT DISTINCT QestID FROM ' + @TableName + ')')
+
 	-- Enable Triggers
 	EXEC('ALTER TABLE ' + @TableName + ' ENABLE TRIGGER ALL')
 
