@@ -58,8 +58,11 @@ namespace Spectra.QESTNET.Upgrade
                                 this.Message("   File execution cancelled.");
                                 return;
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
+                                this.Message(e.ToString());
+                                if (queryTask.Exception != null)
+                                    this.Message(queryTask.Exception.ToString());
                                 throw;
                             }
                         }
