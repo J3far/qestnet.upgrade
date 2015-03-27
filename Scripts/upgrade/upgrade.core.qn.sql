@@ -54,6 +54,12 @@ BEGIN
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedBy', 'int', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedDate', 'datetime', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestStatusFlags', 'int', NULL, 'YES', NULL
+		
+	-- Ensure index on QestUniqueID & QestID, important for update performance
+	IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_qestReverseLookup_QestUniqueID_QestID')
+	BEGIN
+		CREATE INDEX IX_qestReverseLookup_QestUniqueID_QestID ON qestReverseLookup ([QestUniqueID],[QestID])
+	END
 END
 GO
 
@@ -110,7 +116,7 @@ IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laborator
 BEGIN 
 	UPDATE LaboratoryMapping SET LocationUUID = L.QestUUID
 	FROM Laboratory L 
-	INNER JOIN LaboratoryMapping M ON L.QestID = M.LocationQestID AND L.QestUniqueID = M.LocationID 
+	INNER JOIN LaboratoryMapping M ON L.QestUniqueID = M.LocationID 
 	WHERE M.LocationUUID IS NULL 
 
 	ALTER TABLE LaboratoryMapping ALTER COLUMN LocationUUID uniqueidentifier NOT NULL

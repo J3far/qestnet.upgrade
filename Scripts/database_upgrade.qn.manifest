@@ -1,10 +1,13 @@
-﻿#1.0.6
+﻿#1.0.7
 
 // Corrections
 data/data.corrections.before.qn.sql
 procedures/procedures.corrections.qn.sql
 procedures/procedures.database.qn.sql
 structure/structure.corrections.qn.sql
+
+// qestids required for upgrade.documents
+data/data.object_types.qn.sql
 
 // Upgrade
 upgrade/upgrade.procedures.qn.sql
@@ -26,6 +29,7 @@ structure/structure.tables.qn.sql
 upgrade/upgrade.activities.qn.sql
 upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
+upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.user_documents_base.qn.sql
 
 // Procedures

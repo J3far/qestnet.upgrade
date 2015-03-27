@@ -67,8 +67,9 @@ namespace Spectra.QESTNET.Upgrade
 
                         try
                         {
-                            using (var ts = new TransactionScope(TransactionScopeOption.Required, new TimeSpan(1, 0, 0)))
-                            {
+                            // Transaction scope only supports maximum 10 minutes - PSI individual scripts take longer than that
+                            //using (var ts = new TransactionScope(TransactionScopeOption.Required, new TimeSpan(1, 0, 0)))
+                            //{
                                 using (var conn = new SqlConnection(connectionString))
                                 {
                                     conn.InfoMessage += this.PrintInfoMessage;
@@ -78,8 +79,19 @@ namespace Spectra.QESTNET.Upgrade
                                     script.Message = this.Message;
                                     var scriptTask = script.ExecuteAsync(cancellationToken);
                                     scriptTask.Start();
-                                    scriptTask.Wait(); // wait for script to finish
-                      
+                                    try
+                                    {
+                                        scriptTask.Wait(); // wait for script to finish
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        this.Message(e.ToString());
+                                        if (scriptTask.Exception != null)
+                                        {
+                                            this.Message(scriptTask.Exception.ToString());
+                                        }
+                                        throw;
+                                    }
                                     if (cancellationToken.IsCancellationRequested)
                                     {
                                         this.Message("Database upgrade cancelled.  Completed files have been committed.");
@@ -87,12 +99,18 @@ namespace Spectra.QESTNET.Upgrade
                                     }
                                 }
 
-                                ts.Complete();
-                            }
+                            //    ts.Complete();
+                            //}
                         }
                         catch (Exception e)
                         {
                             this.Message(e.ToString());
+                            var innerException = e.InnerException;
+                            while (innerException != null)
+                            {
+                                this.Message(innerException.ToString());
+                                innerException = innerException.InnerException;
+                            }
                             this.Message(string.Format("File '{0}' aborted due to an unhandled exception.  No changes were committed for this file.", this.manifest.ScriptFiles[i].Name));
                             this.SetOption("Repair", "False");
                             this.Message("Database upgrade aborted.");
@@ -114,7 +132,7 @@ namespace Spectra.QESTNET.Upgrade
         // fixme: parameterise etc
         protected void SetOption(string name, string value)
         {
-            QestlabDatabaseHelper.SetSystemValue(this.connectionString, name, value);
+            QestlabDatabaseHelper.SetSystemValue(this.connectionString, "QestnetUpgradeOption_" + name, value);
             this.Message(string.Format("Set upgrade option '{0}' = '{1}',", "QestnetUpgradeOption_" + name, value));
         }
 
