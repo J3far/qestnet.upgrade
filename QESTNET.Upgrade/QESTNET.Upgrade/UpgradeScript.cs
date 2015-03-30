@@ -47,31 +47,44 @@ namespace Spectra.QESTNET.Upgrade
                         {
                             cmd.CommandTimeout = Convert.ToInt32(new TimeSpan(10, 0, 0).TotalSeconds); // 10 hour timeout (due to PSI document upgrades taking a long time)
                             cmd.CommandType = CommandType.Text;
-                            var queryTask = cmd.ExecuteNonQueryAsync();
 
-                            try
-                            {
-                                queryTask.Wait(cancellationToken); // run only one query at a time
-                            }
-                            catch (OperationCanceledException)
-                            {
-                                this.Message("   File execution cancelled.");
-                                return;
-                            }
-                            catch (Exception e)
-                            {
-                                this.Message(e.ToString());
-                                if (queryTask.Exception != null)
-                                    this.Message(queryTask.Exception.ToString());
-                                throw;
-                            }
+                            var asy = cmd.BeginExecuteNonQuery();
+                            asy.AsyncWaitHandle.WaitOne();
+                            asy.AsyncWaitHandle.Close();
+
+
+                            //var queryTask = cmd.ExecuteNonQueryAsync();
+
+                            //try
+                            //{
+                            //    queryTask.Wait(cancellationToken); // run only one query at a time
+                            //}
+                            //catch (OperationCanceledException)
+                            //{
+                            //    this.Message("   File execution cancelled.");
+                            //    return;
+                            //}
+                            //catch (Exception e)
+                            //{
+                            //    this.Message(e.ToString());
+                            //    if (queryTask.Exception != null)
+                            //        this.Message(queryTask.Exception.ToString());
+                            //    throw;
+                            //}
                         }
+
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            this.Message("   File execution cancelled.");
+                            return;
+                        }                           
                     }
                 }
             );
 
             return task;
         }
+
     }
 
    
