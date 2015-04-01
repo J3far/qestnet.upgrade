@@ -19,10 +19,10 @@ namespace Spectra.QESTNET.Upgrade
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-@"if exists(select * from information_schema.tables where table_schema = 'dbo' and table_name = 'qestSystemValues')
-  SELECT [Value] FROM qestSystemValues WHERE Name = @name
-else
-  SELECT N''"
+                    @"IF EXISTS(SELECT * FROM information_schema.tables WHERE table_schema = 'dbo' AND table_name = 'qestSystemValues')
+                        SELECT ISNULL([Value], N'') FROM qestSystemValues WHERE Name = @name
+                      ELSE
+                        SELECT N''"
                 , conn))
                 {
                     cmd.CommandType = CommandType.Text;

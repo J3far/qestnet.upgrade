@@ -2,6 +2,29 @@
 -- Changes that need to occur prior to table structure updates to deal with existing databases
 -- NOTE:  All queries in this file must handle being run on a completely empty database
 
+
+-- Create QestObjects table early if it does not exists as it is required for qestObjects which are required for document upgrade
+IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'qestObjects')
+BEGIN
+	CREATE TABLE [dbo].[qestObjects](
+		[QestUniqueID] [int] IDENTITY(1,1) NOT NULL,
+		[QestID] [int] NULL,
+		[QestActive] [bit] NULL,
+		[QestExtra] [bit] NULL,
+		[Property] [nvarchar](32) NULL,
+		[Value] [nvarchar](4000) NULL,
+		[ValueText] [ntext] NULL,
+		CONSTRAINT [PK_qestObjects] PRIMARY KEY CLUSTERED ([QestUniqueID] ASC)
+	)
+	CREATE NONCLUSTERED INDEX [IX_qestObjects_Property] ON [dbo].[qestObjects] ([Property] ASC )
+	CREATE NONCLUSTERED INDEX [IX_qestObjects_QestID] ON [dbo].[qestObjects]([QestID] ASC, [Property] ASC )
+	ALTER TABLE [dbo].[qestObjects] ADD  CONSTRAINT [DF_qestObjects_QestActive]  DEFAULT (0) FOR [QestActive]
+	ALTER TABLE [dbo].[qestObjects] ADD  CONSTRAINT [DF_qestObjects_QestExtra]  DEFAULT (0) FOR [QestExtra]
+	PRINT 'Table created: qestObjects'
+END
+GO
+
+
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SessionConnections' AND COLUMN_NAME = 'UserID' AND IS_NULLABLE = 'YES')
 BEGIN 
 	EXEC qest_DropIndex 'SessionConnections', 'IX_SessionConnections_UserID'
