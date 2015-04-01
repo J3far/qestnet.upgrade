@@ -252,7 +252,8 @@ namespace Spectra.QESTNET.Upgrade.UI
 
         private void RefreshDatabaseVerison()
         {
-            this.SetDatabaseVersion(QestlabDatabaseHelper.GetSystemValue(txtConnectionString.Text, "QestnetDatabaseVersion"));
+            var version = QestlabDatabaseHelper.GetSystemValue(txtConnectionString.Text, "QestnetDatabaseVersion");
+            this.SetDatabaseVersion(string.IsNullOrEmpty(version) ? "None" : version);
         }
 
         private void cmsFiles_ItemClicked(object sender, ToolStripItemClickedEventArgs e)

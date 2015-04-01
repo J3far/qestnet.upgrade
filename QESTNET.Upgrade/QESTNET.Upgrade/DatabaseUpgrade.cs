@@ -19,7 +19,7 @@ namespace Spectra.QESTNET.Upgrade
 
         private readonly string connectionString;
         private readonly UpgradeManifest manifest;
-        private Version currentVersion;
+        private readonly Version currentVersion;
 
         public bool OptionRepair
         {
@@ -42,7 +42,7 @@ namespace Spectra.QESTNET.Upgrade
 
             // Load current version number
             var currentVersionString = QestlabDatabaseHelper.GetSystemValue(this.connectionString, "QestnetDatabaseVersion");
-            if (currentVersionString != null)
+            if (!string.IsNullOrEmpty(currentVersionString))
             {
                 if (!Version.TryParse(currentVersionString, out this.currentVersion))
                     throw new Exception("The current QestnetDatabaseVersion in qestSystemValues is not a valid version number.");
@@ -56,9 +56,11 @@ namespace Spectra.QESTNET.Upgrade
             var task = new Task(() =>
                 {
                     this.Message("Commencing database upgrade...");
-                    this.Message(string.Format("Current database version: {0}", this.currentVersion == default(Version) ? "not defined" : this.currentVersion.ToString()));
+                    this.Message(string.Format("Current database version: {0}", this.currentVersion == default(Version) ? "none" : this.currentVersion.ToString()));
 
-                    this.SetOption("Repair", this.OptionRepair ? "True" : "False");
+                    // Set the repair option unless it is a brand new database in which case option cannot be set
+                    if (this.currentVersion != default(Version))
+                        this.SetOption("Repair", this.OptionRepair ? "True" : "False");
 
                     // Execute the files
                     for (int i = 0; i < this.manifest.ScriptFiles.Length; i++)

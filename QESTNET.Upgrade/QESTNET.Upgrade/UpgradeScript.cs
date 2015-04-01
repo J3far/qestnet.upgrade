@@ -51,8 +51,7 @@ namespace Spectra.QESTNET.Upgrade
                             var asy = cmd.BeginExecuteNonQuery();
                             asy.AsyncWaitHandle.WaitOne();
                             asy.AsyncWaitHandle.Close();
-
-
+                            cmd.EndExecuteNonQuery(asy);
                             //var queryTask = cmd.ExecuteNonQueryAsync();
 
                             //try
