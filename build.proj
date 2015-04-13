@@ -43,11 +43,12 @@
     <PropertyGroup>
       <ReleaseVersionText>v$(MajorVersion).$(MinorVersion)</ReleaseVersionText>
       <FullVersionText>$(ReleaseVersionText).$(Build).$(Revision)</FullVersionText>
-      <PackagePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade $(ReleaseVersionText).zip</PackagePath>
+      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade $(ReleaseVersionText).zip</PackagePath>
+      <ReleasePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade $(ReleaseVersionText).zip</ReleasePath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <PackagePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\Development\QESTNET.Upgrade $(FullVersionText).zip</PackagePath>
+      <ReleasePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\Development\QESTNET.Upgrade $(FullVersionText).zip</ReleasePath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -64,6 +65,9 @@
 
     <RemoveDir Directories="$(MSBuildProjectDirectory)\temp" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\temp" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\bin" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\bin\$(Configuration)" />
+    
     <Copy SourceFiles="$(MSBuildProjectDirectory)\QESTNET.Upgrade\QESTNET.Upgrade.UI\App.config.default" DestinationFiles="$(MSBuildProjectDirectory)\temp\QESTNET.Upgrade.UI.exe.config" />
     <Copy SourceFiles="@(UpgraderLibraryFiles)" DestinationFolder="$(MSBuildProjectDirectory)\temp" />
     <Copy Condition=" '$(Configuration)' == 'Debug' " SourceFiles="$(MSBuildProjectDirectory)\QESTNET.Upgrade\QESTNET.Upgrade.ScriptWriter.UI\App.config.default" DestinationFiles="$(MSBuildProjectDirectory)\temp\QESTNET.Upgrade.ScriptWriter.UI.exe.config" />
@@ -88,6 +92,10 @@
 
     <RemoveDir Directories="$(MSBuildProjectDirectory)\temp" />
 
+    <!-- Upload to Product Distribution
+    <Copy SourceFiles="$(PackagePath)" DestinationFiles="$(ReleasePath)" />
+    -->
+    
   </Target>
 
 </Project>
