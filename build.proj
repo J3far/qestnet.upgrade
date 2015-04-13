@@ -50,7 +50,7 @@
     
     <PropertyGroup>
       <VersionText>$(MajorVersion).$(MinorVersion).$(Build).$(Revision)</VersionText>
-      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade $(VersionText).zip</PackagePath>
+      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade v$(VersionText).zip</PackagePath>
     </PropertyGroup>
 
     <ItemGroup>
