@@ -147,7 +147,10 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
                 C.DATA_TYPE,
                 C.CHARACTER_MAXIMUM_LENGTH,
                 C.IS_NULLABLE,
-                C.COLUMN_DEFAULT
+                COALESCE(
+	                C.COLUMN_DEFAULT, 
+	                CASE COLUMNPROPERTY(object_id(T.TABLE_NAME), C.COLUMN_NAME, 'IsIdentity') WHEN 1 THEN 'IDENTITY' ELSE NULL END
+                ) AS COLUMN_DEFAULT
                 FROM INFORMATION_SCHEMA.TABLES T
                 INNER JOIN INFORMATION_SCHEMA.COLUMNS C ON T.TABLE_NAME = C.TABLE_NAME
                 WHERE T.TABLE_TYPE = 'BASE TABLE' 

@@ -6,20 +6,21 @@
   <Target Name="SetVersion">
 
     <!-- Generate a days counter: will use this as revision instead -->
-    <Version StartDate="1-JAN-2014" BuildType="Automatic">
-      <Output TaskParameter="Build" PropertyName="Revision" />
+    <Version StartDate="1-JAN-2014" BuildType="Automatic" RevisionType="Automatic">
+      <Output TaskParameter="Build" PropertyName="Build" />
+      <Output TaskParameter="Revision" PropertyName="Revision" />
     </Version>
 
     <!-- Compile with the generated version number -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\QESTNET.Upgrade\build.proj;"
              Targets="SetVersion"
-             Properties="Configuration=$(Configuration);MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(BuildVersion);RevisionVersion=$(Revision)" />
+             Properties="Configuration=$(Configuration);MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(Build);RevisionVersion=$(Revision)" />
 
     <!-- Set the version in the script manifest -->
     <FileUpdate
       Files="$(MSBuildProjectDirectory)\Scripts\database_upgrade.qn.manifest"
-      Regex="#(\d+)\.(\d+)\.(\d+)"
-      ReplacementText="#$(MajorVersion).$(MinorVersion).$(BuildVersion)"
+      Regex="#(\d+)\.(\d+)"
+      ReplacementText="#$(MajorVersion).$(MinorVersion)"
       Multiline="true"
     />
 
@@ -34,15 +35,15 @@
   <Target Name="Publish">
     <MSBuild Projects="$(MSBuildProjectDirectory)\QESTNET.Upgrade\build.proj;"
              Targets="Publish"
-             Properties="Configuration=$(Configuration);MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(BuildVersion);RevisionVersion=$(Revision)" />
+             Properties="Configuration=$(Configuration);MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(Build);RevisionVersion=$(Revision)" />
   </Target>
 
   <Target Name="Package">
 
     <PropertyGroup>
-      <BuildVersionText>v$(MajorVersion).$(MinorVersion).$(BuildVersion)</BuildVersionText>
-      <FullVersionText>$(BuildVersionText).$(Revision)</FullVersionText>
-      <PackagePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade $(BuildVersionText).zip</PackagePath>
+      <ReleaseVersionText>v$(MajorVersion).$(MinorVersion)</ReleaseVersionText>
+      <FullVersionText>$(ReleaseVersionText).$(Build).$(Revision)</FullVersionText>
+      <PackagePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade $(ReleaseVersionText).zip</PackagePath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -51,12 +52,12 @@
 
     <ItemGroup>
       <UpgraderLibraryFiles Include="
-            $(MSBuildProjectDirectory)\Libraries\QESTNET.Upgrade\$(FullVersionText)\$(Configuration)\QESTNET.Upgrade.dll;
-            $(MSBuildProjectDirectory)\Libraries\QESTNET.Upgrade\$(FullVersionText)\$(Configuration)\QESTNET.Upgrade.UI.exe
+            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\$(Configuration)\QESTNET.Upgrade.dll;
+            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\$(Configuration)\QESTNET.Upgrade.UI.exe;
       "/>
       <ScriptWriterLibraryFiles Include="
-            $(MSBuildProjectDirectory)\Libraries\QESTNET.Upgrade\$(FullVersionText)\$(Configuration)\QESTNET.Upgrade.ScriptWriter.dll;
-            $(MSBuildProjectDirectory)\Libraries\QESTNET.Upgrade\$(FullVersionText)\$(Configuration)\QESTNET.Upgrade.ScriptWriter.UI.exe;
+            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.dll;
+            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.UI.exe;
             $(MSBuildProjectDirectory)\Libraries\Microsoft.SqlServer\v11.0\*.dll;
       "/>
     </ItemGroup>

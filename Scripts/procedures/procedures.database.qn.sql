@@ -25,7 +25,7 @@ begin
   --nothing to do
   return 0;
 end
-select CHAR(13) + CHAR(10)
+
 set @sql_to_execute = '';
 if @existingDefaultName is not null
 begin
@@ -105,7 +105,14 @@ BEGIN
 		END
 
 		EXEC(@SQL)
-		EXEC qest_SetDefault @TableName, @ColumnName, @DefaultValue
+		
+		-- Cannot set identity on existing column and counts as no default
+		IF (@DefaultValue = 'IDENTITY')
+		BEGIN
+			EXEC qest_SetDefault @TableName, @ColumnName, NULL
+		END ELSE BEGIN
+			EXEC qest_SetDefault @TableName, @ColumnName, @DefaultValue
+		END
 			
 	END ELSE BEGIN
 	
@@ -119,7 +126,12 @@ BEGIN
 		
 		IF (NOT @DefaultValue IS NULL)
 		BEGIN
-			SET @SQL = @SQL + ' CONSTRAINT DF_' + @TableName + '_' + @ColumnName + ' DEFAULT ' + @DefaultValue
+			IF (@DefaultValue = 'IDENTITY')
+			BEGIN
+				SET @SQL = @SQL + ' IDENTITY(1,1)'
+			END ELSE BEGIN		
+				SET @SQL = @SQL + ' CONSTRAINT DF_' + @TableName + '_' + @ColumnName + ' DEFAULT ' + @DefaultValue
+			END
 		END
 
 		EXEC(@SQL)			

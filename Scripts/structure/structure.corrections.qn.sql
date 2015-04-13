@@ -1014,3 +1014,15 @@ BEGIN
   ALTER TABLE [dbo].[DocumentConcreteDestructive] ALTER COLUMN [ReturnedLoad] real NULL;
 END
 GO
+
+-- Remove incorrectly named Primary Key so that structure update can re-create it
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'PK_TestAnalysisTriaxial_1' AND CONSTRAINT_TYPE = 'PRIMARY KEY')
+BEGIN
+	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_DocumentTriaxial_TestAnalysisTriaxial')
+	BEGIN
+		ALTER TABLE DocumentTriaxial DROP CONSTRAINT FK_DocumentTriaxial_TestAnalysisTriaxial
+	END
+
+	ALTER TABLE TestAnalysisTriaxial DROP CONSTRAINT PK_TestAnalysisTriaxial_1
+END
+GO
