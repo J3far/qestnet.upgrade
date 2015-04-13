@@ -24,6 +24,9 @@
       Multiline="true"
     />
 
+    <!-- Tell the build server what the version number is -->
+    <Message Text="##teamcity[buildNumber '$(MajorVersion).$(MinorVersion).$(Build).$(Revision)']" />
+    
   </Target>
   
   <Target Name="RebuildAll">
@@ -32,18 +35,20 @@
              Properties="Configuration=$(Configuration);" />
   </Target>
 
+  <!-- Publish the assembly files to Libraries -->
   <Target Name="Publish">
     <MSBuild Projects="$(MSBuildProjectDirectory)\QESTNET.Upgrade\build.proj;"
              Targets="Publish"
              Properties="Configuration=$(Configuration);MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(Build);RevisionVersion=$(Revision)" />
   </Target>
 
+  <!-- Package up the zip into bin -->
   <Target Name="Package">
 
     <PropertyGroup>
       <ReleaseVersionText>v$(MajorVersion).$(MinorVersion)</ReleaseVersionText>
       <FullVersionText>$(ReleaseVersionText).$(Build).$(Revision)</FullVersionText>
-      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade $(ReleaseVersionText).zip</PackagePath>
+      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade $(FullVersionText).zip</PackagePath>
       <ReleasePath>\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade $(ReleaseVersionText).zip</ReleasePath>
     </PropertyGroup>
 
@@ -92,9 +97,8 @@
 
     <RemoveDir Directories="$(MSBuildProjectDirectory)\temp" />
 
-    <!-- Upload to Product Distribution
+    <!-- Upload to Product Distribution -->
     <Copy SourceFiles="$(PackagePath)" DestinationFiles="$(ReleasePath)" />
-    -->
     
   </Target>
 
