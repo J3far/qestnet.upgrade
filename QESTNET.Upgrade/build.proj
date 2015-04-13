@@ -33,23 +33,23 @@
     </AssemblyInfo>
   </Target>
 
-  <!-- Release versions can be published to Libraries -->
+  <!-- Release versions can be published to Libraries to be referenced -->
   <Target Name="Publish">
 
     <PropertyGroup>
       <PublishToDirectory>$(MSBuildProjectDirectory)\..\Libraries\QESTNET.Upgrade\v$(MajorVersion).$(MinorVersion)</PublishToDirectory>
     </PropertyGroup>
-    
-    <Copy 
-      Condition=" '$(Configuration)' == 'Release' " 
+
+    <Copy
+      Condition=" '$(Configuration)' == 'Release' "
       OverwriteReadOnlyFiles="True"
       SourceFiles="
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.dll;
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.UI.exe;
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.dll;
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.ScriptWriter.UI.exe;
-      "    
+      "
       DestinationFolder="$(PublishToDirectory)" />
   </Target>
-  
+
 </Project>
