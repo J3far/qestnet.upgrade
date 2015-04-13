@@ -25,7 +25,7 @@
           Outputs="UpdatedAssemblyVersionFiles">
 
     <AssemblyInfo CodeLanguage="CS" 
-                  AssemblyVersion="$(MajorVersion).$(MinorVersion).$(BuildVersion)" 
+                  AssemblyVersion="$(MajorVersion).$(MinorVersion)" 
                   AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(BuildVersion).$(RevisionVersion)" 
                   OutputFile="%(AssemblyVersionFiles.FullPath)">
         <Output TaskParameter="OutputFile" 
@@ -33,15 +33,16 @@
     </AssemblyInfo>
   </Target>
 
-
+  <!-- Release versions can be published to Libraries -->
   <Target Name="Publish">
 
     <PropertyGroup>
-      <PublishToDirectory>$(MSBuildProjectDirectory)\..\Libraries\QESTNET.Upgrade\v$(MajorVersion).$(MinorVersion).$(BuildVersion).$(RevisionVersion)\$(Configuration)</PublishToDirectory>
+      <PublishToDirectory>$(MSBuildProjectDirectory)\..\Libraries\QESTNET.Upgrade\v$(MajorVersion).$(MinorVersion)</PublishToDirectory>
     </PropertyGroup>
     
-    <Copy
-	  OverwriteReadOnlyFiles="True"
+    <Copy 
+      Condition=" '$(Configuration)' == 'Release' " 
+      OverwriteReadOnlyFiles="True"
       SourceFiles="
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.dll;
         $(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade.UI.exe;
