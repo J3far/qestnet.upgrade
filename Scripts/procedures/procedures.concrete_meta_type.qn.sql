@@ -92,3 +92,24 @@ as
     where M.TemplateQestUniqueID = @TemplateUniqueID and M.SampleQestID = @SampleQestID
     
 GO
+
+if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetTemplateList]') and type in (N'P', N'PC'))
+  exec ('create proc [dbo].[qest_TypeMeta_GetTemplateList] as select 0 tmp');
+GO
+alter proc [dbo].qest_TypeMeta_GetTemplateList
+  @SampleQestID int, @LabNo int
+as
+  if @LabNo = 0 
+  begin
+	select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = @LabNo
+  end
+  else
+  begin
+	Select Coalesce(a.TemplateName, b.TemplateName) as 'TemplateName', Coalesce(a.TemplateQestUniqueID, b.TemplateQestUniqueID) as 'TemplateQestUniqueID', Coalesce(a.IsDefaultTemplate, b.IsDefaultTemplate) as 'IsDefaultTemplate' from 
+	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = 0) a
+	full join
+	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and QestOwnerLabNo = @LabNo) b
+	on a.TemplateName = b.TemplateName
+  end
+
+GO

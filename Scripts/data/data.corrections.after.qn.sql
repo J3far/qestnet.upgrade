@@ -89,3 +89,4 @@ begin
   update Samples set SampleType = 1 where Disturbed = 1 and (SampleType is null or SampleType = 0);
 end
 GO
+
