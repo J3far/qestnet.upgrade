@@ -74,7 +74,15 @@ BEGIN
 END
 GO
 
--- Set PeopleRolesMapping.WorkflowUUID non-nullable
+-- Set qestWorkflow.WorkflowUUID non-nullable
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestWorkflow' AND COLUMN_NAME = 'WorkflowUUID' AND IS_NULLABLE = 'YES')
+BEGIN 
+	DELETE FROM dbo.qestWorkflow WHERE WorkflowUUID IS NULL
+	ALTER TABLE dbo.qestWorkflow ALTER COLUMN WorkflowUUID uniqueidentifier NOT NULL
+END
+GO
+
+-- Set qestWorkflowLocationMapping.WorkflowUUID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestWorkflowLocationMapping' AND COLUMN_NAME = 'WorkflowUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
 	DELETE FROM dbo.qestWorkflowLocationMapping WHERE WorkflowUUID IS NULL
@@ -272,6 +280,25 @@ BEGIN
 	ALTER TABLE Defaults DROP CONSTRAINT DF_TEMP END
 GO
 
+-- Add QestOwnerLabNo column to Defaults, set to 0 where null
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'Defaults'))
+BEGIN
+  ALTER TABLE Defaults ADD QestOwnerLabNo INT NULL
+END
+GO
+IF EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'Defaults'))
+BEGIN
+  UPDATE Defaults SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
+END 
+GO
+
+-- Replace null QestOwnerLabNo for Defaults
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Defaults' AND COLUMN_NAME = 'QestOwnerLabNo')
+BEGIN 
+	UPDATE Defaults SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
+END
+GO
+
 -- WorkTemplates - correct null QestIDs
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'WorkTemplates' and COLUMN_NAME = 'QestID')
 BEGIN 
@@ -282,7 +309,7 @@ GO
 -- Set SpecificationRecords.SpecificationID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SpecificationRecords' AND COLUMN_NAME = 'SpecificationID' AND IS_NULLABLE = 'YES')
 BEGIN 
-	EXEC qest_DropIndex 'PeopleRolesMapping', 'IX_SpecificationRecords_SpecificationID'
+	EXEC qest_DropIndex 'SpecificationRecords','IX_SpecificationRecords_SpecificationID'
 	ALTER TABLE dbo.SpecificationRecords ALTER COLUMN SpecificationID int NOT NULL
 END
 GO
@@ -292,6 +319,18 @@ IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Specifica
 BEGIN 
 	ALTER TABLE dbo.SpecificationRecords ALTER COLUMN ObjectID int NOT NULL
 END
+GO
+
+--Create QestOwnerLabNo for table SpecificationRecords if it doesn't exist, retrieve value from specification
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+BEGIN
+  ALTER TABLE SpecificationRecords ADD QestOwnerLabNo INT NULL
+END 
+GO
+IF EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+BEGIN
+  UPDATE SpecificationRecords SET QestOwnerLabNo = (SELECT QestOwnerLabNo FROM Specifications WHERE QestUniqueID = SpecificationID)
+END 
 GO
 
 -- Set Users.PersonID non-nullable
@@ -579,6 +618,13 @@ BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestUniqueID_QestID'
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestUniqueID'
 	ALTER TABLE dbo.qestReverseLookup ALTER COLUMN QestUniqueID int NOT NULL
+END
+GO
+
+-- Remove qestReverseLookup entries with invalid QestIDs
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestID')
+BEGIN 
+	DELETE FROM qestReverseLookup WHERE qestid NOT IN (SELECT qestid FROM qestobjects)
 END
 GO
 
@@ -1038,3 +1084,152 @@ BEGIN
 	ALTER TABLE AuditTrail DROP CONSTRAINT FK_qestReverseLookup_AuditTrail
 END
 GO
+
+-- Add QestParentID column to Equipment
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
+BEGIN
+  ALTER TABLE Equipment ADD QestParentID INT NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestUniqueParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
+BEGIN
+ALTER TABLE Equipment ADD QestUniqueParentID INT NULL
+END
+GO
+
+
+-- Add QestID Column to Equipment
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Equipment')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'Equipment'))
+	BEGIN
+	  alter table Equipment add QestID int not null
+	END
+END
+GO
+
+-- Add QestID Column to QestObject
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestobject')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'qestobject'))
+	BEGIN
+	  alter table qestobject add QestID int not null
+	END
+END
+GO
+
+-- Add QestID Column to WorkTemplates
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'WorkTemplates')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'WorkTemplates'))
+	BEGIN
+	  alter table WorkTemplates add QestID int not null
+	END
+END
+GO
+
+--Add QestID Column to DocumentConcreteRoundSingle, alter if exists
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentConcreteRoundSingle')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'DocumentConcreteRoundSingle'))
+	BEGIN
+		alter table DocumentConcreteRoundSingle add QestID int not null
+	END ELSE
+	BEGIN
+		alter table documentconcreteroundsingle alter column QestID int not null
+	END
+END
+GO
+
+-- QestID Fix for Record Tables
+-- Creates QestID column if it doesn't exist and sets null or zero QestIDs to the correct value
+IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
+	DROP PROCEDURE qest_FixRecordQestID_TEMP
+GO
+
+CREATE PROCEDURE qest_FixRecordQestID_TEMP 
+    @TableName nvarchar(128), 
+    @QestID int
+AS 
+BEGIN
+	DECLARE @SQL nvarchar(max)
+    IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName)
+	BEGIN
+		IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(@TableName))
+		BEGIN
+			Set @SQL = 'ALTER TABLE ' + @TableName + ' ADD QestID int null'
+			EXEC(@SQL)
+		END
+		Set @SQL = 'UPDATE ' + @TableName + ' SET QestID = ' + CAST(@QestID AS VARCHAR(16)) + ' WHERE ISNULL(QestID,0) = 0'
+		EXEC(@SQL)
+	END
+END
+GO
+
+EXEC qest_FixRecordQestID_TEMP 'SpecificationRecords', 70002
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentAsphaltBulkDensitySingle', 111235
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentAsphaltResModulusRecords', 111236
+GO
+EXEC qest_FixRecordQestID_TEMP 'documentbenkelmanbeam', 111238
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationBalanceDataSingle', 32001
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationBalanceRepeatabilitySingle', 32002
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationBalanceSinglePointSingle', 32003
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCaliforniaBearingRatioSingle', 111212
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentDynamicConePenetrometerBlows', 111246
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentLosAngelesValueSingle', 111252
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentSofteningPointRecords', 111263
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentStabilisationAgentCalSingle', 111265
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentStabilisationAgentContSingle', 111266
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentTextureSingle', 111268
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentViscosityOfEmulsionSingle', 111272
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentWeatheringQualityCycles', 111274
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentAggSoilDispersionSingle', 111234
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationNGConsistencyASSingle', 32004
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationNGConsistencySingle', 32005
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentCalibrationNuclearGaugeSingle', 32006
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentUncCompStrenSummarySingle', 111270
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentShrinkSwellSingle', 111277
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentRandomSiteLocationSingle', 111257
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentRockPointLoadSamples', 111259
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentRockPorositySpecimen', 111260
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentRockStrengthUniaxialSpecimen', 111261
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentMaximumDryCSSpecimen', 111253
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentMoistureCorrelationSingle', 111254
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentDegradationFactorSpecimen', 111244
+GO
+
+IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
+BEGIN
+	DROP PROCEDURE qest_FixRecordQestID_TEMP
+END
+GO
+
+
+
