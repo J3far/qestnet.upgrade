@@ -1026,3 +1026,8 @@ BEGIN
 	ALTER TABLE TestAnalysisTriaxial DROP CONSTRAINT PK_TestAnalysisTriaxial_1
 END
 GO
+
+-- Ensure old audit trigger has been removed
+IF OBJECT_ID('TR_AuditTrail_SetKeyUID', 'TR') IS NOT NULL
+	DROP TRIGGER TR_AuditTrail_SetKeyUID
+GO
