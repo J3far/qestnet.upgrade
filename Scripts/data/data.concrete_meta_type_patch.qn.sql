@@ -73,11 +73,11 @@ begin
 				where a.QestID in (1602)
 			)
 	begin
-	insert into RolePermissions 
-	select OldRP.QestChecksum, OldRP.RoleID, OldRP.locationID, 
+	insert into RolePermissions (RoleID, LocationID, ActivityID, InstanceID, AllowRead, AllowEdit, AllowAdd, AllowDelete, AllowAuthorise, PermissionMap)
+	select OldRP.RoleID, OldRP.locationID, 
 		   NewRP.ActivityID, OldRP.instanceID, OldRP.Allowread, 
 		   OldRP.AllowEdit, OldRP.AllowAdd, OldRP.AllowDelete, 
-		   OldRP.AllowAuthorise, OldRP.PermissionMap, OldRP.PermissionLevelID
+		   OldRP.AllowAuthorise, OldRP.PermissionMap
 	from (select distinct rp.RoleID, am.QestUniqueID as 'ActivityID', rp.QestUniqueID
 		  from RolePermissions rp 
 			   inner join Activities at on at.QestUniqueID = rp.ActivityID 
@@ -99,11 +99,11 @@ begin
 				where a.QestID in (1603)
 			)
 	begin
-	insert into RolePermissions 
-	select OldRP.QestChecksum, OldRP.RoleID, OldRP.locationID, 
+	insert into RolePermissions (RoleID, LocationID, ActivityID, InstanceID, AllowRead, AllowEdit, AllowAdd, AllowDelete, AllowAuthorise, PermissionMap)
+	select OldRP.RoleID, OldRP.locationID, 
 		   NewRP.ActivityID, OldRP.instanceID, OldRP.Allowread, 
 		   OldRP.AllowEdit, OldRP.AllowAdd, OldRP.AllowDelete, 
-		   OldRP.AllowAuthorise, OldRP.PermissionMap, OldRP.PermissionLevelID
+		   OldRP.AllowAuthorise, OldRP.PermissionMap
 	from (select distinct rp.RoleID, am.QestUniqueID as 'ActivityID', rp.QestUniqueID
 		  from RolePermissions rp 
 			   inner join Activities at on at.QestUniqueID = rp.ActivityID 
@@ -126,11 +126,11 @@ begin
 				where a.QestID in (1604)
 			)
 	begin
-	insert into RolePermissions 
-	select OldRP.QestChecksum, OldRP.RoleID, OldRP.locationID, 
+	insert into RolePermissions (RoleID, LocationID, ActivityID, InstanceID, AllowRead, AllowEdit, AllowAdd, AllowDelete, AllowAuthorise, PermissionMap)
+	select OldRP.RoleID, OldRP.locationID, 
 		   NewRP.ActivityID, OldRP.instanceID, OldRP.Allowread, 
 		   OldRP.AllowEdit, OldRP.AllowAdd, OldRP.AllowDelete, 
-		   OldRP.AllowAuthorise, OldRP.PermissionMap, OldRP.PermissionLevelID
+		   OldRP.AllowAuthorise, OldRP.PermissionMap
 	from (select distinct rp.RoleID, am.QestUniqueID as 'ActivityID', rp.QestUniqueID
 		  from RolePermissions rp 
 			   inner join Activities at on at.QestUniqueID = rp.ActivityID 
@@ -153,11 +153,11 @@ begin
 				where a.QestID in (1605)
 			)
 	begin
-	insert into RolePermissions 
-	select OldRP.QestChecksum, OldRP.RoleID, OldRP.locationID, 
+	insert into RolePermissions (RoleID, LocationID, ActivityID, InstanceID, AllowRead, AllowEdit, AllowAdd, AllowDelete, AllowAuthorise, PermissionMap)
+	select OldRP.RoleID, OldRP.locationID, 
 		   NewRP.ActivityID, OldRP.instanceID, OldRP.Allowread, 
 		   OldRP.AllowEdit, OldRP.AllowAdd, OldRP.AllowDelete, 
-		   OldRP.AllowAuthorise, OldRP.PermissionMap, OldRP.PermissionLevelID
+		   OldRP.AllowAuthorise, OldRP.PermissionMap
 	from (select distinct rp.RoleID, am.QestUniqueID as 'ActivityID', rp.QestUniqueID
 		  from RolePermissions rp 
 			   inner join Activities at on at.QestUniqueID = rp.ActivityID 
