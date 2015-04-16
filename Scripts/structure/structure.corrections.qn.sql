@@ -624,7 +624,9 @@ GO
 -- Remove qestReverseLookup entries with invalid QestIDs
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestID')
 BEGIN 
-	DELETE FROM qestReverseLookup WHERE qestid NOT IN (SELECT qestid FROM qestobjects)
+	--Remove invalid parents first
+	UPDATE qestReverseLookup SET QestUniqueParentID = Null, QestParentUUID = Null, QestParentID = NULL WHERE QestParentID NOT IN (SELECT QestID FROM QestObjects)
+	DELETE FROM qestReverseLookup WHERE QestID NOT IN (SELECT QestID FROM QestObjects)
 END
 GO
 
