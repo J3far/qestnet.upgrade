@@ -44,3 +44,20 @@ IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentAs
 BEGIN
 	UPDATE DocumentAsphaltPrepCompactionSingle SET QestID = 111233 WHERE QestID <= 0
 END 
+
+-- Delete any Users without an associated Person
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
+BEGIN
+	IF EXISTS(SELECT 1 FROM Users WHERE PersonID NOT IN (SELECT qestUniqueID FROM People) OR PersonID IS NULL)
+	BEGIN
+	  DELETE FROM Users WHERE PersonID NOT IN (SELECT qestuniqueID FROM People) OR PersonID IS NULL
+	END
+END
+GO
+
+--Replace null QestOwnerLabNo with 0 (global) for ListClient
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ListClient')
+BEGIN
+	UPDATE [dbo].[ListClient] SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
+END
+GO

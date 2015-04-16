@@ -331,11 +331,15 @@ BEGIN
 	
 	DECLARE @NN int
 	DECLARE @UID int 
+	DECLARE @LOCSPECIFIC bit
+	
+	-- Test if count is location specific
+	SELECT @LOCSPECIFIC = ISNULL(LocationSpecific,0) FROM Counters WHERE QestUniqueID = @QestUniqueParentID
 	
 	-- Get existing value
-	SELECT TOP 1 @UID = QestUniqueID, @NN = NextNumber FROM CounterValues WHERE 
-		QestUniqueParentID = @QestUniqueParentID AND
-		(QestOwnerLabNo = @LabNo OR (QestOwnerLabNo IS NULL AND @LabNo IS NULL)) AND
+	SELECT TOP 1 @UID = QestUniqueID, @NN = NextNumber FROM CounterValues
+	WHERE QestUniqueParentID = @QestUniqueParentID AND
+		((QestOwnerLabNo IS NULL AND @LOCSPECIFIC = 0) OR (QestOwnerLabNo = @LabNo AND NOT @LOCSPECIFIC = 0)) AND
 		(GroupingFieldValue1 = @GroupingFieldValue1 OR (GroupingFieldValue1 IS NULL AND @GroupingFieldValue1 IS NULL)) AND
 		(GroupingFieldValue2 = @GroupingFieldValue2 OR (GroupingFieldValue2 IS NULL AND @GroupingFieldValue2 IS NULL)) AND
 		(GroupingFieldValue3 = @GroupingFieldValue3 OR (GroupingFieldValue3 IS NULL AND @GroupingFieldValue3 IS NULL)) AND
@@ -346,7 +350,7 @@ BEGIN
 	BEGIN		
 		-- Insert new row and return NextNumber 1
 		INSERT INTO CounterValues (QestUniqueParentID, NextNumber, QESTOwnerLabNo, GroupingFieldValue1, GroupingFieldValue2, GroupingFieldValue3, GroupingFieldValue4, GroupingFieldValue5)
-		VALUES (@QestUniqueParentID, 2, @LabNo, @GroupingFieldValue1, @GroupingFieldValue2, @GroupingFieldValue3, @GroupingFieldValue4, @GroupingFieldValue5)	
+		VALUES (@QestUniqueParentID, 2, CASE @LOCSPECIFIC WHEN 0 THEN NULL ELSE @LabNo END, @GroupingFieldValue1, @GroupingFieldValue2, @GroupingFieldValue3, @GroupingFieldValue4, @GroupingFieldValue5)	
 		SET @NN = 1
 	
 	END ELSE BEGIN	

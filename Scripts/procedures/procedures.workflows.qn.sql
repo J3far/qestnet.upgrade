@@ -150,7 +150,7 @@ AS
 BEGIN
 	SELECT D.FieldName, D.DisplayType, D.FormatString, D.Caption, D.ReadOnly, D.Hidden, D.Width, D.AutoFill, 
 	D.ListField, D.RestrictField, COALESCE(D.ChildID, D.ListID, D.EquipmentID) As QestID, D.List, D.AdditionalData, D.ElementType, 
-	D.FilterBy, D.Mask, D.Description, I.CHARACTER_MAXIMUM_LENGTH as MaxLength
+	D.FilterBy, D.Mask, D.Description, COALESCE(D.MaxLength, I.CHARACTER_MAXIMUM_LENGTH) as MaxLength
  	FROM qestDisplayObjectCollection C
  		INNER JOIN qestDisplayObjectDetails D ON C.QestUniqueID = D.QestUniqueParentID
 		LEFT JOIN qestObjects O ON C.QestID = O.QestID AND O.Property = ''TableName''

@@ -41,6 +41,7 @@ procedures/procedures.workflows.qn.sql
 procedures/procedures.test_methods.qn.sql
 procedures/procedures.suitability_rule_config.qn.sql
 procedures/procedures.units_of_measure.qn.sql
+procedures/procedures.concrete_meta_type.qn.sql
 
 // Data
 data/data.corrections.after.qn.sql
@@ -49,6 +50,8 @@ data/data.business_rules.qn.sql
 data/data.object_types.qn.sql
 data/data.test_stage_types.qn.sql
 data/data.units_of_measure.qn.sql
+data/data.concrete_meta_type_template.qn.sql
+data/data.concrete_meta_type_patch.qn.sql
 
 // Structure - Foreign Keys
 structure/structure.foreignkeys.qn.sql
