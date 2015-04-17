@@ -24,6 +24,23 @@ BEGIN
 END
 GO
 
+-- Create LTP_PlannedTestStages table early if it does not exists as it is required for document upgrade
+IF NOT EXISTS(Select 1 from sys.tables where name = N'LTP_PlannedTestStages')
+BEGIN
+	CREATE TABLE [dbo].[LTP_PlannedTestStages](
+		[QestUUID] [uniqueidentifier] NOT NULL,
+		[PlannedTestUUID] [uniqueidentifier] NOT NULL,
+		[TestStageQestID] [int] NOT NULL,
+		[Index] [int] NOT NULL,
+	 CONSTRAINT [PK_LTP_PlannedTestStages] PRIMARY KEY CLUSTERED 
+	(
+		[QestUUID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+	PRINT 'Table created: LTP_PlannedTestStages'
+END
+GO
+
 
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SessionConnections' AND COLUMN_NAME = 'UserID' AND IS_NULLABLE = 'YES')
 BEGIN 
@@ -322,15 +339,47 @@ END
 GO
 
 --Create QestOwnerLabNo for table SpecificationRecords if it doesn't exist, retrieve value from specification
-IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SpecificationRecords')
 BEGIN
-  ALTER TABLE SpecificationRecords ADD QestOwnerLabNo INT NULL
-END 
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+	BEGIN
+	  ALTER TABLE SpecificationRecords ADD QestOwnerLabNo INT NULL
+	END 
+	IF EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+	BEGIN
+	  UPDATE SpecificationRecords SET QestOwnerLabNo = (SELECT QestOwnerLabNo FROM Specifications WHERE QestUniqueID = SpecificationID)
+	END 
+END
 GO
-IF EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
+
+--Create column TestQestUUID for table qestReportMapping if it doesn't exist
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestreportmapping')
 BEGIN
-  UPDATE SpecificationRecords SET QestOwnerLabNo = (SELECT QestOwnerLabNo FROM Specifications WHERE QestUniqueID = SpecificationID)
-END 
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'TestQestUUID' AND [object_id] = OBJECT_ID(N'qestreportmapping'))
+	BEGIN
+		ALTER TABLE qestreportmapping ADD TestQestUUID uniqueidentifier NULL
+	END
+END
+GO
+
+--Create column QestUniqueID for table qestReportMapping if it doesn't exist
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestreportmapping')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestUniqueID' AND [object_id] = OBJECT_ID(N'QestReportMapping'))
+	BEGIN
+		ALTER TABLE qestreportmapping ADD qestuniqueid int NOT NULL IDENTITY(1,1)
+	END
+END
+GO
+
+--Create column QestOwnerLabNo for table Users if it doesn't exist
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Users' AND COLUMN_NAME = 'QestOwnerLabNo')
+	BEGIN 
+		ALTER TABLE users ADD qestownerlabno int NOT NULL
+	END
+END
 GO
 
 -- Set Users.PersonID non-nullable
@@ -393,6 +442,34 @@ IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStage
 BEGIN
 	ALTER TABLE dbo.TestStageData ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
+GO
+
+--Set Equipment.QestOwnerLabNo non-nullable
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Equipment' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE Equipment ALTER COLUMN QestOwnerLabNo int NOT NULL
+END 
+GO
+
+--Set LaboratoryMapping.LabNo non-nullable
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'laboratorymapping' AND COLUMN_NAME = 'labno' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE laboratorymapping ALTER COLUMN labno int NOT NULL
+END 
+GO
+
+--Set SuitabilityRuleConfigurationTestConditions.SuitabilityRuleConfigurationUUID non-nullable
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SuitabilityRuleConfigurationTestConditions' AND COLUMN_NAME = 'SuitabilityRuleConfigurationUUID' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE SuitabilityRuleConfigurationTestConditions ALTER COLUMN SuitabilityRuleConfigurationUUID uniqueidentifier NOT NULL
+END 
+GO
+
+--Set SuitabilityRuleConfigurationTestConditions.TestConditionUUID non-nullable
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SuitabilityRuleConfigurationTestConditions' AND COLUMN_NAME = 'TestConditionUUID' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE SuitabilityRuleConfigurationTestConditions ALTER COLUMN TestConditionUUID uniqueidentifier NOT NULL
+END 
 GO
 
 -- Remove bad default name: DF_Table_1_QestUUID1
@@ -622,11 +699,12 @@ END
 GO
 
 -- Remove qestReverseLookup entries with invalid QestIDs
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestID')
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' AND COLUMN_NAME = 'QestID') AND
+   EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestObjects' AND COLUMN_NAME = 'QestID')
 BEGIN 
 	--Remove invalid parents first
-	UPDATE qestReverseLookup SET QestUniqueParentID = Null, QestParentUUID = Null, QestParentID = NULL WHERE QestParentID NOT IN (SELECT QestID FROM QestObjects)
-	DELETE FROM qestReverseLookup WHERE QestID NOT IN (SELECT QestID FROM QestObjects)
+	UPDATE qestReverseLookup SET QestUniqueParentID = Null, QestParentUUID = Null, QestParentID = NULL WHERE QestParentid NOT IN (SELECT qestid FROM qestobjects)
+	DELETE FROM qestReverseLookup WHERE qestid NOT IN (SELECT qestid FROM qestobjects)
 END
 GO
 
@@ -678,48 +756,9 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentSampleTransferRequestSingle')
-BEGIN
-	UPDATE DocumentSampleTransferRequestSingle SET QestID = 42001 WHERE ISNULL(QestID, 0) = 0
-END
-
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentHveemStabilitySingle')
-BEGIN
-	UPDATE DocumentHveemStabilitySingle SET QestID = 111230 WHERE ISNULL(QestID, 0) = 0
-END
-GO
-
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentSodiumSulphateSUSASingle')
-BEGIN
-	UPDATE DocumentSodiumSulphateSUSASingle SET QestID = 111231 WHERE ISNULL(QestID, 0) = 0
-END
-GO
-
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentConcreteVaporEmissionSpecimen')
-BEGIN
-	UPDATE DocumentConcreteVaporEmissionSpecimen SET QestID = 111232 WHERE ISNULL(QestID, 0) = 0
-END
-GO
-
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentConcreteDiameterAverage')
 BEGIN
 	UPDATE DocumentConcreteDiameterAverage SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo = 998
-END
-GO
-
--- Shrinkage QestID
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentConcreteShrinkageSpecimen')
-BEGIN 
-	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteShrinkageSpecimen' AND COLUMN_NAME = 'QestID')
-	BEGIN 
-		ALTER TABLE DocumentConcreteShrinkageSpecimen ADD QestID int NULL DEFAULT 111100 
-	END
-END
-GO
-
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteShrinkageSpecimen' AND COLUMN_NAME = 'QestID')
-BEGIN 
-	UPDATE DocumentConcreteShrinkageSpecimen SET QestID = 111100 WHERE ISNULL(QestID, 0) = 0	
 END
 GO
 
@@ -1059,7 +1098,7 @@ GO
 --Change DocumentConcreteDestructive.ReturnedLoad to real
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentConcreteDestructive' AND COLUMN_NAME = 'ReturnedLoad' AND DATA_TYPE = 'int')
 BEGIN
-  ALTER TABLE [dbo].[DocumentConcreteDestructive] ALTER COLUMN [ReturnedLoad] real NULL;
+	ALTER TABLE [dbo].[DocumentConcreteDestructive] ALTER COLUMN [ReturnedLoad] real NULL;
 END
 GO
 
@@ -1088,24 +1127,25 @@ END
 GO
 
 -- Add QestParentID column to Equipment
-IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Equipment')
 BEGIN
-  ALTER TABLE Equipment ADD QestParentID INT NULL
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
+	BEGIN
+		ALTER TABLE Equipment ADD QestParentID INT NULL
+	END
+	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestUniqueParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
+	BEGIN
+		ALTER TABLE Equipment ADD QestUniqueParentID INT NULL
+	END
 END
 GO
-IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestUniqueParentID' AND [object_id] = OBJECT_ID(N'Equipment'))
-BEGIN
-ALTER TABLE Equipment ADD QestUniqueParentID INT NULL
-END
-GO
-
 
 -- Add QestID Column to Equipment
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Equipment')
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'Equipment'))
 	BEGIN
-	  alter table Equipment add QestID int not null
+		ALTER TABLE Equipment ADD QestID int NOT NULL
 	END
 END
 GO
@@ -1115,7 +1155,7 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestobjec
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'qestobject'))
 	BEGIN
-	  alter table qestobject add QestID int not null
+		ALTER TABLE qestobject ADD QestID int NOT NULL
 	END
 END
 GO
@@ -1125,7 +1165,7 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'WorkTempl
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'WorkTemplates'))
 	BEGIN
-	  alter table WorkTemplates add QestID int not null
+		ALTER TABLE WorkTemplates ADD QestID int NOT NULL
 	END
 END
 GO
@@ -1135,10 +1175,10 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentC
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestID' AND [object_id] = OBJECT_ID(N'DocumentConcreteRoundSingle'))
 	BEGIN
-		alter table DocumentConcreteRoundSingle add QestID int not null
+		ALTER TABLE DocumentConcreteRoundSingle ADD QestID INT NOT NULL
 	END ELSE
 	BEGIN
-		alter table documentconcreteroundsingle alter column QestID int not null
+		ALTER TABLE documentconcreteroundsingle ALTER COLUMN QestID INT NOT NULL
 	END
 END
 GO
@@ -1226,12 +1266,19 @@ EXEC qest_FixRecordQestID_TEMP 'DocumentMoistureCorrelationSingle', 111254
 GO
 EXEC qest_FixRecordQestID_TEMP 'DocumentDegradationFactorSpecimen', 111244
 GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentSampleTransferRequestSingle', 42001
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentHveemStabilitySingle', 111230
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentSodiumSulphateSUSASingle', 111231
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentConcreteVaporEmissionSpecimen', 111232
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentConcreteShrinkageSpecimen', 111100
+GO
 
 IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
 BEGIN
 	DROP PROCEDURE qest_FixRecordQestID_TEMP
 END
 GO
-
-
-
