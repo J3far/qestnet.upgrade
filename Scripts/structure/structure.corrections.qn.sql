@@ -1276,6 +1276,8 @@ EXEC qest_FixRecordQestID_TEMP 'DocumentConcreteVaporEmissionSpecimen', 111232
 GO
 EXEC qest_FixRecordQestID_TEMP 'DocumentConcreteShrinkageSpecimen', 111100
 GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentLayerThicknessSingle', 111251
+GO
 
 IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
 BEGIN
