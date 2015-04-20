@@ -347,7 +347,7 @@ BEGIN
 	END 
 	IF EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'SpecificationRecords'))
 	BEGIN
-	  UPDATE SpecificationRecords SET QestOwnerLabNo = (SELECT QestOwnerLabNo FROM Specifications WHERE QestUniqueID = SpecificationID)
+	  exec('UPDATE SpecificationRecords SET QestOwnerLabNo = (SELECT QestOwnerLabNo FROM Specifications WHERE QestUniqueID = SpecificationID)')
 	END 
 END
 GO
@@ -444,7 +444,7 @@ BEGIN
 END
 GO
 
---Set Equipment.QestOwnerLabNo non-nullable
+----Set Equipment.QestOwnerLabNo non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Equipment' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
 BEGIN
 	ALTER TABLE Equipment ALTER COLUMN QestOwnerLabNo int NOT NULL
@@ -695,6 +695,12 @@ BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestUniqueID_QestID'
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestUniqueID'
 	ALTER TABLE dbo.qestReverseLookup ALTER COLUMN QestUniqueID int NOT NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' and COLUMN_NAME = 'QestParentUUID')
+BEGIN
+	ALTER TABLE qestReverseLookup ADD QestParentUUID uniqueidentifier null
 END
 GO
 
