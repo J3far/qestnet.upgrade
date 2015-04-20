@@ -1284,6 +1284,10 @@ EXEC qest_FixRecordQestID_TEMP 'DocumentConcreteShrinkageSpecimen', 111100
 GO
 EXEC qest_FixRecordQestID_TEMP 'DocumentLayerThicknessSingle', 111251
 GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentPermeabilityTest', 111255
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentSpallLithologicalSingle', 111264
+GO
 
 IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
 BEGIN
