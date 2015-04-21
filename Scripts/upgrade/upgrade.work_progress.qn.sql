@@ -21,7 +21,8 @@ GO
 -- Delete any where the document is gone
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUUID')
 BEGIN
-	DELETE FROM WorkProgress WHERE QestUUID IS NULL OR NOT QestUUID IN (SELECT QestUUID FROM qestReverseLookup)
+	DELETE FROM WorkProgress WHERE QestUUID is Null 
+	DELETE FROM WorkProgress WHERE QestUUID NOT IN (SELECT QestUUID FROM qestReverseLookup)
 END
 GO
 

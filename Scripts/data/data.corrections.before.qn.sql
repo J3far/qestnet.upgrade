@@ -17,6 +17,7 @@ GO
 -- Delete any stage definitions not in use - genuine ones will be added again in later script
 if exists (select * from information_schema.tables where table_name = 'qestTestStage')
   and exists (select * from information_schema.tables where table_name = 'TestStageData')
+  and exists (select * from information_schema.tables where table_name = 'LTP_PlannedTestStages')
 begin
   DELETE FROM qestTestStage 
   WHERE TestStageQestID NOT IN (SELECT QestID FROM TestStageData)
