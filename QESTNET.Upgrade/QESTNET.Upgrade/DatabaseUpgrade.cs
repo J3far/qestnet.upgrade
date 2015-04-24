@@ -143,6 +143,10 @@ namespace Spectra.QESTNET.Upgrade
             if (this.manifest.UpgradeVersion == default(Version))
                 throw new Exception("No upgrade version is set for the upgrade manifest.");
 
+            // Ignore zeroed major & minor versions - indicates dev code
+            if (this.manifest.UpgradeVersion <= Version.Parse("0.0"))
+                return;
+
             // If current version is not set then any upgrade version is allowed
             if (this.currentVersion != default(Version))
             {
