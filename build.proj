@@ -35,13 +35,6 @@
              Properties="Configuration=Release;" />
   </Target>
 
-  <!-- Publish the assembly files to Libraries (only for release version) -->
-  <Target Name="Publish" Condition=" '$(Configuration)' == 'Release' ">
-    <MSBuild Projects="$(MSBuildProjectDirectory)\QESTNET.Upgrade\build.proj;"
-             Targets="Publish"
-             Properties="Configuration=Release;MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(Build);RevisionVersion=$(Revision)" />
-  </Target>
-
   <!-- Package the files to zip in the bin and Distribution -->
   <Target Name="Package">
 
