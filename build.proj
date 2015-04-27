@@ -5,6 +5,14 @@
 
   <Target Name="SetVersion">
 
+    <PropertyGroup>
+      <MajorVersion>$([System.Text.RegularExpressions.Regex]::Match($(Version.Split('.')[0]), "\d+"))</MajorVersion>
+      <MinorVersion>$([System.Text.RegularExpressions.Regex]::Match($(Version.Split('.')[1]), "\d+"))</MinorVersion>
+    </PropertyGroup>
+    
+    <Error Condition="'$(MajorVersion)' == ''" Text="Error: MajorVersion not defined." />
+    <Error Condition="'$(MinorVersion)' == ''" Text="Error: MinorVersion not defined." />
+
     <!-- Generate a days counter: will use this as revision instead -->
     <Version StartDate="1-JAN-2014" BuildType="Automatic" RevisionType="Automatic">
       <Output TaskParameter="Build" PropertyName="Build" />
