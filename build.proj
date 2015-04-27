@@ -5,7 +5,7 @@
 
   <Target Name="SetVersion">
 
-    <PropertyGroup>
+    <PropertyGroup Condition="'$(Version)' != ''">
       <MajorVersion>$([System.Text.RegularExpressions.Regex]::Match($(Version.Split('.')[0]), "\d+"))</MajorVersion>
       <MinorVersion>$([System.Text.RegularExpressions.Regex]::Match($(Version.Split('.')[1]), "\d+"))</MinorVersion>
     </PropertyGroup>
