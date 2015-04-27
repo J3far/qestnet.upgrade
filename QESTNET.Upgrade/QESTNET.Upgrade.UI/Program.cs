@@ -8,9 +8,6 @@ namespace Spectra.QESTNET.Upgrade.UI
 {
     static class Program
     {
-
-        INTENTIONAL SCREWUP TO TEST TEAMCITY NOTIFIER
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
