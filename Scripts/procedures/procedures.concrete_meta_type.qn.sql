@@ -106,10 +106,31 @@ as
   else
   begin
 	Select Coalesce(a.TemplateName, b.TemplateName) as 'TemplateName', Coalesce(a.TemplateQestUniqueID, b.TemplateQestUniqueID) as 'TemplateQestUniqueID', Coalesce(a.IsDefaultTemplate, b.IsDefaultTemplate) as 'IsDefaultTemplate' from 
-	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = 0) a
+	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and QestOwnerLabNo = @LabNo) a
 	full join
-	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and QestOwnerLabNo = @LabNo) b
+	(select distinct TemplateQestUniqueID, TemplateName, IsDefaultTemplate from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = 0) b
 	on a.TemplateName = b.TemplateName
+  end
+
+GO
+
+if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetMetaID]') and type in (N'P', N'PC'))
+  exec ('create proc [dbo].[qest_TypeMeta_GetMetaID] as select 0 tmp');
+GO
+alter proc [dbo].qest_TypeMeta_GetMetaID
+  @Type nvarchar(8), @TemplateID int, @SampleQestID int, @LabNo int
+as
+  if @LabNo = 0 
+  begin
+	select MetaQestID from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = @LabNo and [Type] = @Type and TemplateQestUniqueID = @TemplateID
+  end
+  else
+  begin
+	Select Coalesce(a.MetaQestID, b.MetaQestID) as 'MetaQestID' from 
+	(select distinct MetaQestID from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and QestOwnerLabNo = @LabNo and [Type] = @Type and TemplateQestUniqueID = @TemplateID) a
+	full join
+	(select distinct MetaQestID from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = 0 and [Type] = @Type and TemplateQestUniqueID = @TemplateID) b
+	on a.MetaQestID = b.MetaQestID
   end
 
 GO
