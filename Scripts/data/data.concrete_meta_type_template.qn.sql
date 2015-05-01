@@ -43,7 +43,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (1999)' OR Template
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'MOR50', 68650)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'MOR75', 68650)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'MORCUBE', 68701)
---INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'OTHER', 68900)
+--INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'OTHER', 69900)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'SHOTCOR', 68600)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1602, 'SPLTEN', 68330)
 
@@ -60,7 +60,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (1999)' OR Template
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1603, '', 67102) --Slump Only
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1603, 'COMP100', 68002)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1603, 'COMP150', 68002)
---INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1603, 'OTHER', 68900)
+--INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1603, 'OTHER', 69900)
 
 ----AU Defaults AS
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, '', 67100) --Slump Only
@@ -78,7 +78,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (1999)' OR Template
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, 'GROCUBE', 68800)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, 'INDTEN', 68300)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, 'MORCUBE', 68700)
---INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, 'OTHER', 68900)
+--INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1604, 'OTHER', 69900)
 
 ----US Masonry Defaults
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'ABSBLOCK', 69070)
@@ -116,7 +116,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (1999)' OR Template
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'MOR50', 68651)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'MOR75', 68651)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'MORCUBE', 68704)
---INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'OTHER', 68900)
+--INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'OTHER', 69900)
 --INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Default', 1, 0, 1605, 'SOLPRIS', 68920)
 
 --US Defaults ASTM
@@ -147,7 +147,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'MOR50', 68650)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'MOR75', 68650)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'MORCUBE', 68701)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'OTHER', 69900)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'SHOTCOR', 68600)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1602, 'SPLTEN', 68330)
 
@@ -159,7 +159,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('TxDOT', 7, 0, 1602, 'COMP75', 68005)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('TxDOT', 7, 0, 1602, 'COMPCOR', 68406)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('TxDOT', 7, 0, 1602, 'FLEX', 68104)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('TxDOT', 7, 0, 1602, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('TxDOT', 7, 0, 1602, 'OTHER', 69900)
 
 --US Defaults AASHTO
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, '', 67106) --Slump Only
@@ -167,7 +167,6 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'COMP150', 68006)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'COMP225', 68006)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'COMP75', 68006)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'COMPCOR', 68406)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'FLEX', 68105)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AASHTO', 8, 0, 1602, 'FLEXC', 68131)
 
@@ -187,7 +186,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('NZS', 6, -1, 1603, '', 67102) --Slump Only
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('NZS', 6, -1, 1603, 'COMP100', 68002)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('NZS', 6, -1, 1603, 'COMP150', 68002)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('NZS', 6, -1, 1603, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('NZS', 6, -1, 1603, 'OTHER', 69900)
 
 --AU Defaults AS
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, '', 67100) --Slump Only
@@ -205,7 +204,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, 'GROCUBE', 68800)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, 'INDTEN', 68300)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, 'MORCUBE', 68700)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (2015)', 2, -1, 1604, 'OTHER', 69900)
 
 --AU Defaults RMS
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, '', 67103) --Slump Only
@@ -223,7 +222,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, 'GROCUBE', 68802)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, 'INDTEN', 68301)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, 'MORCUBE', 68702)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('RMS', 4, 0, 1604, 'OTHER', 69900)
 
 --AU Defaults Q
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, '', 67104) --Slump Only
@@ -241,7 +240,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, 'GROCUBE', 68803)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, 'INDTEN', 68302)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, 'MORCUBE', 68703)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('Q', 5, 0, 1604, 'OTHER', 69900)
 
 --AU Defaults AS Old
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, '', 67100) --Slump Only
@@ -259,7 +258,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, 'GROCUBE', 68805)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, 'INDTEN', 68300)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, 'MORCUBE', 68705)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('AS (1999)', 14, 0, 1604, 'OTHER', 69900)
 
 --WA
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('WA', 12, 0, 1604, 'GROCUBE', 68806)
@@ -303,7 +302,7 @@ INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [Is
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'MOR50', 68651)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'MOR75', 68651)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'MORCUBE', 68704)
-INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'OTHER', 68900)
+INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'OTHER', 69900)
 INSERT INTO QestSpecimenTypeMetaMap ([TemplateName], [TemplateQestUniqueID], [IsDefaultTemplate], [SampleQestID], [Type], [MetaQestID]) VALUES ('ASTM', 3, -1, 1605, 'SOLPRIS', 68920)
 
 --US BS Masonry Defaults
