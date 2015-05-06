@@ -168,7 +168,7 @@ GO
                                     currentObjectType = new QestlabObjectType(qestID, lineNumber);
                                     if (objectTypes.ContainsKey(qestID))
                                     {
-                                        validationWarnings.Add(string.Format("Duplicate object types detected on lines {0} and {1}, QestID {3}", objectTypes[qestID].StartLineNumber, lineNumber, qestID));
+                                        validationWarnings.Add(string.Format("Duplicate object types detected on lines {0} and {1}, QestID {2}", objectTypes[qestID].StartLineNumber, lineNumber, qestID));
                                     }
                                     else
                                     {
@@ -193,7 +193,7 @@ GO
                                     var qestID = int.Parse(match.Groups[1].Value);
                                     if (qestID != currentObjectType.QestID)
                                     {
-                                        validationWarnings.Add(string.Format("Mismatching START/END QestIDs in qestlab.qes on lines {0} and {1}. Values {3}, {4}", currentObjectType.StartLineNumber, lineNumber, currentObjectType.QestID, qestID));
+                                        validationWarnings.Add(string.Format("Mismatching START/END QestIDs in qestlab.qes on lines {0} and {1}. Values {2}, {3}", currentObjectType.StartLineNumber, lineNumber, currentObjectType.QestID, qestID));
                                     }
 
                                     writer.WriteLine("GO");
