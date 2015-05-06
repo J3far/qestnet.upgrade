@@ -32,14 +32,17 @@ as
 	   end
 	
     
-	select o1.Value as 'Method', o3.Value as 'Metas', o4.Value as 'Size' 
+	select o1.QestID as 'QestID', o1.Value as 'Method', o3.Value as 'Metas', o4.Value as 'Sizes' 
     from            qestObjects o1 
          inner join qestObjects o2 on o1.QestID = o2.QestID 
          inner join qestObjects o3 on o1.QestID = o3.QestID 
          left join  qestObjects o4 on o1.QestID = o4.QestID and o4.Property = 'Size' 
+         inner join qestObjects o5 on o1.QestID = o5.QestID 
     where     o1.Property = 'Method' 
           and o2.Property = 'ActivityParent' and o2.Value = @TestMethodActivityParent 
           and o3.Property = 'Metas' 
+          and o5.Property = 'Sortable'
+    order by o5.Value
 
 GO
 
@@ -48,28 +51,22 @@ if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qe
   exec ('create proc [dbo].[qest_TypeMeta_GetTypeMetaSizeList] as select 0 tmp');
 GO
 alter proc [dbo].qest_TypeMeta_GetTypeMetaSizeList
-  @SampleQestID int
+  @SampleQestID int, @TemplateUniqueID int, @LabNo int
 as
-
-    Select T.TypeName, B.MetaID, T.Size 
-    From 
-       (SELECT o2.Value AS 'BaseType', o2.QestID AS 'MetaID' 
-        FROM           qestObjects o1 
-            inner join qestObjects o2 on o1.QestID = o2.QestID 
-            inner join qestObjects o3 on o1.QestID = o3.QestID 
-        WHERE     o1.Property = 'ActivityParent' and o1.Value = 67000 
-              and o2.Property = 'Basetype' 
-              and o3.Property = 'ActivityDependency' and o3.Value = @SampleQestID) B 
-        left join 
-        (SELECT o4.Value AS 'SpecimenBaseType', o6.Value AS 'TypeName', CAST(o7.Value AS INT) AS 'Size' 
-        FROM           qestObjects o4 
-             inner join qestObjects o5 on o4.QestID = o5.QestID 
-             inner join qestObjects o6 on o4.QestID = o6.QestID 
-             left join  qestObjects o7 on o4.QestID = o7.QestID and o7.Property = 'Size' and ISNUMERIC(o7.Value) = 1 
-         WHERE o4.Property = 'SpecimenBaseType' 
-           and o5.Property = 'ActivityParent' and o5.Value = 16100 
-           and o6.Property = 'Name') T on T.SpecimenBaseType = B.BaseType 
-    Order By T.SpecimenBaseType, T.Size
+	Select M.[Type], M.MetaQestID, O.Size
+	From 
+        (Select Coalesce(a.TemplateQestUniqueID, b.TemplateQestUniqueID) as 'TemplateQestUniqueID', Coalesce(a.MetaQestID, b.MetaQestID) as 'MetaQestID', Coalesce(a.[Type], b.[Type]) as 'Type' from 
+        (select distinct TemplateQestUniqueID, TemplateName, MetaQestID, [Type] from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and TemplateQestUniqueID = @TemplateUniqueID and QestOwnerLabNo = @LabNo) a
+         full join
+        (select distinct TemplateQestUniqueID, TemplateName, MetaQestID, [Type] from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and TemplateQestUniqueID = @TemplateUniqueID and isnull(QestOwnerLabNo,0) = 0) b
+         on a.TemplateName = b.TemplateName
+	) M 
+    left join 
+	    (SELECT o1.QestID AS 'MetaID', CAST(o1.Value AS INT) AS 'Size' 
+		 FROM qestObjects o1  
+		 WHERE o1.Property = 'Size' and ISNUMERIC(o1.Value) = 1 
+    ) O  
+    on M.MetaQestID = O.MetaID
 GO
 
 
@@ -77,7 +74,7 @@ if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qe
   exec ('create proc [dbo].[qest_TypeMeta_GetTemplateMetaNotesList] as select 0 tmp');
 GO
 alter proc [dbo].qest_TypeMeta_GetTemplateMetaNotesList
-  @SampleQestID int, @TemplateUniqueID int
+  @SampleQestID int, @TemplateUniqueID int, @LabNo int
 as
     select distinct O.Notes, O.NoteFamily, O.BaseType
     from (select o1.value as 'Notes', o1.Property as 'NoteFamily', o1.QestID as 'MetaID', o3.Value as 'BaseType' 
@@ -88,8 +85,14 @@ as
                 and o2.Property = 'ActivityParent' and o2.Value = 67000
                 and o3.Property = 'BaseType'
          ) O     
-         inner join QestSpecimenTypeMetaMap M on M.MetaQestID = O.MetaID     
-    where M.TemplateQestUniqueID = @TemplateUniqueID and M.SampleQestID = @SampleQestID
+         inner join 
+         (Select Coalesce(a.TemplateQestUniqueID, b.TemplateQestUniqueID) as 'TemplateQestUniqueID', Coalesce(a.MetaQestID, b.MetaQestID) as 'MetaQestID' from 
+	     (select distinct TemplateQestUniqueID, TemplateName, MetaQestID from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and QestOwnerLabNo = @LabNo) a
+	     full join
+	     (select distinct TemplateQestUniqueID, TemplateName, MetaQestID from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and isnull(QestOwnerLabNo,0) = 0) b
+	      on a.TemplateName = b.TemplateName
+	     ) M on M.MetaQestID = O.MetaID     
+    where M.TemplateQestUniqueID = @TemplateUniqueID
     
 GO
 
