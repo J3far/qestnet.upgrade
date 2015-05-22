@@ -1,13 +1,7 @@
 
---  Trigger for automatic creation of LaboratoryMapping rows
+--  Remove trigger for automatic creation of LaboratoryMapping rows
 IF OBJECT_ID('TR_LaboratoryMapping', 'TR') IS NOT NULL
 	DROP TRIGGER TR_LaboratoryMapping
-GO
-
-CREATE TRIGGER TR_LaboratoryMapping
-ON Laboratory AFTER INSERT, UPDATE
-AS
-	EXEC dbo.qest_UpdateLaboratoryMappings
 GO
 
 -- Trigger for automatic creation of qestObject rows (QestIDs)
