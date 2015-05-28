@@ -1294,3 +1294,24 @@ BEGIN
 	DROP PROCEDURE qest_FixRecordQestID_TEMP
 END
 GO
+
+-- Change InspectionRadiographic.IqiMin to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'IqiMin' AND DATA_TYPE = 'int')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN IqiMin real
+END
+GO
+
+-- Change InspectionRadiographic.IqiMax to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'IqiMax' AND DATA_TYPE = 'int')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN IqiMax real
+END
+GO
+
+--Change InspectionRadiographic.Iqi to nvarchar(20)
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'Iqi' AND DATA_TYPE = 'int')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN Iqi nvarchar(20)
+END
+GO
