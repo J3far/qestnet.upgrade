@@ -4,6 +4,11 @@ IF OBJECT_ID('TR_LaboratoryMapping', 'TR') IS NOT NULL
 	DROP TRIGGER TR_LaboratoryMapping
 GO
 
+--  Remove trigger for copying client/project details from WO to Billing (no longer required)
+IF OBJECT_ID('TR_CopyProjectToBilling', 'TR') IS NOT NULL
+	DROP TRIGGER TR_CopyProjectToBilling
+GO
+
 -- Trigger for automatic creation of qestObject rows (QestIDs)
 IF OBJECT_ID('TR_qestObjects_QestObjectID', 'TR') IS NOT NULL
 	DROP TRIGGER TR_qestObjects_QestObjectID

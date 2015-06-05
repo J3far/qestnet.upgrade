@@ -62,3 +62,10 @@ BEGIN
 	UPDATE [dbo].[ListClient] SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL
 END
 GO
+
+--Drops the IX_Equipment_QestOwnerLabNo to allow nullable QestOwnerLabNo to be changed to Non-Nullable
+IF EXISTS(SELECT 1 FROM SYS.INDEXES WHERE name = 'IX_Equipment_QestOwnerLabNo')
+BEGIN
+      DROP INDEX Equipment.IX_Equipment_QestOwnerLabNo
+END
+GO

@@ -4,8 +4,9 @@
 Development releases are automatically built by TeamCity whenever changes are pushed to the *dev-1.0* branch.  The output can be found in *\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\Builds\Development\*.
 
 ###Public Release Build Process
-1. **Fetch the latest** of the branches *dev-1.0* and *release-1.0*
-2. **Checkout** *release-1.0* and **merge** in *dev-1.0*
+1. **Fetch the latest** of the branches *dev-1.0* and *release-1.0* from origin.
+2. **Advance** your local branches *dev-1.0* and *release-1.0* to the latest origin heads. (*git merge -ff-only*)
+2. **Checkout** *release-1.0* and **merge** in the *dev-1.0* branch.  (a *qest_objects.qn.sql* conflict is likely from differences between dev and release in VSS)
 3. **Make any additional changes** to *release-1.0* required and commit those.  (e.g. *qest_objects.qn.sql* from the correct branch)
 4. **Push** the merge and any manual commits on *release-1.0* to Git.
 5. **Open** TeamCity and go to the [Parameters](http://adlv0024:58590/admin/editProject.html?projectId=QestnetUpgrade&tab=projectParams) section of Edit Settings of the QESTNET.Upgrade root project.
