@@ -179,3 +179,55 @@ begin
 end
 
 go
+
+
+
+-- Patch for new field "CrushingMethodQestID"
+--Masonry
+if exists(select CrushingMethodQestID from (select top 10 CrushingMethodQestID from DocumentConcreteDestructive where QestID = 1605 order by QestUniqueID asc) T where T.CrushingMethodQestID is null)
+begin 
+	update C
+	set CrushingMethodQestID = TM.CrushingMethodQestID
+	from DocumentConcreteDestructive C
+	     left join 
+	     (
+			select o1.QestID as 'CrushingMethodQestID',  o3.Value as 'CrushingMethod'
+			from qestObjects o1 
+				 inner join qestObjects o2 on o1.QestID = o2.QestID
+				 inner join qestObjects o3 on o1.QestID = o3.QestID
+			where o1.Property = 'ActivityParent' and o1.Value = '66500' and o2.Property = 'ActivityDependency' and o2.Value = '1605'
+			and o3.Property = 'Method'
+		 ) TM on C.CrushingMethod = TM.CrushingMethod
+	where C.QestID = 1605 and C.CrushingMethodQestID is null and not C.CrushingMethod is null
+end
+--Concrete
+if exists(select CrushingMethodQestID from (select top 10 CrushingMethodQestID from DocumentConcreteDestructive where QestID = 1602 order by QestUniqueID asc) T where T.CrushingMethodQestID is null)
+begin 
+	update C
+	set CrushingMethodQestID = TM.CrushingMethodQestID
+	from DocumentConcreteDestructive C
+	     left join 
+	     (
+			select o1.QestID as 'CrushingMethodQestID',  o3.Value as 'CrushingMethod'
+			from qestObjects o1 
+				 inner join qestObjects o2 on o1.QestID = o2.QestID
+				 inner join qestObjects o3 on o1.QestID = o3.QestID
+			where o1.Property = 'ActivityParent' and o1.Value = '66000' and o2.Property = 'ActivityDependency' and o2.Value = '1602'
+			and o3.Property = 'Method'
+		 ) TM on C.CrushingMethod = TM.CrushingMethod
+	where C.QestID = 1602 and C.CrushingMethodQestID is null and not C.CrushingMethod is null
+end
+
+go
+
+
+--Patch to convert existing Masonry Samples over to use "ASTM (2007)" (id = 17) instead of "ASTM" (id = 3)
+if exists(select TypeMetaTemplateID from (select top 10 TypeMetaTemplateID from DocumentConcreteDestructive where QestID = 1605 order by QestUniqueID asc) T where T.TypeMetaTemplateID = 3)
+begin 
+	update C
+	set TypeMetaTemplateID = 17
+	from DocumentConcreteDestructive C
+	where C.QestID = 1605 and C.TypeMetaTemplateID = 3
+end
+
+go
