@@ -69,3 +69,10 @@ BEGIN
       DROP INDEX Equipment.IX_Equipment_QestOwnerLabNo
 END
 GO
+
+--Delete any records with zero-value QestUniqueID in qestReverseLookup
+IF EXISTS(SELECT 1 FROM qestReverseLookup WHERE QestUniqueID = 0)
+BEGIN
+	DELETE FROM qestReverseLookup WHERE QestUniqueID=0
+END
+GO
