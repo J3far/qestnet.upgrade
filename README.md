@@ -12,7 +12,7 @@ The output can be found in *"\\\ADLS0003\Development\Product Distribution\QESTNE
 	*git merge -ff-only origin/dev-1.0*
 	
 2. **Checkout** *release-1.0* and **merge** in the *dev-1.0* branch.  
-	NOTE: A *qest_objects.qn.sql* conflict is likely from differences between dev and release in VSS
+	NOTE: A *qest_objects.qn.sql* conflict is likely from differences between dev and release in VSS	
 	*git checkout release-1.0*
 	*git merge dev-1.0*
 	
