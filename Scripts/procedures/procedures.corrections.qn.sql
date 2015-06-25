@@ -67,3 +67,9 @@ IF OBJECT_ID('TR_DocumentAtterbergLimitsCPSpecimens_RL', 'TR') IS NOT NULL
 	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsCPSpecimens_RL'
 GO
 
+IF OBJECT_ID('TR_DocumentConcreteShrinkageSpecimen_RL', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentConcreteShrinkageSpecimen_RL
+	PRINT 'Removed trigger: TR_DocumentConcreteShrinkageSpecimen_RL'
+GO
+
+
