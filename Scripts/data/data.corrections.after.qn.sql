@@ -90,9 +90,3 @@ begin
 end
 GO
 
--- Remove duplicate rows in qestReportMapping
-IF EXISTS(SELECT 1 FROM qestReportMapping GROUP BY ReportQestID,ReportQestUniqueID,TestQestID,TestQestUniqueID,Mapping HAVING COUNT(*) > 1)
-BEGIN
-	DELETE FROM qestReportMapping WHERE QestUniqueID NOT IN (SELECT MIN(QestUniqueID) FROM qestReportMapping GROUP BY ReportQestID,ReportQestUniqueID,TestQestID,TestQestUniqueID,Mapping)
-END 
-GO
