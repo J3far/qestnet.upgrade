@@ -92,3 +92,53 @@ BEGIN CATCH
 	  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @errMessage, @errProcedure);
 END CATCH
 GO
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_ValidateColumnList' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_ValidateColumnList]
+END
+GO
+
+CREATE PROCEDURE [dbo].[qest_ValidateColumnList] 
+	@Columns as nvarchar(500), -- Comma-separated list of column names to check
+	@TableName as nvarchar(200)  
+AS
+BEGIN
+	SET NOCOUNT ON 
+
+	IF NOT EXISTS(SELECT * FROM sys.Tables WHERE Name = @TableName AND Type = N'U') RETURN
+	
+	DECLARE @ExistingColumns nvarchar(500), @CurrentColumn nvarchar(200)
+	SET @ExistingColumns = ''
+
+	-- For each column name in @Columns, check if it exists and add to @ExistingColumns if so
+	DECLARE @i int, @j int
+		SET @i = 1
+		WHILE @i > 0
+		BEGIN
+		  SET @j = charindex(',',@Columns, @i)
+		  IF @j = 0 
+			  -- No more commas - grab the rest of the string.
+			  BEGIN
+				SET @CurrentColumn = substring(@Columns, @i, 500);
+				SET @i = 0;
+			  END
+		  ELSE
+		      -- Get next column
+			  BEGIN
+				SET @CurrentColumn = substring(@Columns, @i, @j - @i);
+				SET @i = @j + 1;
+			  END
+		  IF COL_LENGTH(@TableName,@CurrentColumn) IS NOT NULL
+			BEGIN
+				IF @ExistingColumns <> '' SET @ExistingColumns = @ExistingColumns + ', '
+				SET @ExistingColumns = @ExistingColumns + QUOTENAME(@CurrentColumn)
+			END
+		END
+	
+	-- Return validated list
+	SELECT @ExistingColumns as Result
+	
+END
+GO
+
