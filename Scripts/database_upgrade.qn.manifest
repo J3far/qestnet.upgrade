@@ -6,6 +6,7 @@ procedures/procedures.corrections.qn.sql
 procedures/procedures.database.qn.sql
 structure/structure.corrections.qn.sql
 
+//just a random comment being introduced for testing
 // qestids required for upgrade.documents
 data/data.object_types.qn.sql
 
