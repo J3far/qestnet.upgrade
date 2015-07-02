@@ -1315,3 +1315,17 @@ BEGIN
 	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN Iqi nvarchar(20)
 END
 GO
+
+--InspectionJobSafety: rename column from PlotSurfaces to HotSurfaces
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'PlotSurfaces')
+BEGIN
+  IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'HotSurfaces')
+  BEGIN
+    EXEC sp_rename 'dbo.InspectionJobSafety.PlotSurfaces', 'HotSurfaces', 'COLUMN'
+  END
+  ELSE
+  BEGIN
+    ALTER TABLE dbo.InspectionJobSafety DROP COLUMN PlotSurfaces
+  END
+END
+GO
