@@ -48,28 +48,25 @@ namespace Spectra.QESTNET.Upgrade
                             cmd.CommandTimeout = Convert.ToInt32(new TimeSpan(10, 0, 0).TotalSeconds); // 10 hour timeout (due to PSI document upgrades taking a long time)
                             cmd.CommandType = CommandType.Text;
 
-                            var asy = cmd.BeginExecuteNonQuery();
-                            asy.AsyncWaitHandle.WaitOne();
-                            //asy.AsyncWaitHandle.Close();
-                            cmd.EndExecuteNonQuery(asy);
-                            //var queryTask = cmd.ExecuteNonQueryAsync();
-
-                            //try
-                            //{
-                            //    queryTask.Wait(cancellationToken); // run only one query at a time
-                            //}
-                            //catch (OperationCanceledException)
-                            //{
-                            //    this.Message("   File execution cancelled.");
-                            //    return;
-                            //}
-                            //catch (Exception e)
-                            //{
-                            //    this.Message(e.ToString());
-                            //    if (queryTask.Exception != null)
-                            //        this.Message(queryTask.Exception.ToString());
-                            //    throw;
-                            //}
+                            try
+                            {
+                                var asy = cmd.BeginExecuteNonQuery();
+                                asy.AsyncWaitHandle.WaitOne();
+                                cmd.EndExecuteNonQuery(asy);
+                            }
+                            catch (SqlException e)
+                            {
+                                throw new UpgradeScriptException(this.file.Name, this.queries[i], e);
+                            }
+                            catch (InvalidOperationException e)
+                            {
+                                //this can occur when there is a transaction timeout -- I don't know if there is a better way of determining the
+                                //underlying cause, but it's the best I could come up with (and the default error message is somewhat obtuse)...
+                                if (e.Message.Contains("The transaction associated with the current connection has completed but has not been disposed."))
+                                    throw new UpgradeScriptException(this.file.Name, this.queries[i], "Transaction timeout elapsed.", e);
+                                else
+                                    throw new UpgradeScriptException(this.file.Name, this.queries[i], e.Message + " (possibly a transaction timeout)", e);
+                            }
                         }
 
                         if (cancellationToken.IsCancellationRequested)

@@ -56,3 +56,20 @@ BEGIN
 	PRINT 'Removed trigger: TR_DocumentTriaxialSingleReading_RL'
 END
 GO
+
+IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_RL', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_RL
+	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsSpecimen_RL'
+GO
+
+IF OBJECT_ID('TR_DocumentAtterbergLimitsCPSpecimens_RL', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentAtterbergLimitsCPSpecimens_RL
+	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsCPSpecimens_RL'
+GO
+
+IF OBJECT_ID('TR_DocumentConcreteShrinkageSpecimen_RL', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentConcreteShrinkageSpecimen_RL
+	PRINT 'Removed trigger: TR_DocumentConcreteShrinkageSpecimen_RL'
+GO
+
+
