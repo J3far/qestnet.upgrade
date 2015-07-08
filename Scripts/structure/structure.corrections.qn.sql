@@ -1335,3 +1335,9 @@ BEGIN
   END
 END
 GO
+
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
+BEGIN
+	alter table InspectionRadiographicReader alter column Strength real
+END
+GO
