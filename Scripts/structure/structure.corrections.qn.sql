@@ -1315,3 +1315,31 @@ BEGIN
 	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN Iqi nvarchar(20)
 END
 GO
+
+-- Add columns added for QESTLab 4.1 to UserDocument tables, where required
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDocument[0-9]%')
+  BEGIN 
+	-- Iterate cursor over list of table names missing one or more of the columns
+	DECLARE	Table_Cursor CURSOR	FOR
+		SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES as T WHERE TABLE_NAME Like 'UserDocument[0-9]%' 
+			AND (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitability')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitabilityReason')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestOfUUID')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestRequired'))
+			
+	DECLARE @TableName nvarchar(50)
+	OPEN Table_Cursor
+	FETCH NEXT FROM Table_Cursor INTO @TableName
+
+	WHILE @@FETCH_STATUS = 0
+		BEGIN
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitability', 'int', NULL, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitabilityReason', 'nvarchar', 4000, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestOfUUID', 'uniqueidentifier', NULL, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestRequired', 'bit', NULL, 'YES', NULL
+			FETCH NEXT FROM Table_Cursor INTO @TableName
+		END
+
+	CLOSE Table_Cursor
+	DEALLOCATE Table_Cursor
+  END
