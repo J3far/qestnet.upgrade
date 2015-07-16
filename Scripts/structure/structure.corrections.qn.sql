@@ -57,6 +57,27 @@ BEGIN
 END
 GO
 
+-- Add identity to SessionLocks.QestUniqueID if column exists without identity (can be done as SessionLocks is cleared by data.corrections.before.qn.sql)
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMNPROPERTY(object_id('SessionLocks'), 'QestUniqueID', 'IsIdentity') = 0)
+BEGIN 
+	-- Clear SessionLocks again in case script was interrupted
+	DELETE FROM SessionLocks
+	-- Add new temp column with identity
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SessionLocks' AND COLUMN_NAME = 'QestUniqueID_TEMP')
+		 ALTER TABLE SessionLocks DROP COLUMN QestUniqueID_TEMP
+	ALTER TABLE SessionLocks ADD QestUniqueID_TEMP int NOT NULL IDENTITY(1,1)
+	--Drop old column (have to drop primary key first)
+	ALTER TABLE SessionLocks DROP CONSTRAINT PK_SessionLocks
+	ALTER TABLE SessionLocks DROP COLUMN QestUniqueID
+	--Rename temp column, add primary key back
+	EXEC sp_rename 'SessionLocks.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
+	ALTER TABLE [dbo].[SessionLocks] ADD CONSTRAINT [PK_SessionLocks] PRIMARY KEY CLUSTERED 
+	(
+		[QestUniqueID] ASC
+	)
+END
+GO
+
 -- Set ListLanguageTranslations.QestID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ListLanguageTranslations' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
 BEGIN 
@@ -1325,6 +1346,20 @@ GO
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'Iqi' AND DATA_TYPE = 'int')
 BEGIN
 	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN Iqi nvarchar(20)
+END
+GO
+
+--InspectionJobSafety: rename column from PlotSurfaces to HotSurfaces
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'PlotSurfaces')
+BEGIN
+  IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'HotSurfaces')
+  BEGIN
+    EXEC sp_rename 'dbo.InspectionJobSafety.PlotSurfaces', 'HotSurfaces', 'COLUMN'
+  END
+  ELSE
+  BEGIN
+    ALTER TABLE dbo.InspectionJobSafety DROP COLUMN PlotSurfaces
+  END
 END
 GO
 
