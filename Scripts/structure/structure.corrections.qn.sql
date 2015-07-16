@@ -198,17 +198,18 @@ GO
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'LTP_PlannedTestConditions')
 BEGIN 
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID')
-	BEGIN 
-		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NOT NULL CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID DEFAULT NEWID()
-		ALTER TABLE dbo.LTP_PlannedTestConditions DROP CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID
+	BEGIN
+		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NULL;
+		UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) --guid.comb
+		ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 	END 
 END
 GO
 
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
-	UPDATE dbo.LTP_PlannedTestConditions SET QestUUID = NEWID() WHERE QestUUID IS NULL
-	ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+  UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) WHERE QestUUID IS NULL --guid.comb
+  ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
 
@@ -646,9 +647,8 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS C where C.TABLE_NAME = 'Test
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF_TestConditions_QestUUID')	
 	BEGIN 
-		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (newsequentialid()) FOR QestUUID
+		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)) FOR QestUUID
 	END
-
 	ALTER TABLE dbo.TestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
@@ -904,6 +904,18 @@ BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestOwnerLabNo'
 	EXEC('UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL')
 	EXEC('ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL')
+END
+GO
+
+-- Columns required for [dbo].[qest_ConnectDocumentToReverseLookups]
+IF EXISTS (select * from information_schema.tables where table_name = 'qestReverseLookup')
+BEGIN
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestOwnerLabNo', 'int', NULL, 'NO', '((0))'
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedBy', 'int', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedDate', 'datetime', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedBy', 'int', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedDate', 'datetime', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestStatusFlags', 'int', NULL, 'YES', NULL
 END
 GO
 
