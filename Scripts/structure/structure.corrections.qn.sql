@@ -57,6 +57,27 @@ BEGIN
 END
 GO
 
+-- Add identity to SessionLocks.QestUniqueID if column exists without identity (can be done as SessionLocks is cleared by data.corrections.before.qn.sql)
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMNPROPERTY(object_id('SessionLocks'), 'QestUniqueID', 'IsIdentity') = 0)
+BEGIN 
+	-- Clear SessionLocks again in case script was interrupted
+	DELETE FROM SessionLocks
+	-- Add new temp column with identity
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SessionLocks' AND COLUMN_NAME = 'QestUniqueID_TEMP')
+		 ALTER TABLE SessionLocks DROP COLUMN QestUniqueID_TEMP
+	ALTER TABLE SessionLocks ADD QestUniqueID_TEMP int NOT NULL IDENTITY(1,1)
+	--Drop old column (have to drop primary key first)
+	ALTER TABLE SessionLocks DROP CONSTRAINT PK_SessionLocks
+	ALTER TABLE SessionLocks DROP COLUMN QestUniqueID
+	--Rename temp column, add primary key back
+	EXEC sp_rename 'SessionLocks.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
+	ALTER TABLE [dbo].[SessionLocks] ADD CONSTRAINT [PK_SessionLocks] PRIMARY KEY CLUSTERED 
+	(
+		[QestUniqueID] ASC
+	)
+END
+GO
+
 -- Set ListLanguageTranslations.QestID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ListLanguageTranslations' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
 BEGIN 
@@ -177,17 +198,18 @@ GO
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'LTP_PlannedTestConditions')
 BEGIN 
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID')
-	BEGIN 
-		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NOT NULL CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID DEFAULT NEWID()
-		ALTER TABLE dbo.LTP_PlannedTestConditions DROP CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID
+	BEGIN
+		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NULL;
+		UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) --guid.comb
+		ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 	END 
 END
 GO
 
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
-	UPDATE dbo.LTP_PlannedTestConditions SET QestUUID = NEWID() WHERE QestUUID IS NULL
-	ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+  UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) WHERE QestUUID IS NULL --guid.comb
+  ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
 
@@ -625,9 +647,8 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS C where C.TABLE_NAME = 'Test
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF_TestConditions_QestUUID')	
 	BEGIN 
-		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (newsequentialid()) FOR QestUUID
+		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)) FOR QestUUID
 	END
-
 	ALTER TABLE dbo.TestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
@@ -883,6 +904,18 @@ BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestOwnerLabNo'
 	EXEC('UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL')
 	EXEC('ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL')
+END
+GO
+
+-- Columns required for [dbo].[qest_ConnectDocumentToReverseLookups]
+IF EXISTS (select * from information_schema.tables where table_name = 'qestReverseLookup')
+BEGIN
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestOwnerLabNo', 'int', NULL, 'NO', '((0))'
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedBy', 'int', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedDate', 'datetime', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedBy', 'int', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedDate', 'datetime', NULL, 'YES', NULL
+  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestStatusFlags', 'int', NULL, 'YES', NULL
 END
 GO
 
@@ -1329,3 +1362,31 @@ BEGIN
   END
 END
 GO
+
+-- Add columns added for QESTLab 4.1 to UserDocument tables, where required
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDocument[0-9]%')
+  BEGIN 
+	-- Iterate cursor over list of table names missing one or more of the columns
+	DECLARE	Table_Cursor CURSOR	FOR
+		SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES as T WHERE TABLE_NAME Like 'UserDocument[0-9]%' 
+			AND (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitability')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitabilityReason')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestOfUUID')
+			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestRequired'))
+			
+	DECLARE @TableName nvarchar(50)
+	OPEN Table_Cursor
+	FETCH NEXT FROM Table_Cursor INTO @TableName
+
+	WHILE @@FETCH_STATUS = 0
+		BEGIN
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitability', 'int', NULL, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitabilityReason', 'nvarchar', 4000, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestOfUUID', 'uniqueidentifier', NULL, 'YES', NULL
+			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestRequired', 'bit', NULL, 'YES', NULL
+			FETCH NEXT FROM Table_Cursor INTO @TableName
+		END
+
+	CLOSE Table_Cursor
+	DEALLOCATE Table_Cursor
+  END
