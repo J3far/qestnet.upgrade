@@ -1341,3 +1341,28 @@ BEGIN
 	alter table InspectionRadiographicReader alter column Strength real
 END
 GO
+
+-- Correct timekeeping fields
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonCode')
+begin
+	alter table DocumentTimekeeping drop column PersonCode
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonName')
+begin
+	alter table DocumentTimekeeping drop column PersonName
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureBase30')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureBase30
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureJPG')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureJPG
+end
+go
