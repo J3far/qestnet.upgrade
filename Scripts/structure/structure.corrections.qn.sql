@@ -183,6 +183,12 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTest' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
+BEGIN
+  ALTER TABLE dbo.LTP_PlannedTest ALTER COLUMN QestID int not null
+END
+GO
+
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'PlannedTestUUID' AND IS_NULLABLE = 'YES')
 BEGIN
   ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN PlannedTestUUID uniqueidentifier not null
@@ -1390,3 +1396,34 @@ IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDoc
 	CLOSE Table_Cursor
 	DEALLOCATE Table_Cursor
   END
+  
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
+BEGIN
+	alter table InspectionRadiographicReader alter column Strength real
+END
+GO
+
+-- Correct timekeeping fields
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonCode')
+begin
+	alter table DocumentTimekeeping drop column PersonCode
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonName')
+begin
+	alter table DocumentTimekeeping drop column PersonName
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureBase30')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureBase30
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureJPG')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureJPG
+end
+go
