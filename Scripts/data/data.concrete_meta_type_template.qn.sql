@@ -178,14 +178,14 @@ end
 --US Defaults TxDOT
 if exists(select 1 from qestViewConfiguration where Active = 1 and Code in ('US', 'Default'))
 begin
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, '', 67105 --Slump Only
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'COMP75', 68005
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'COMP100', 68005
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'COMP150', 68005
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'COMP225', 68005
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'COMPCOR', 68406
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'FLEX', 68104
-	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, 0, 1602, 'OTHER', 69900
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, '', 67105 --Slump Only
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'COMP75', 68005
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'COMP100', 68005
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'COMP150', 68005
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'COMP225', 68005
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'COMPCOR', 68406
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'FLEX', 68104
+	exec temp_AddToSpecimenTypeMetaMap 'TxDOT', 7, -1, 1602, 'OTHER', 69900
 end
 
 --US Defaults AASHTO
