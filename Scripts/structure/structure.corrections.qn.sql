@@ -1336,6 +1336,13 @@ BEGIN
 END
 GO
 
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'EyeProtection')
+begin
+	alter table InspectionJobSafety alter column EyeProtection nvarchar(30) null
+end
+go
+
+
 IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
 BEGIN
 	alter table InspectionRadiographicReader alter column Strength real
@@ -1366,3 +1373,4 @@ begin
 	alter table DocumentTimekeeping drop column CustomerSignatureJPG
 end
 go
+
