@@ -206,7 +206,7 @@ BEGIN
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID')
 	BEGIN
 		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NULL;
-		UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) --guid.comb
+		EXEC ('UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)') --guid.comb
 		ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 	END 
 END
@@ -762,6 +762,16 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laborato
 BEGIN
 	EXEC qest_DropIndex 'Laboratory', 'IX_Laboratory_QestID'
 	ALTER TABLE dbo.Laboratory ALTER COLUMN QestID int NOT NULL
+END
+GO
+
+-- Set Laboratory.QestID non-nullable
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laboratory' and COLUMN_NAME = 'QestID')
+BEGIN
+	IF EXISTS (SELECT 1 FROM Laboratory WHERE QestID = 0)
+	BEGIN
+		EXEC ('UPDATE Laboratory SET QestID = 90040 WHERE QestID = 0')
+	END
 END
 GO
 
