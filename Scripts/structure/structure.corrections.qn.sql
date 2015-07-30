@@ -765,7 +765,7 @@ BEGIN
 END
 GO
 
--- Set Laboratory.QestID non-nullable
+-- Set Laboratory.QestID to 90040 where it is 0
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laboratory' and COLUMN_NAME = 'QestID')
 BEGIN
 	IF EXISTS (SELECT 1 FROM Laboratory WHERE QestID = 0)
