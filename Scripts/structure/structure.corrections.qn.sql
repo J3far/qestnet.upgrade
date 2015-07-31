@@ -183,6 +183,12 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTest' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
+BEGIN
+  ALTER TABLE dbo.LTP_PlannedTest ALTER COLUMN QestID int not null
+END
+GO
+
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'PlannedTestUUID' AND IS_NULLABLE = 'YES')
 BEGIN
   ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN PlannedTestUUID uniqueidentifier not null
@@ -200,7 +206,7 @@ BEGIN
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID')
 	BEGIN
 		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NULL;
-		UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) --guid.comb
+		EXEC ('UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)') --guid.comb
 		ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 	END 
 END
@@ -756,6 +762,16 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laborato
 BEGIN
 	EXEC qest_DropIndex 'Laboratory', 'IX_Laboratory_QestID'
 	ALTER TABLE dbo.Laboratory ALTER COLUMN QestID int NOT NULL
+END
+GO
+
+-- Set Laboratory.QestID to 90040 where it is 0
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laboratory' and COLUMN_NAME = 'QestID')
+BEGIN
+	IF EXISTS (SELECT 1 FROM Laboratory WHERE QestID = 0)
+	BEGIN
+		EXEC ('UPDATE Laboratory SET QestID = 90040 WHERE QestID = 0')
+	END
 END
 GO
 
@@ -1390,3 +1406,34 @@ IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDoc
 	CLOSE Table_Cursor
 	DEALLOCATE Table_Cursor
   END
+  
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
+BEGIN
+	alter table InspectionRadiographicReader alter column Strength real
+END
+GO
+
+-- Correct timekeeping fields
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonCode')
+begin
+	alter table DocumentTimekeeping drop column PersonCode
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonName')
+begin
+	alter table DocumentTimekeeping drop column PersonName
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureBase30')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureBase30
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureJPG')
+begin
+	alter table DocumentTimekeeping drop column CustomerSignatureJPG
+end
+go

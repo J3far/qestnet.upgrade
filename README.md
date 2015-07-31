@@ -23,11 +23,11 @@ The output can be found in *"\\\ADLS0003\Development\Product Distribution\QESTNE
 4. **Push** the merge and any manual commits on *release-1.0* to Git.
 	*git push origin release-1.0*
 	
-5. **Open** TeamCity (http://adlv0024:58590/) and go to the [Parameters](http://adlv0024:58590/admin/editProject.html?projectId=QestnetUpgrade&tab=projectParams) section of Edit Settings of the QESTNET.Upgrade root project.
+5. **Open** TeamCity (http://adlv0033.sqaus.com:58590/) and go to the [Parameters](http://adlv0033.sqaus.com:58590/admin/editProject.html?projectId=QestnetUpgrade&tab=projectParams) section of Edit Settings of the QESTNET.Upgrade root project.
 
 6. **Edit** the *System.Version* parameter and set the *Value* to the required *major.minor* version, then **Save**.  This will update the *major.minor* version for both Release and Development.
 
-7. Open the [Release](http://adlv0024:58590/viewType.html?buildTypeId=QestnetUpgrade_Release) project and click **Run**.
+7. Open the [Release](http://adlv0033.sqaus.com:58590/viewType.html?buildTypeId=QestnetUpgrade_Release) project and click **Run**.
 
 8. When prompted *"Build release?"* enter "y" or "yes" and click **Run Build**.
 
