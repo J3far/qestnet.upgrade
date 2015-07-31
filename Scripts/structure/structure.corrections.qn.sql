@@ -1342,6 +1342,11 @@ begin
 end
 go
 
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'AttendantRequired')
+BEGIN
+	ALTER TABLE dbo.InspectionJobSafety ALTER COLUMN AttendantRequired nvarchar(25)
+END
+
 
 IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
 BEGIN
