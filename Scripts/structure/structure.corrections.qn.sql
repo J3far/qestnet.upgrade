@@ -1397,3 +1397,73 @@ BEGIN
 	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN Revision nvarchar(2)
 END
 GO
+
+
+
+-- Major Radiation Exposure Inspection rework.
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateStart')
+begin
+	alter table InspectionRadiationExposure drop column DateStart
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateEnd')
+begin
+	alter table InspectionRadiationExposure drop column DateEnd
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ReadingDate
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposuresCount')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ExposuresCount
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposureTimePerHour')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ExposureTimePerHour
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateOut')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column DateOut
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'TimeIn')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column TimeIn
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateIn')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column DateIn
+end
+go
+
+if exists (select * from information_schema.tables where table_name = 'InspectionRadiationExposureTechnician')
+begin
+	drop table dbo.InspectionRadiationExposureTechnician
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureTechnicianReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureTechnicianReading drop column ReadingDate
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureVehicleReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureVehicleReading drop column ReadingDate
+end
+go
