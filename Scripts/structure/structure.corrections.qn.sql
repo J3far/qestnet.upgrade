@@ -1346,6 +1346,7 @@ IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AN
 BEGIN
 	ALTER TABLE dbo.InspectionJobSafety ALTER COLUMN AttendantRequired nvarchar(25)
 END
+GO
 
 
 IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
@@ -1379,3 +1380,20 @@ begin
 end
 go
 
+--Inspections: shorten Procedure and Revision fields
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'ProcedureRevision')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN ProcedureRevision nvarchar(2)
+END
+GO
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Procedure')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN [Procedure] nvarchar(10)
+END
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Revision')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN Revision nvarchar(2)
+END
+GO
