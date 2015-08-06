@@ -1379,6 +1379,19 @@ BEGIN
 END
 GO
 
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'EyeProtection')
+begin
+	alter table InspectionJobSafety alter column EyeProtection nvarchar(30) null
+end
+go
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'AttendantRequired')
+BEGIN
+	ALTER TABLE dbo.InspectionJobSafety ALTER COLUMN AttendantRequired nvarchar(25)
+END
+GO
+
+
 -- Add columns added for QESTLab 4.1 to UserDocument tables, where required
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDocument[0-9]%')
   BEGIN 
@@ -1435,5 +1448,93 @@ go
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureJPG')
 begin
 	alter table DocumentTimekeeping drop column CustomerSignatureJPG
+end
+go
+
+--Inspections: shorten Procedure and Revision fields
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'ProcedureRevision')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN ProcedureRevision nvarchar(2)
+END
+GO
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Procedure')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN [Procedure] nvarchar(10)
+END
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Revision')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN Revision nvarchar(2)
+END
+GO
+
+
+
+-- Major Radiation Exposure Inspection rework.
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateStart')
+begin
+	alter table InspectionRadiationExposure drop column DateStart
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateEnd')
+begin
+	alter table InspectionRadiationExposure drop column DateEnd
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ReadingDate
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposuresCount')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ExposuresCount
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposureTimePerHour')
+begin
+	alter table InspectionRadiationExposureAreaPointReading drop column ExposureTimePerHour
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateOut')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column DateOut
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'TimeIn')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column TimeIn
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateIn')
+begin
+	alter table InspectionRadiationExposureEquipmentReading drop column DateIn
+end
+go
+
+if exists (select * from information_schema.tables where table_name = 'InspectionRadiationExposureTechnician')
+begin
+	drop table dbo.InspectionRadiationExposureTechnician
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureTechnicianReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureTechnicianReading drop column ReadingDate
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureVehicleReading' and column_name = 'ReadingDate')
+begin
+	alter table InspectionRadiationExposureVehicleReading drop column ReadingDate
 end
 go
