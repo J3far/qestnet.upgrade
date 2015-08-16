@@ -102,7 +102,7 @@ exec dbo.qest_AddUnitOfMeasure @quantity = 'speed', @code = 'mm/min', @slope = 0
 exec dbo.qest_AddUnitOfMeasure @quantity = 'revrate', @code = '°/min', @slope =0.00004629630357142857 , @description = 'Degrees per minute';
 
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m', @slope = 1, @description = 'Newton metres';
-exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft', @slope = 0.737562149, @description = 'Foot pounds';
+exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft', @slope = 1.35581795, @description = 'Foot pounds';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m/°', @slope = 0.01745329252392839860045886974973, @description = 'Newton metres per degree';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft/°', @slope = 0.01287288794107426359388303635873, @description = 'Foot pounds per degree';
 
