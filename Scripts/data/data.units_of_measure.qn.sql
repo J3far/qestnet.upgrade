@@ -103,8 +103,8 @@ exec dbo.qest_AddUnitOfMeasure @quantity = 'revrate', @code = '°/min', @slope =0
 
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m', @slope = 1, @description = 'Newton metres';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft', @slope = 1.35581795, @description = 'Foot pounds';
-exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m/°', @slope = 0.01745329252392839860045886974973, @description = 'Newton metres per degree';
-exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft/°', @slope = 0.01287288794107426359388303635873, @description = 'Foot pounds per degree';
+exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m/°', @slope = 180 / @pi, @description = 'Newton metres per degree'; --'base unit 'N.m/rad'
+exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft/°', @slope = 1.35581795 * 180 / @pi, @description = 'Foot pounds per degree';
 
 --Miscellanous units of measure -- these are NOT units of measure for the same quantity, so be careful when converting from one unit in this group to another.
 exec dbo.qest_AddUnitOfMeasure @quantity = 'miscellaneous', @code = 'm²/yr', @slope = 0.0000000317097919837645865043125, @description = 'Coefficient of Consolidation (m²/yr)';       -- 1 / 31536000
