@@ -1379,9 +1379,16 @@ BEGIN
 END
 GO
 
+-- Drop EyeProtection and Ladder
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'EyeProtection')
 begin
-	alter table InspectionJobSafety alter column EyeProtection nvarchar(30) null
+	alter table InspectionJobSafety drop column EyeProtection
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'Ladder')
+begin
+	alter table InspectionJobSafety drop column Ladder
 end
 go
 
