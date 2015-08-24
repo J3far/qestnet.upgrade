@@ -1365,6 +1365,13 @@ BEGIN
 END
 GO
 
+--InspectionRadiographic: correction related to weld readings
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'NumWelds_12to14')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic DROP COLUMN NumWelds_12to14
+END
+GO
+
 --InspectionJobSafety: rename column from PlotSurfaces to HotSurfaces
 IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'PlotSurfaces')
 BEGIN
