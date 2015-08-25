@@ -96,3 +96,13 @@ BEGIN
 	DELETE FROM qestReportMapping WHERE QestUniqueID NOT IN (SELECT MIN(QestUniqueID) FROM qestReportMapping GROUP BY ReportQestID,ReportQestUniqueID,TestQestID,TestQestUniqueID,Mapping)
 END 
 GO
+
+-- Set UTCTime to true for 4.0 onwards
+IF EXISTS(SELECT 1 FROM Options WHERE OptionName = 'UTCTime')
+BEGIN
+	UPDATE Options SET OptionValue = 'True' WHERE OptionName = 'UTCTime'
+END
+ELSE
+BEGIN
+	INSERT INTO Options(OptionKey,OptionValue,OptionName) Values ('\QLO\QESTLAB\UTCTime','True','UTCTime')
+END
