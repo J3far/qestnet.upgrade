@@ -1510,6 +1510,12 @@ begin
 end
 go
 
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'SensitivityLevel')
+begin
+	alter table InspectionRadiographicReaderSet alter column SensitivityLevel nvarchar(10)
+end
+go
+
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderWeld' and column_name = 'WeldNumber')
 begin
 	alter table dbo.InspectionRadiographicReaderWeld alter column WeldNumber nvarchar(20)
