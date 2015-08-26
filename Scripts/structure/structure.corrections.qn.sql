@@ -1492,6 +1492,24 @@ begin
 end
 go
 
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageIntermediate')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageIntermediate bit
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageFinal')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageFinal bit
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageRepair')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageRepair bit
+end
+go
+
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderWeld' and column_name = 'WeldNumber')
 begin
 	alter table dbo.InspectionRadiographicReaderWeld alter column WeldNumber nvarchar(20)
