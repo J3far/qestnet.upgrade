@@ -1365,6 +1365,13 @@ BEGIN
 END
 GO
 
+--InspectionRadiographic: correction related to weld readings
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'NumWelds_12to14')
+BEGIN
+	ALTER TABLE dbo.InspectionRadiographic DROP COLUMN NumWelds_12to14
+END
+GO
+
 --InspectionJobSafety: rename column from PlotSurfaces to HotSurfaces
 IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'PlotSurfaces')
 BEGIN
@@ -1379,9 +1386,16 @@ BEGIN
 END
 GO
 
+-- Drop EyeProtection and Ladder
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'EyeProtection')
 begin
-	alter table InspectionJobSafety alter column EyeProtection nvarchar(30) null
+	alter table InspectionJobSafety drop column EyeProtection
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'Ladder')
+begin
+	alter table InspectionJobSafety drop column Ladder
 end
 go
 
@@ -1419,12 +1433,6 @@ IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDoc
 	CLOSE Table_Cursor
 	DEALLOCATE Table_Cursor
   END
-  
-IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Strength')
-BEGIN
-	alter table InspectionRadiographicReader alter column Strength real
-END
-GO
 
 -- Correct timekeeping fields
 if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonCode')
@@ -1458,21 +1466,76 @@ BEGIN
 END
 GO
 
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Procedure')
-BEGIN
-	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN [Procedure] nvarchar(10)
-END
 
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographicReader' AND COLUMN_NAME = 'Revision')
-BEGIN
-	ALTER TABLE dbo.InspectionRadiographicReader ALTER COLUMN Revision nvarchar(2)
-END
-GO
+-- Radiographic Reader changes
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Strength')
+begin
+	alter table InspectionRadiographicReader alter column Strength real
+end
+go
 
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Procedure')
+begin
+	alter table dbo.InspectionRadiographicReader alter column [Procedure] nvarchar(10)
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Revision')
+begin
+	alter table dbo.InspectionRadiographicReader alter column Revision nvarchar(2)
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'PWHT')
+begin
+	alter table InspectionRadiographicReader drop column PWHT
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageIntermediate')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageIntermediate bit
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageFinal')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageFinal bit
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageRepair')
+begin
+	alter table InspectionRadiographicReaderSet alter column StageRepair bit
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'SizeOfFilm')
+begin
+	alter table InspectionRadiographicReaderSet alter column SizeOfFilm nvarchar(15)
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'SensitivityLevel')
+begin
+	alter table InspectionRadiographicReaderSet alter column SensitivityLevel nvarchar(10)
+end
+go
+
+if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderWeld' and column_name = 'WeldNumber')
+begin
+	alter table dbo.InspectionRadiographicReaderWeld alter column WeldNumber nvarchar(20)
+end
+go
+
+if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'PbScreensFrontBack')
+begin
+	alter table InspectionRadiographicReaderSet alter column PbScreensFrontBack real
+end
+go
 
 
 -- Major Radiation Exposure Inspection rework.
-
 if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateStart')
 begin
 	alter table InspectionRadiationExposure drop column DateStart
@@ -1538,3 +1601,5 @@ begin
 	alter table InspectionRadiationExposureVehicleReading drop column ReadingDate
 end
 go
+
+
