@@ -51,6 +51,7 @@ data/data.test_stage_types.qn.sql
 data/data.units_of_measure.qn.sql
 data/data.concrete_meta_type_template.qn.sql
 data/data.concrete_meta_type_patch.qn.sql
+data/data.testconditions.sql
 
 // Structure - Foreign Keys
 structure/structure.foreignkeys.qn.sql
