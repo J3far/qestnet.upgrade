@@ -125,7 +125,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2007)' OR Templa
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'COMPIPUC', 69340
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'COMPRWU', 69200
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'COMPRWUC', 69200
---exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'CRMSQ50', 69731
+--exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'CRMSQ50', 68731
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'GRO100', 68751
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'GRO50', 68751
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'GRO75', 68751
@@ -349,7 +349,7 @@ begin
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPIPUC', 69340
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPRWU', 69200
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPRWUC', 69200
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'CRMSQ50', 69731
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'CRMSQ50', 68731
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'GRO50', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'GRO75', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'GRO100', 68751
@@ -387,7 +387,7 @@ begin
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'COMPIPUC', 69342
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'COMPRWU', 69202
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'COMPRWUC', 69202
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'CRMSQ50', 69731
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'CRMSQ50', 68731
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'GRO50', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'GRO75', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2012)', 16, 0, 1605, 'GRO100', 68751
@@ -425,7 +425,7 @@ begin
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'COMPIPUC', 69343
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'COMPRWU', 69203
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'COMPRWUC', 69203
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'CRMSQ50', 69731
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'CRMSQ50', 68731
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'GRO50', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'GRO75', 68751
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2007)', 17, 0, 1605, 'GRO100', 68751
