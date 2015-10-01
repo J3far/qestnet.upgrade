@@ -16,58 +16,70 @@ GO
 
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetTestMethodList]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_TypeMeta_GetTestMethodList] as select 0 tmp');
-GO
+go
 alter proc [dbo].qest_TypeMeta_GetTestMethodList
   @SampleQestID int
 as
     declare @TestMethodActivityParent nvarchar(8)
+
     if @SampleQestID = 1602
        begin set @TestMethodActivityParent = '66000' end
     else
-       begin
+    begin
        if @SampleQestID = 1605
           begin set @TestMethodActivityParent = '66500' end
        else
           begin set @TestMethodActivityParent = '-1' end
-	   end
-	
+	end
     
-	select o1.QestID as 'QestID', o1.Value as 'Method', o3.Value as 'Metas', o4.Value as 'Sizes' 
-    from            qestObjects o1 
-         inner join qestObjects o2 on o1.QestID = o2.QestID 
-         inner join qestObjects o3 on o1.QestID = o3.QestID 
+	select o1.QestID as QestID, o1.Value as Method, o3.Value as Metas, o4.Value as Sizes
+    from            qestObjects o1
+         inner join qestObjects o2 on o1.QestID = o2.QestID
+         inner join qestObjects o3 on o1.QestID = o3.QestID
          left join  qestObjects o4 on o1.QestID = o4.QestID and o4.Property = 'Size' 
          inner join qestObjects o5 on o1.QestID = o5.QestID 
+		 inner join Activities a   on a.QestID  = o1.QestID and isnull(a.Inactive, 0) = 0
     where     o1.Property = 'Method' 
           and o2.Property = 'ActivityParent' and o2.Value = @TestMethodActivityParent 
           and o3.Property = 'Metas' 
           and o5.Property = 'Sortable'
     order by o5.Value
-
-GO
+go
 
 
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetTypeMetaSizeList]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_TypeMeta_GetTypeMetaSizeList] as select 0 tmp');
-GO
+go
 alter proc [dbo].qest_TypeMeta_GetTypeMetaSizeList
   @SampleQestID int, @TemplateUniqueID int, @LabNo int
 as
-	Select M.[Type], M.MetaQestID, O.Size
-	From 
-        (Select Coalesce(a.TemplateQestUniqueID, b.TemplateQestUniqueID) as 'TemplateQestUniqueID', Coalesce(a.MetaQestID, b.MetaQestID) as 'MetaQestID', Coalesce(a.[Type], b.[Type]) as 'Type' from 
-        (select distinct TemplateQestUniqueID, TemplateName, MetaQestID, [Type] from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and TemplateQestUniqueID = @TemplateUniqueID and QestOwnerLabNo = @LabNo) a
-         full join
-        (select distinct TemplateQestUniqueID, TemplateName, MetaQestID, [Type] from QestSpecimenTypeMetaMap where SampleQestID = @SampleQestID and TemplateQestUniqueID = @TemplateUniqueID and isnull(QestOwnerLabNo,0) = 0) b
-         on a.TemplateName = b.TemplateName
-	) M 
-    left join 
-	    (SELECT o1.QestID AS 'MetaID', CAST(o1.Value AS INT) AS 'Size' 
-		 FROM qestObjects o1  
-		 WHERE o1.Property = 'Size' and ISNUMERIC(o1.Value) = 1 
-    ) O  
-    on M.MetaQestID = O.MetaID
-GO
+	select M.[Type], M.MetaQestID, O.Size
+	from
+	(
+		select distinct TemplateQestUniqueID, TemplateName, MetaQestID, [Type]
+		from QestSpecimenTypeMetaMap m
+			left join Activities a on a.QestID = m.MetaQestID
+		where SampleQestID = @SampleQestID 
+			and TemplateQestUniqueID = @TemplateUniqueID 
+			and isnull(QestOwnerLabNo, 0) in (0, @LabNo)
+			and isnull(a.Inactive, 0) = 0
+	) M
+    left join
+	(
+		select o1.Value as [Type], cast(o3.Value as int) as Size
+		from qestObjects o1
+			inner join qestObjects o2 
+				on o2.QestID = o1.QestID 
+				and o2.Property = 'ActivityParent' 
+				and o2.Value = '16100'
+			left join qestObjects o3
+				on o3.QestID = o1.QestID
+				and o3.Property = 'Size'
+		where o1.Property = 'Name'
+			and isnumeric(o3.Value) = 1
+    ) O
+    on M.[Type] = O.[Type]
+go
 
 
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetTemplateMetaNotesList]') and type in (N'P', N'PC'))

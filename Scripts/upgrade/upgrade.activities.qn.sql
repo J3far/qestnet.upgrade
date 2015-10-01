@@ -7,6 +7,8 @@ EXEC qest_EnableActivityForQestnet 'ListConcreteTestGroup'
 GO
 EXEC qest_EnableActivityForQestnet 'ListProduct'
 GO
+EXEC qest_EnableActivityForQestnet 'ListContact'
+GO
 EXEC qest_EnableActivityForQestnet 'ListClient'
 GO
 EXEC qest_EnableActivityForQestnet 'ListProject'
