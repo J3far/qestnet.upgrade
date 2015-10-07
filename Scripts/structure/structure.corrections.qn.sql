@@ -1026,3 +1026,20 @@ BEGIN
 	ALTER TABLE TestAnalysisTriaxial DROP CONSTRAINT PK_TestAnalysisTriaxial_1
 END
 GO
+
+-- Correct type of DocumentVisualIdentification fields
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentVisualIdentification' AND COLUMN_NAME = 'VolumeEstBrokenShell')
+BEGIN
+	ALTER TABLE DocumentVisualIdentification ALTER COLUMN VolumeEstBrokenShell nvarchar(10)
+END
+GO
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentVisualIdentification' AND COLUMN_NAME = 'VolumeEstShellPieces')
+BEGIN
+	ALTER TABLE DocumentVisualIdentification ALTER COLUMN VolumeEstShellPieces nvarchar(10)
+END
+GO
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentVisualIdentification' AND COLUMN_NAME = 'VolumeEstShellPiecesSand')
+BEGIN
+	ALTER TABLE DocumentVisualIdentification ALTER COLUMN VolumeEstShellPiecesSand nvarchar(10)
+END
+GO
