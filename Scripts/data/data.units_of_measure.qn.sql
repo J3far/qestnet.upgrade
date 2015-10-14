@@ -97,7 +97,7 @@ exec dbo.qest_AddUnitOfMeasure @quantity = 'ratio', @code = @permyriadSymbol, @s
 exec dbo.qest_AddUnitOfMeasure @quantity = 'ratio', @code = 'ppm', @slope = 0.000001, @description = 'parts per million';
 
 exec dbo.qest_AddUnitOfMeasure @quantity = 'speed', @code = 'in/min', @slope = 1.52400000155448, @description = 'Inches per minute'; -- 2362.2047244094
-exec dbo.qest_AddUnitOfMeasure @quantity = 'speed', @code = 'mm/min', @slope = 0.06, @description = 'Millimetres per minute'; --60000
+exec dbo.qest_AddUnitOfMeasure @quantity = 'speed', @code = 'mm/min', @slope = 0.00001666666666667, @description = 'Millimetres per minute'; --60000
 exec dbo.qest_AddUnitOfMeasure @quantity = 'revrate', @code = '°/min', @slope =0.00004629630357142857 , @description = 'Degrees per minute';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'N·m', @slope = 1, @description = 'Newton metres';
 exec dbo.qest_AddUnitOfMeasure @quantity = 'torque', @code = 'lbf·ft', @slope = 1.35581795, @description = 'Foot pounds';
