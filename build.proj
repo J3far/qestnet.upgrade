@@ -7,7 +7,6 @@
 
     <!-- Generate a days counter: will use this as revision instead -->
     <Version StartDate="1-JAN-2014" BuildType="Automatic" RevisionType="Automatic">
-      <Output TaskParameter="Build" PropertyName="Build" />
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </Version>
 
@@ -19,14 +18,11 @@
     <!-- Set the version in the script manifest -->
     <FileUpdate
       Files="$(MSBuildProjectDirectory)\Scripts\database_upgrade.qn.manifest"
-      Regex="#(\d+)\.(\d+)"
-      ReplacementText="#$(MajorVersion).$(MinorVersion)"
+      Regex="#(\d+)\.(\d+)\.(\d+)"
+      ReplacementText="#$(MajorVersion).$(MinorVersion).$(Build)"
       Multiline="true"
     />
-
-    <!-- Tell the build server what the version number is -->
-    <Message Text="##teamcity[buildNumber '$(MajorVersion).$(MinorVersion).$(Build).$(Revision)']" />
-    
+	
   </Target>
   
   <Target Name="RebuildAll">
@@ -34,75 +30,4 @@
              Targets="RebuildAll"
              Properties="Configuration=Release;" />
   </Target>
-
-  <!-- Publish the assembly files to Libraries (only for release version) -->
-  <Target Name="Publish" Condition=" '$(Configuration)' == 'Release' ">
-    <MSBuild Projects="$(MSBuildProjectDirectory)\QESTNET.Upgrade\build.proj;"
-             Targets="Publish"
-             Properties="Configuration=Release;MajorVersion=$(MajorVersion);MinorVersion=$(MinorVersion);BuildVersion=$(Build);RevisionVersion=$(Revision)" />
-  </Target>
-
-  <!-- Package the files to zip in the bin and Distribution -->
-  <Target Name="Package">
-
-    <MakeDir Directories="$(MSBuildProjectDirectory)\bin" />
-    <MakeDir Directories="$(MSBuildProjectDirectory)\bin\$(Configuration)" />
-    
-    <PropertyGroup>
-      <VersionText>$(MajorVersion).$(MinorVersion).$(Build).$(Revision)</VersionText>
-      <PackagePath>$(MSBuildProjectDirectory)\bin\$(Configuration)\QESTNET.Upgrade v$(VersionText).zip</PackagePath>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <UpgraderFiles Include="
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.dll;
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.UI.exe;
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.UI.exe.config;
-      "/>
-      <ScriptWriterFiles Include="
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.ScriptWriter.dll;
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.ScriptWriter.UI.exe;
-            $(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release\QESTNET.Upgrade.ScriptWriter.UI.exe.config;
-      "/>
-      <SqlServerFiles Include="
-            $(MSBuildProjectDirectory)\Libraries\Microsoft.SqlServer\v11.0\*.dll
-      "/>
-      <ScriptFiles Include="
-            $(MSBuildProjectDirectory)\Scripts\**\*.*
-      "/>
-    </ItemGroup>
-
-    <MSBuild.ExtensionPack.Compression.Zip
-       TaskAction="Create"
-       CompressFiles="@(UpgraderFiles)"
-       RemoveRoot="$(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release"
-       ZipFileName="$(PackagePath)" />
-
-    <MSBuild.ExtensionPack.Compression.Zip
-       TaskAction="AddFiles"
-       CompressFiles="@(ScriptFiles)"
-       RemoveRoot="$(MSBuildProjectDirectory)"
-       ZipFileName="$(PackagePath)" />
-
-    <!-- Upload release version to distrubtion (no scriptwriter) -->
-    <Copy Condition=" '$(Configuration)' == 'Release' " SourceFiles="$(PackagePath)" DestinationFiles="\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\QESTNET.Upgrade v$(MajorVersion).$(MinorVersion).zip" />
-
-    <MSBuild.ExtensionPack.Compression.Zip
-       TaskAction="AddFiles"
-       CompressFiles="@(ScriptWriterFiles)"
-       RemoveRoot="$(MSBuildProjectDirectory)\QESTNET.Upgrade\bin\Release"
-       ZipFileName="$(PackagePath)" />
-
-    <MSBuild.ExtensionPack.Compression.Zip
-       TaskAction="AddFiles"
-       CompressFiles="@(SqlServerFiles)"
-       RemoveRoot="$(MSBuildProjectDirectory)\Libraries\Microsoft.SqlServer\v11.0"
-       ZipFileName="$(PackagePath)" />
-      
-    <!-- Upload developer version to distrubtion (everything) -->
-    <Copy SourceFiles="$(PackagePath)" DestinationFiles="\\ADLS0003\Development\Product Distribution\QESTNET.Upgrade\Development\QESTNET.Upgrade v$(VersionText).zip" />
-
-  </Target>
-  
-
 </Project>
