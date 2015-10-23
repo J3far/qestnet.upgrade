@@ -108,3 +108,29 @@ where d.QestParentID in (110936, 110938)
 	and d.HydroReadOrig is not null
 	and d.EnteredHydroReadOrig is null
 go
+
+-- Make activities for new test stages
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000920, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000921, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000922, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000923, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000924, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000028, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000029, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000038, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000039, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000048, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000049, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000058, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000059, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000068, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000069, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000078, @Name = ''
+EXEC qest_AddUpdateActivity @ParentActivityID = 14, @QestID = 2000079, @Name = ''
+GO
+
+-- Patch fallcone data
+UPDATE DocumentFallcone SET FallconeCodeRemoulded = FallconeCode WHERE FallconeCodeRemoulded IS NULL AND FallconeCode IS NOT NULL
+GO
+UPDATE DocumentFallcone SET ConeTypeRemoulded = ConeType WHERE ConeTypeRemoulded IS NULL AND ConeType IS NOT NULL
+GO
