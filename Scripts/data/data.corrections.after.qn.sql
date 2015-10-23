@@ -89,3 +89,22 @@ begin
   update Samples set SampleType = 1 where Disturbed = 1 and (SampleType is null or SampleType = 0);
 end
 GO
+
+-- Copy hydrometer correction data into the new fields that are used so that data is not lost
+update Documentparticlesizedistribution
+set 
+	EnteredCorrectionRW1 = CorrectionRW1, 
+	EnteredCorrectionRW2 = CorrectionRW2
+from Documentparticlesizedistribution d
+where d.QestID in (110936, 110938)
+	and (d.CorrectionRW1 is not null or d.CorrectionRW2 is not null)
+	and (d.EnteredCorrectionRW1 is null or d.EnteredCorrectionRW2 is null)
+go
+
+update DocumentPSDHydrometer
+set EnteredHydroReadOrig = HydroReadOrig
+from DocumentPSDHydrometer d
+where d.QestParentID in (110936, 110938)
+	and d.HydroReadOrig is not null
+	and d.EnteredHydroReadOrig is null
+go
