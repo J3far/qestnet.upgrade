@@ -348,7 +348,7 @@ declare @triaxialTests table (qestID int, isAnisotropic bit, canBeStaged bit, is
 insert into @triaxialTests (qestID, isAnisotropic, canBeStaged, isUnconfined, name)
 select n.QestID
      , case when a.value in ('CAU', 'CAD') then 1 else 0 end -- isAnisotropic
-     , case when a.value in ('CIU', 'CID') then 1 else 0 end -- canBeStaged
+     , case when a.value in ('CIU', 'CID', 'CAU', 'CAD') then 1 else 0 end -- canBeStaged
      , case when a.value in ('UCS', 'UCT') then 1 else 0 end -- isUnconfined
      , substring(n.value, 1, 100)
   from qestObjects n
@@ -379,9 +379,11 @@ begin
   begin
     exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'Staged'                             , @order = 1,  @fieldCaption = 'Staged'                      , @InputType = @tList   , @DefaultValue = 'single', @IsMandatory = 1
     exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'Staged'                             , @order = 0,  @itemValue = 'single'                         , @itemCaption = 'Single'
-    exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'Staged'                             , @order = 1,  @itemValue = 'multispecimen'                  , @itemCaption = 'Multi-stage, Multi-specimen'
-    exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'Staged'                             , @order = 2,  @itemValue = 'multistage'                     , @itemCaption = 'Multi-stage, Single Specimen'
-
+	if @isAnisotropic = 0 
+    begin
+		exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'Staged'                         , @order = 1,  @itemValue = 'multispecimen'                  , @itemCaption = 'Multi-stage, Multi-specimen'
+		exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'Staged'                         , @order = 2,  @itemValue = 'multistage'                     , @itemCaption = 'Multi-stage, Single Specimen'
+	end
     if @isUnconfined = 0
     begin
       exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2,  @fieldCaption = 'Confining Pressure'          , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
