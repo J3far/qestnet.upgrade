@@ -1337,6 +1337,11 @@ EXEC qest_FixRecordQestID_TEMP 'DocumentPermeabilityTest', 111255
 GO
 EXEC qest_FixRecordQestID_TEMP 'DocumentSpallLithologicalSingle', 111264
 GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentBulkDensityFillerSingle', 111239
+GO
+EXEC qest_FixRecordQestID_TEMP 'DocumentResistanceStrippingSpecimen', 111258
+GO
+
 
 IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
 BEGIN
