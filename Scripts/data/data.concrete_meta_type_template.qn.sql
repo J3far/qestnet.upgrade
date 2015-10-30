@@ -35,6 +35,8 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (1999)' OR Template
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2014)' OR TemplateQestUniqueID = 15
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2012)' OR TemplateQestUniqueID = 16
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2007)' OR TemplateQestUniqueID = 17
+DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'CT' OR TemplateQestUniqueID = 18
+
 
 ----US Defaults ASTM
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1602, '', 67101 --Slump Only
@@ -198,6 +200,13 @@ begin
 	exec temp_AddToSpecimenTypeMetaMap 'AASHTO', 8, 0, 1602, 'COMP225', 68006
 	exec temp_AddToSpecimenTypeMetaMap 'AASHTO', 8, 0, 1602, 'FLEX', 68105
 	exec temp_AddToSpecimenTypeMetaMap 'AASHTO', 8, 0, 1602, 'FLEXC', 68131
+end
+
+--US Defaults CT
+if exists(select 1 from qestViewConfiguration where Active = 1 and Code in ('US', 'Default'))
+begin
+	exec temp_AddToSpecimenTypeMetaMap 'CT', 18, 0, 1602, 'FLEX', 68106
+	exec temp_AddToSpecimenTypeMetaMap 'CT', 18, 0, 1602, 'FLEXC', 68132
 end
 
 --US Defaults RILEM
