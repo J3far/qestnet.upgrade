@@ -1257,7 +1257,7 @@ BEGIN
 			Set @SQL = 'ALTER TABLE ' + @TableName + ' ADD QestID int null'
 			EXEC(@SQL)
 		END
-		Set @SQL = 'UPDATE ' + @TableName + ' SET QestID = ' + CAST(@QestID AS VARCHAR(16)) + ' WHERE ISNULL(QestID,0) = 0'
+		Set @SQL = 'UPDATE ' + @TableName + ' SET QestID = ' + CAST(@QestID AS VARCHAR(16)) + ' WHERE ISNULL(QestID,0) <= 0'
 		EXEC(@SQL)
 	END
 END
