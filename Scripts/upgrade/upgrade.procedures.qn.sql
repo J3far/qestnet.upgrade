@@ -69,7 +69,7 @@ BEGIN
 		  begin
 		    update [dbo].' + quotename(@tableName) + '
 		    set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)
-		    where qestUniqueID >= @i and qestUniqueID < @i + @batchSize;
+		    where QestUUID IS NULL and qestUniqueID >= @i and qestUniqueID < @i + @batchSize;
 		    set @i = @i + @batchSize
 		  end'
 		  exec sp_executesql @sql_to_execute, N'@batchSize int', 10000
@@ -77,7 +77,7 @@ BEGIN
 		ELSE
 		BEGIN
 		  --otherwise just update the whole lot in one batch
-		  EXEC('update ' + @TableName + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)');
+		  EXEC('update ' + @TableName + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) where QestUUID IS NULL');
 		END
 
 		EXEC('ALTER TABLE ' + @TableName + ' ALTER COLUMN QestUUID uniqueidentifier NOT NULL') -- make non-nullable
