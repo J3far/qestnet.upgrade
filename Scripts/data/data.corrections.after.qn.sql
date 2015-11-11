@@ -71,6 +71,22 @@ BEGIN
 END
 GO
 
+-- AuditTrail.QestUniqueParentID no longer required
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'AuditTrail' AND COLUMN_NAME = 'QestUniqueParentID')
+BEGIN
+	ALTER TABLE dbo.AuditTrail DROP COLUMN QestUniqueParentID
+END
+GO
+
+-- AuditTrail.ObjectQestUniqueID no longer required
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'AuditTrail' AND COLUMN_NAME = 'ObjectQestUniqueID')
+BEGIN
+	EXEC qest_DropIndex 'AuditTrail', 'IX_AuditTrail_QestIDObjectQestUniqueID'
+	ALTER TABLE dbo.AuditTrail DROP COLUMN ObjectQestUniqueID
+END
+GO
+
+
 -- Update old object keys (TEST SPEED! - may need to mandate Audit Archive before running)
 UPDATE AuditTrail SET ObjectKey = dbo.qest_AuditKeyForUUID(ObjectQestUUID) 
 WHERE ObjectQestUUID IS NOT NULL AND (ObjectKey IS NULL OR ObjectKey LIKE 'ID%')
