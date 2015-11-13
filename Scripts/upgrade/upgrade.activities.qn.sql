@@ -25,3 +25,5 @@ EXEC qest_EnableActivityForQestnet 'WorkTemplates'
 GO
 EXEC qest_EnableActivityForQestnet 'Defaults'
 GO
+EXEC qest_EnableActivityForQestnet 'DocumentConcreteDockets'
+GO
