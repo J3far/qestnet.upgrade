@@ -1043,3 +1043,15 @@ BEGIN
 	ALTER TABLE DocumentVisualIdentification ALTER COLUMN VolumeEstShellPiecesSand nvarchar(10)
 END
 GO
+
+-- Corrected Spring Constant of DocumentShearStrengthLabVaneReading
+IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentShearStrengthLabVaneReading' AND COLUMN_NAME = 'MultiplicationFactor')
+BEGIN
+	ALTER TABLE DocumentShearStrengthLabVaneReading ADD MultiplicationFactor real
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentShearStrengthLabVaneReading' AND COLUMN_NAME = 'SpringStiffness')
+BEGIN
+	ALTER TABLE DocumentShearStrengthLabVaneReading ADD SpringStiffness real
+END
+GO
