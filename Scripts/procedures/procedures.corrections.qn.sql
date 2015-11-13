@@ -15,6 +15,14 @@ BEGIN
 END
 GO
 
+-- No longer required
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetWorkOrdersCorrectionRequired' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_GetWorkOrdersCorrectionRequired]
+	PRINT 'Removed procedure: qest_GetWorkOrdersCorrectionRequired'
+END
+GO
+
 IF OBJECT_ID('TR_DocumentTimekeepingRecords_RL', 'TR') IS NOT NULL
 BEGIN
 	DROP TRIGGER TR_DocumentTimekeepingRecords_RL

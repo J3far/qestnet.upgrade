@@ -358,7 +358,7 @@ BEGIN
 	DECLARE @DocumentTableName varchar(255)
 	DECLARE tableCursor CURSOR LOCAL for
 		SELECT name FROM sys.tables WHERE type_desc = 'USER_TABLE' AND name LIKE @TableLike 
-		AND NOT name IN ('DocumentGroups', 'DocumentReportingBodyMap', 'UserDocuments') ORDER BY name
+		AND NOT name IN ('DocumentGroups', 'DocumentReportingBodyMap', 'UserDocuments', 'DocumentConcreteDockets') ORDER BY name
   
 	OPEN tableCursor
 	FETCH NEXT FROM tableCursor INTO @DocumentTableName
