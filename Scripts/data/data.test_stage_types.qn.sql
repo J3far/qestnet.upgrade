@@ -622,6 +622,20 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000426, @TestQestID = 110932, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Particle Size Distribution & Pipette [BS 1377-2: 1990 cl 9.2, 9.4]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000431, @TestQestID = 110950, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000432, @TestQestID = 110950, @Idx = 1, @Code = 'P', @Name = 'Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000433, @TestQestID = 110950, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000434, @TestQestID = 110950, @Idx = 3, @Code = 'SR', @Name = 'Sedimentation Readings'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000435, @TestQestID = 110950, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000436, @TestQestID = 110950, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Bulk Density [BS 1377-2: 1990 cl 7.3] (110929)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000501, @TestQestID = 110929, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
 GO
