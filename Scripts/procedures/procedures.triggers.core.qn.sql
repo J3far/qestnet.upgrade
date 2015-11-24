@@ -100,6 +100,62 @@ AS
 	END
 GO
 
+-- Remove parent reference update trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+GO
+
+-- Add parent reference update trigger
+CREATE TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+ON qestReverseLookup AFTER INSERT
+AS
+	BEGIN TRANSACTION
+	BEGIN TRY
+		
+		DECLARE @QestUUID uniqueidentifier
+		DECLARE @TableName nvarchar(255)
+				
+		DECLARE InsertedCursor CURSOR FOR
+			SELECT I.QestUUID, Q.[Value] 
+			FROM inserted I
+			LEFT JOIN qestObjects Q ON Q.QestID = I.QestID AND Q.Property = 'TableName'
+				
+		OPEN InsertedCursor		
+		FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			IF (@TableName IS NULL)
+			BEGIN
+				RAISERROR('TableName not found in qestObjects.', 16, 1) 
+			END ELSE BEGIN
+				-- Set QestUniqueParentID, QestParentID in qestReverseLookup from parent qestReverseLookup
+				EXEC('UPDATE D SET QestUniqueParentID = PRL.QestUniqueID, QestParentID = PRL.QestID
+				FROM ' + @TableName + ' D 
+				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID
+				INNER JOIN qestReverseLookup PRL ON PRL.QestUUID = RL.QestParentUUID
+				WHERE D.QestUUID = ''' + @QestUUID  + '''')
+
+				-- Set QestUniqueID, QestUniqueParentID, QestParentID in qestReverseLookup from document			
+				EXEC('UPDATE RL SET QestUniqueID = D.QestUniqueID, QestUniqueParentID = D.QestUniqueParentID, QestParentID = D.QestParentID
+				FROM ' + @TableName + ' D 
+				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID 
+				WHERE D.QestUUID = ''' + @QestUUID  + '''')
+			END
+				
+			FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+		END
+	    
+		CLOSE InsertedCursor
+		DEALLOCATE InsertedCursor
+			
+		COMMIT
+	END TRY		
+	BEGIN CATCH
+		ROLLBACK
+		RAISERROR('TableName not found in qestObjects.', 16, 1) 
+	END CATCH
+GO
+
 -- Add trigger to generate object keys for audit
 IF OBJECT_ID('TR_AuditTrail_SetObjectKey', 'TR') IS NOT NULL
 	DROP TRIGGER TR_AuditTrail_SetObjectKey
