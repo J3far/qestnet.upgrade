@@ -100,12 +100,12 @@ AS
 	END
 GO
 
--- Remove parent reference update trigger
+-- Remove qestReverseLookup Insert UniqueIDs trigger
 IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
 	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
 GO
 
--- Add parent reference update trigger
+-- Add qestReverseLookup Insert UniqueIDs trigger
 CREATE TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
 ON qestReverseLookup AFTER INSERT
 AS
