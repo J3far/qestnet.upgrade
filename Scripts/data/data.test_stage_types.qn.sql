@@ -1064,6 +1064,14 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000932, @TestQestID = 110752, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
 
+
+-- Moisture Content of Soil and Rock [ASTM D 2216]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000941, @TestQestID = 110060, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000942, @TestQestID = 110060, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
