@@ -1043,3 +1043,42 @@ BEGIN
 	ALTER TABLE DocumentVisualIdentification ALTER COLUMN VolumeEstShellPiecesSand nvarchar(10)
 END
 GO
+
+--Correct length for Sample.BoreholeName
+if not exists (
+		select 1 
+		from INFORMATION_SCHEMA.COLUMNS c1
+		inner join
+		INFORMATION_SCHEMA.COLUMNS c2 on c1.DATA_TYPE = c2.DATA_TYPE and c1.CHARACTER_MAXIMUM_LENGTH = c2.CHARACTER_MAXIMUM_LENGTH
+		where c1.TABLE_SCHEMA = 'dbo'
+		and c1.TABLE_NAME = 'Samples'
+		and c1.COLUMN_NAME = 'BoreholeName'
+		and c2.TABLE_SCHEMA ='dbo'
+		and c2.TABLE_NAME = 'ListSampleLocation'
+		and c2.COLUMN_NAME = 'LocationDescription'
+	)
+	and exists (
+		select 1 
+		from INFORMATION_SCHEMA.COLUMNS c1
+		inner join
+		INFORMATION_SCHEMA.COLUMNS c2 on 1 = 1
+		where c1.TABLE_SCHEMA = 'dbo'
+		and c1.TABLE_NAME = 'Samples'
+		and c1.COLUMN_NAME = 'BoreholeName'
+		and c2.TABLE_SCHEMA ='dbo'
+		and c2.TABLE_NAME = 'ListSampleLocation'
+		and c2.COLUMN_NAME = 'LocationDescription'
+	)
+begin
+	declare @t nvarchar(max)
+	declare @l int
+	select @t=c2.DATA_TYPE, @l=c2.CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS c2 
+		where c2.TABLE_SCHEMA ='dbo'
+		and c2.TABLE_NAME = 'ListSampleLocation'
+		and c2.COLUMN_NAME = 'LocationDescription'
+	
+	declare @sql nvarchar(max)
+	set @sql = N'alter table dbo.Samples alter column BoreholeName '+@t+N'('+CAST(@l as nvarchar(5))+N')';
+	exec sp_executesql @sql
+end
+go
