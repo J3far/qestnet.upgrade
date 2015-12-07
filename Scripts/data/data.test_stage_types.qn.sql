@@ -629,12 +629,15 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000432, @TestQestID = 110950
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000433, @TestQestID = 110950, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000434, @TestQestID = 110950, @Idx = 3, @Code = 'SR', @Name = 'Sedimentation Readings'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000437, @TestQestID = 110950, @Idx = 3, @Code = 'SP', @Name = 'Sedimentation Preparation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000435, @TestQestID = 110950, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000434, @TestQestID = 110950, @Idx = 4, @Code = 'SR', @Name = 'Sedimentation Readings'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000436, @TestQestID = 110950, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000435, @TestQestID = 110950, @Idx = 5, @Code = 'MF', @Name = 'Material Finalisation'
 GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000436, @TestQestID = 110950, @Idx = 6, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 
 -- Bulk Density [BS 1377-2: 1990 cl 7.3] (110929)
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000501, @TestQestID = 110929, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
