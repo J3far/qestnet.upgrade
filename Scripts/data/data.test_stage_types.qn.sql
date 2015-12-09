@@ -633,13 +633,27 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000432, @TestQestID = 110950
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000433, @TestQestID = 110950, @Idx = 4, @Code = 'SA', @Name = 'Sieve Analysis'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000437, @TestQestID = 110950, @Idx = 5, @Code = 'SP', @Name = 'Sedimentation Preparation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000437, @TestQestID = 110950, @Idx = 5, @Code = 'SPW', @Name = 'Sedimentation Preparation'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000434, @TestQestID = 110950, @Idx = 6, @Code = 'SR', @Name = 'Sedimentation Readings'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000440, @TestQestID = 110950, @Idx = 6, @Code = 'SPD', @Name = 'Sedimentation Preparation Dry'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000435, @TestQestID = 110950, @Idx = 7, @Code = 'MF', @Name = 'Material Finalisation'
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000434, @TestQestID = 110950, @Idx = 7, @Code = 'SR', @Name = 'Sedimentation Readings'
 GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000436, @TestQestID = 110950, @Idx = 8, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000435, @TestQestID = 110950, @Idx = 8, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000436, @TestQestID = 110950, @Idx = 9, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Particle Size Distribution & Pipette [BS 1377-2: 1990 cl 9.2, 9.4] Moisture Content (111046)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000441, @TestQestID = 111047, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000442, @TestQestID = 111047, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000443, @TestQestID = 111047, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000444, @TestQestID = 111047, @Idx = 4, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000445, @TestQestID = 111047, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
 -- Bulk Density [BS 1377-2: 1990 cl 7.3] (110929)
