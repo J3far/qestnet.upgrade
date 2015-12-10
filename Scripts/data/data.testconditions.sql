@@ -468,5 +468,8 @@ exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetWat
 exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetWaterContentRelativeTo'       , @order = 11, @fieldCaption = 'Relative To'               , @InputType = @tText, @IsMandatoryWhenFieldName = 'TargetWaterContentType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'PerformResidualTest'                , @order = 12, @fieldCaption = 'Perform Residual Test'     , @InputType = @tBoolean, @DefaultValue = 'false' , @IsMandatory = 1
 
+-- Particle Size Distribution - Wet Method & Pipette [BS 1377-2: 1990 cl 9.2, 9.4] (110950)
+exec dbo.qest_AddTestCondition         @qestID = 110950, @fieldName = 'PercentRetainedWarningPercent'      , @order = 0,  @fieldCaption = 'Request Full PSD Test at Percentage Retained on Reduced Sieves [%]', @InputType = @tNumber   , @DefaultValue = '10', @IsMandatory = 1
+
 --List all of the test conditions
 --exec dbo.qest_InfoTestConditions
