@@ -122,3 +122,21 @@ ELSE
 BEGIN
 	INSERT INTO Options(OptionKey,OptionValue,OptionName) Values ('\QLO\QESTLAB\UTCTime','True','UTCTime')
 END
+GO
+
+-- Patch report pictures created with QESTNET ID 90201 over to the QESTLab ID 111278, for compatibility purposes
+-- As report pictures are childless, and these two object IDs are stored the same way, this can be done by straightforward substitution.
+IF EXISTS(SELECT 1 From QestReverseLookup WHERE QestID = 90201)
+BEGIN
+	UPDATE DocumentCertificatesPictures SET QestID = 111278 WHERE QestID = 90201
+
+	UPDATE qestReverseLookup SET QestID = 111278 WHERE QestID = 90201
+
+	UPDATE AuditTrail SET QestID = 111278, 
+                          ObjectKey = CASE WHEN ObjectKey Like 'ID%' -- old object key format
+                                           THEN CONCAT(LEFT(ObjectKey,Len(ObjectKey)-16), '00111278', RIGHT(ObjectKey,8))
+                                      ELSE REPLACE(ObjectKey,'00090201:','00111278:') -- new object key format
+                                      END
+	WHERE QestID = 90201
+END
+GO
