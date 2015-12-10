@@ -134,7 +134,7 @@ BEGIN
 
 	UPDATE AuditTrail SET QestID = 111278, 
                           ObjectKey = CASE WHEN ObjectKey Like 'ID%' -- old object key format
-                                           THEN CONCAT(LEFT(ObjectKey,Len(ObjectKey)-16), '00111278', RIGHT(ObjectKey,8))
+                                           THEN LEFT(ObjectKey,Len(ObjectKey)-16) + '00111278' + RIGHT(ObjectKey,8)
                                       ELSE REPLACE(ObjectKey,'00090201:','00111278:') -- new object key format
                                       END
 	WHERE QestID = 90201
