@@ -7,7 +7,7 @@ end
 GO
 
 alter proc [dbo].[qest_AddTestCondition] 
-  @qestID int, @fieldName nvarchar(50), @fieldCaption nvarchar(50), @uom_SI nvarchar(20) = null, @uom_US nvarchar(20) = null, 
+  @qestID int, @fieldName nvarchar(50), @fieldCaption nvarchar(100), @uom_SI nvarchar(20) = null, @uom_US nvarchar(20) = null, 
   @inputType int = 2, @defaultValue nvarchar(50) = null, @isMandatory bit = 0, @order int = null, @isArray bit = 0,
   @defaultValueSI real = null, @defaultValueUS real = null, @isMandatoryWhenFieldName nvarchar(50) = null, @isMandatoryWhenRegExp nvarchar(50) = null
 as
