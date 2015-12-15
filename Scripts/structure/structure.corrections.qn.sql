@@ -1082,3 +1082,10 @@ begin
 	exec sp_executesql @sql
 end
 go
+
+-- Drop column Caption from DocumentParticleSizeDistributionSieve
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentParticleSizeDistributionSieve' AND COLUMN_NAME = 'Caption')
+BEGIN
+	ALTER TABLE DocumentParticleSizeDistributionSieve DROP COLUMN Caption
+END
+GO
