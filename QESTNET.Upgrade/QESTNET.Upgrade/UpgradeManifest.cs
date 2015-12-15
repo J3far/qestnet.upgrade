@@ -84,6 +84,17 @@ namespace Spectra.QESTNET.Upgrade
                     string.Format("The following files listed in the update manifest cannot be found: {0}", string.Join(", ", missing))
                 );
 
+            // This was added because we had one file that ended with .sql, rather than .qn.sql ... it was completely ignored,
+            // with no warnings or error messages ... which seems bad.
+            //
+            // Unfortunately, because all of the comments and whitespace lines have already been ripped out, it's not
+            // exactly easy to include line numbers in the error message.
+            var invalidLines = validLines.Where(l => !(l.StartsWith("#") || l.EndsWith(".qn.sql"))).ToArray();
+            if (invalidLines.Any())
+            {
+                throw new Exception(string.Format("The manifest file contains the invalid content: {0}{1}", System.Environment.NewLine, string.Join(System.Environment.NewLine, invalidLines)));
+            }
+
             this.scriptFiles = fileNames.Select(n => new FileInfo(n)).ToArray();
         }
     }
