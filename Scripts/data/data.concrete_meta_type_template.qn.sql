@@ -21,7 +21,7 @@ GO
 -- NOTE:  These should be considered a fixed enumeration, do not change the meaning of a given UniqueID after release.  TemplateNames can be adjusted if required.
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'Default' OR TemplateQestUniqueID = 1
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (2015)' OR TemplateQestUniqueID = 2
-DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM' OR TemplateQestUniqueID = 3
+DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2013)' OR TemplateQestUniqueID = 3
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'RMS' OR TemplateQestUniqueID = 4
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'Q' OR TemplateQestUniqueID = 5
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'NZS' OR TemplateQestUniqueID = 6
@@ -37,6 +37,7 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2014)' OR Templa
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2012)' OR TemplateQestUniqueID = 16
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2007)' OR TemplateQestUniqueID = 17
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'Caltrans' OR TemplateQestUniqueID = 18
+DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2014)' OR TemplateQestUniqueID = 19
 
 
 ----US Defaults ASTM
@@ -143,39 +144,74 @@ DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'Caltrans' OR TemplateQ
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'OTHER', 69900
 --exec temp_AddToSpecimenTypeMetaMap 'Default', 1, 0, 1605, 'SOLPRIS', 68920
 
---US Defaults ASTM
+--US Defaults ASTM (2014 version)
 if exists(select 1 from qestViewConfiguration where Active = 1 and Code in ('US', 'ME', 'Default'))
 begin
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, '', 67101 --Slump Only
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'CIP100', 68350
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMP75', 68001
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMP100', 68001
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMP150', 68001
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMP225', 68001
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMPCOR', 68401
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'COMPUNIT', 69000
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'CRMSQ50', 68730
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'ELAS100', 68520
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'ELAS150', 68520
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'ELASCOR', 68530
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'FLEX', 68101
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'FLEXC', 68130
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GRO50', 68750
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GRO75', 68750
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GRO100', 68750
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GROCUBE', 68801
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GROCUBNS', 68860
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GROPRIS', 68900
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'GROSQ100', 68830
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'HOLPRIS', 68910
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'LCOMP75', 68450
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'LW75', 68460
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'MOR50', 68650
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'MOR75', 68650
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'MORCUBE', 68701
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'OTHER', 69900
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'SHOTCOR', 68600
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM', 3, -1, 1602, 'SPLTEN', 68330
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, '', 67101 --Slump Only
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'CIP100', 68350
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMP75', 68009
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMP100', 68009
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMP150', 68009
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMP225', 68009
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMPCOR', 68401
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'COMPUNIT', 69000
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'CRMSQ50', 68730
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'ELAS100', 68520
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'ELAS150', 68520
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'ELASCOR', 68530
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'FLEX', 68101
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'FLEXC', 68130
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GRO50', 68754
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GRO75', 68754
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GRO100', 68754
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GROCUBE', 68801
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GROCUBNS', 68860
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GROPRIS', 68900
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'GROSQ100', 68830
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'HOLPRIS', 68910
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'LCOMP75', 68450
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'LW75', 68460
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'MOR50', 68654
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'MOR75', 68654
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'MORCUBE', 68701
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'OTHER', 69900
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'SHOTCOR', 68600
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 19, -1, 1602, 'SPLTEN', 68330
+end
+
+-- ASTM 2013 version
+if exists(select 1 from qestViewConfiguration where Active = 1 and Code in ('US','ME', 'Default'))
+begin
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, '', 67101 --Slump Only
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'CIP100', 68350
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMP75', 68001
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMP100', 68001
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMP150', 68001
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMP225', 68001
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMPCOR', 68401
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'COMPUNIT', 69000
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'CRMSQ50', 68730
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'ELAS100', 68520
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'ELAS150', 68520
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'ELASCOR', 68530
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'FLEX', 68101
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'FLEXC', 68130
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GRO50', 68750
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GRO75', 68750
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GRO100', 68750
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GROCUBE', 68801
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GROCUBNS', 68860
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GROPRIS', 68900
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'GROSQ100', 68830
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'HOLPRIS', 68910
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'LCOMP75', 68450
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'LW75', 68460
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'MOR50', 68650
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'MOR75', 68650
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'MORCUBE', 68701
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'OTHER', 69900
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'SHOTCOR', 68600
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2013)', 3, 0, 1602, 'SPLTEN', 68330
 end
 
 --US Defaults TxDOT
