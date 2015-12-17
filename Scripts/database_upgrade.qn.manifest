@@ -31,6 +31,7 @@ upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.user_documents_base.qn.sql
+structure/structure.corrections.suitabilityruleconfiguration.qn.sql
 
 // Procedures
 procedures/procedures.core.qn.sql
