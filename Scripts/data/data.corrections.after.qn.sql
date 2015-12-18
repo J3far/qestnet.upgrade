@@ -140,3 +140,30 @@ BEGIN
 	WHERE QestID = 90201
 END
 GO
+
+
+-- Patches required for existing ASTM RC screens to maintain compatibility with new screen design
+-- Create missing density / unit weight values for ASTM proctors created under previous screen.
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentMaximumDryDensity' AND COLUMN_NAME = 'MaximumDryDensity')
+ AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentMaximumDryDensity' AND COLUMN_NAME = 'MaximumDryUnitWeight')
+ AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentMaximumDryDensity' AND COLUMN_NAME = 'AdjustedMDD')
+ AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentMaximumDryDensity' AND COLUMN_NAME = 'AdjustedMDUW')
+ BEGIN
+	-- ASTM metric proctors - find Density (t/m3) from known Unit Weight (kN/m3)
+	UPDATE DocumentMaximumDryDensity SET MaximumDryDensity = (MaximumDryUnitWeight / 9.80665), AdjustedMDD = (AdjustedMDUW / 9.80665) WHERE QestID IN (110401, 110403, 110411, 110412) AND coalesce(MaximumDryDensity,AdjustedMDD) is null  AND coalesce(MaximumDryUnitWeight, AdjustedMDUW) is not null
+	
+	-- ASTM non-metric proctors - copy Unit Weight from known Density (numerically equivalent due to units)
+	UPDATE DocumentMaximumDryDensity SET MaximumDryUnitWeight = MaximumDryDensity, AdjustedMDUW = AdjustedMDD WHERE QestID IN (110032, 110033, 110036, 110037, 110043, 110048, 110052, 110053, 110079, 110084, 110377, 110378) AND coalesce(MaximumDryDensity,AdjustedMDD) is not null  AND coalesce(MaximumDryUnitWeight, AdjustedMDUW) is null
+END
+GO
+
+-- Set 'Enter Oversize' to 1 if null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentAggSoilCompaction' AND COLUMN_NAME = 'EnterOversize')
+BEGIN
+	-- The original intention was to only set EnterOversize to 1 if any oversize field contained a value
+	-- However, the impact on execution time (7m30s vs. 5s) and the low number of cases where this distinction would have any meaning (128 out of 1.04 million)
+	--  make it better to set this to 1 for all pre-existing screens, as there's no harm in doing so.
+	UPDATE DocumentAggSoilCompaction SET EnterOversize = 1 WHERE EnterOversize is null AND (QestID in (110201, 110202, 110404))	
+END
+GO
+-- End ASTM RC patches
