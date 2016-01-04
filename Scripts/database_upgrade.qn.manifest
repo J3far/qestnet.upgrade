@@ -31,6 +31,7 @@ upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 upgrade/upgrade.user_documents.qn.sql
 upgrade/upgrade.user_documents_base.qn.sql
+structure/structure.corrections.suitabilityruleconfiguration.qn.sql
 
 // Procedures
 procedures/procedures.core.qn.sql
@@ -49,6 +50,7 @@ data/data.business_rules.qn.sql
 data/data.object_types.qn.sql
 data/data.test_stage_types.qn.sql
 data/data.units_of_measure.qn.sql
+data/data.testconditions.qn.sql
 data/data.concrete_meta_type_template.qn.sql
 data/data.concrete_meta_type_patch.qn.sql
 

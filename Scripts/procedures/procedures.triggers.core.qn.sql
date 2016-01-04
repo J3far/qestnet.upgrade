@@ -99,6 +99,62 @@ AS
 	END
 GO
 
+-- Remove qestReverseLookup Insert UniqueIDs trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+GO
+
+-- Add qestReverseLookup Insert UniqueIDs trigger
+CREATE TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+ON qestReverseLookup AFTER INSERT
+AS
+	BEGIN TRANSACTION
+	BEGIN TRY
+		
+		DECLARE @QestUUID uniqueidentifier
+		DECLARE @TableName nvarchar(255)
+				
+		DECLARE InsertedCursor CURSOR FOR
+			SELECT I.QestUUID, Q.[Value] 
+			FROM inserted I
+			LEFT JOIN qestObjects Q ON Q.QestID = I.QestID AND Q.Property = 'TableName'
+				
+		OPEN InsertedCursor		
+		FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			IF (@TableName IS NULL)
+			BEGIN
+				RAISERROR('TableName not found in qestObjects.', 16, 1) 
+			END ELSE BEGIN
+				-- Set QestUniqueParentID, QestParentID in qestReverseLookup from parent qestReverseLookup
+				EXEC('UPDATE D SET QestUniqueParentID = PRL.QestUniqueID, QestParentID = PRL.QestID
+				FROM ' + @TableName + ' D 
+				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID
+				INNER JOIN qestReverseLookup PRL ON PRL.QestUUID = RL.QestParentUUID
+				WHERE D.QestUUID = ''' + @QestUUID  + '''')
+
+				-- Set QestUniqueID, QestUniqueParentID, QestParentID in qestReverseLookup from document			
+				EXEC('UPDATE RL SET QestUniqueID = D.QestUniqueID, QestUniqueParentID = D.QestUniqueParentID, QestParentID = D.QestParentID
+				FROM ' + @TableName + ' D 
+				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID 
+				WHERE D.QestUUID = ''' + @QestUUID  + '''')
+			END
+				
+			FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+		END
+	    
+		CLOSE InsertedCursor
+		DEALLOCATE InsertedCursor
+			
+		COMMIT
+	END TRY		
+	BEGIN CATCH
+		ROLLBACK
+		RAISERROR('TableName not found in qestObjects.', 16, 1) 
+	END CATCH
+GO
+
 -- Add trigger to generate object keys for audit
 IF OBJECT_ID('TR_AuditTrail_SetObjectKey', 'TR') IS NOT NULL
 	DROP TRIGGER TR_AuditTrail_SetObjectKey
@@ -132,3 +188,37 @@ AS
 	INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
 	INNER JOIN WorkProgress D ON D.QestUUID = RL.QestUUID
 GO
+
+-- Correct bug in trigger TR_INS_UPD_DocumentGDS, where installed
+IF OBJECT_ID('TR_INS_UPD_DocumentGDS', 'TR') IS NOT NULL
+BEGIN
+    EXEC('ALTER TRIGGER [dbo].[TR_INS_UPD_DocumentGDS]
+	ON [dbo].[DocumentGroundDescriptionSingle] AFTER INSERT, UPDATE
+	AS		
+		--Find first soil description from affected tests
+		UPDATE GD
+		SET 
+		GD.SoilDescription1 = GDS.[Description],
+		GD.Offset1_SI = GDS.Offset_SI,
+		GD.Offset1_IP = GDS.Offset_IP,
+		GD.Height1_SI = GDS.Height_SI,
+		GD.Height1_IP = GDS.Height_IP
+		FROM
+		(    SELECT 
+				-- Where at least one offset (ie. depth) is null, use the record with the lowest QestUniqueId
+				-- Otherwise use the record with the lowest offset (ie. the shallowest)
+				CASE WHEN COUNT(*) - COUNT(s.Offset) <> 0
+				THEN MIN(S.QESTUniqueID)
+				ELSE (SELECT s1.QestUniqueID from DocumentGroundDescriptionSingle S1 where s1.Offset = Min(S.offset) and s1.QestUniqueParentID = i.QestUniqueParentID)
+				END AS FirstUID,
+				i.QESTUniqueParentID 
+			FROM DocumentGroundDescriptionSingle S 
+			INNER JOIN inserted i 
+			ON S.QestUniqueParentID = i.QestUniqueParentID
+			GROUP BY i.QestUniqueParentID
+		) UPD
+		INNER JOIN DocumentGroundDescriptionSingle GDS
+		ON GDS.QestUniqueID = UPD.FirstUID	
+		LEFT JOIN DocumentGroundDescription GD
+		ON GD.QestUniqueID = GDS.QestUniqueParentID')
+END

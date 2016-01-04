@@ -14,9 +14,10 @@ alter proc [dbo].[qest_ConfigureSuitabilityRule]
   , @altersMineralogy bit = 0
   , @minimumMass float = null
   , @minimumDiameter float = null
-  , @defaultDiameter float = null
-  , @lengthDiameterRatio float = null
-  , @lengthConstant float = null
+  , @minimumLength float = null
+  , @recommendedMass float = null
+  , @recommendedDiameter float = null
+  , @recommendedLength float = null
   , @trimmingTolerance float = null
   , @minimumAbsoluteLength float = null
   , @tcField0 nvarchar(50) = null
@@ -73,9 +74,10 @@ as
         , AltersMineralogy = @altersMineralogy
         , MinimumMass = @minimumMass
         , MinimumDiameter = @minimumDiameter
-        , DefaultDiameter = @defaultDiameter
-        , LengthDiameterRatio = @lengthDiameterRatio
-        , LengthConstant = @lengthConstant
+        , MinimumLength = @minimumLength
+        , RecommendedMass = coalesce(@recommendedMass, @minimumMass)
+        , RecommendedDiameter = coalesce(@recommendedDiameter, @minimumDiameter)
+        , RecommendedLength = coalesce(@recommendedLength, @minimumLength)
         , TrimmingTolerance = @trimmingTolerance
         , MinimumAbsoluteLength = @minimumAbsoluteLength
       where QestUUID = @ruleUUID
@@ -107,9 +109,10 @@ as
       , AltersMineralogy
       , MinimumMass
       , MinimumDiameter
-      , DefaultDiameter
-      , LengthDiameterRatio
-      , LengthConstant
+      , MinimumLength
+      , RecommendedMass
+      , RecommendedDiameter
+      , RecommendedLength
       , TrimmingTolerance
       , MinimumAbsoluteLength    
     )
@@ -126,9 +129,10 @@ as
       , @altersMineralogy
       , @minimumMass
       , @minimumDiameter
-      , @defaultDiameter
-      , @lengthDiameterRatio
-      , @lengthConstant
+      , @minimumLength
+      , coalesce(@recommendedMass, @minimumMass)
+      , coalesce(@recommendedDiameter, @minimumDiameter)
+      , coalesce(@recommendedLength, @minimumLength)
       , @trimmingTolerance
       , @minimumAbsoluteLength      
     )
@@ -217,6 +221,7 @@ alter proc [dbo].[qest_SetMaterialCategorySuitability]
   , @materialCategory nvarchar(300)
   , @suitability nvarchar(20)
   , @minimumMass float = null
+  , @recommendedMass float = null
 as
   set nocount on
   
@@ -255,13 +260,13 @@ as
   if exists (select * from [dbo].[SuitabilityTestTypeMaterialCategory] where TestTypeQestID = @testTypeQestID and MaterialCategoryCode = @materialCategoryCode)
   begin
     update [dbo].[SuitabilityTestTypeMaterialCategory]
-      set Suitability = @suitabilityEnum, MinimumMass = @minimumMass
+      set Suitability = @suitabilityEnum, MinimumMass = @minimumMass, RecommendedMass = coalesce(@recommendedMass, @minimumMass)
       where  TestTypeQestID = @testTypeQestID and MaterialCategoryCode = @materialCategoryCode
   end
   else
   begin
-    insert  [dbo].[SuitabilityTestTypeMaterialCategory] (TestTypeQestID, MaterialCategoryCode, Suitability, MinimumMass)
-      values (@testTypeQestID, @materialCategoryCode, @suitabilityEnum, @minimumMass)
+    insert  [dbo].[SuitabilityTestTypeMaterialCategory] (TestTypeQestID, MaterialCategoryCode, Suitability, MinimumMass, RecommendedMass)
+      values (@testTypeQestID, @materialCategoryCode, @suitabilityEnum, @minimumMass, coalesce(@recommendedMass, @minimumMass))
   end
 GO
 
@@ -285,11 +290,12 @@ select [Test] = case when sr.Idx = 0 then a.Value else '"' end
   , [Unaltered Structure] = sr.RequiresUnalteredStructure
   , [Unaltered Water Content] = sr.RequiresUnalteredWaterContent
   , [Unaltered Mineralogy] = sr.RequiresUnalteredMineralogy
-  , [Diameter (mm)] = coalesce(convert(nvarchar(20), sr.MinimumDiameter * 1000), '-')
-  , [Length (mm)] = coalesce(convert(nvarchar(20), sr.LengthDiameterRatio) + '*D', '')
-      + coalesce(case when sr.LengthDiameterRatio is not null then ' + ' else '' end + convert(nvarchar(20), sr.LengthConstant * 1000), '')
-      + case when sr.LengthDiameterRatio is not null or sr.LengthConstant is not null then ' (+' + convert(nvarchar(20), sr.TrimmingTolerance * 1000) + ')' else '-' end
-  , [Mass (g)] = coalesce(convert(nvarchar(20), sr.MinimumMass * 1000), '-')
+  , [Minimum Diameter (mm)] = coalesce(convert(nvarchar(20), sr.MinimumDiameter * 1000), '-')
+  , [Minimum Length (mm)] = coalesce(convert(nvarchar(20), sr.MinimumLength * 1000), '-')
+  , [Minimum Mass (g)] = coalesce(convert(nvarchar(20), sr.MinimumMass * 1000), '-')
+  , [Recommened Diameter (mm)] = coalesce(convert(nvarchar(20), sr.RecommendedDiameter * 1000), '-')
+  , [Recommened Length (mm)] = coalesce(convert(nvarchar(20), sr.RecommendedLength * 1000), '-')
+  , [Recommened Mass (g)] = coalesce(convert(nvarchar(20), sr.RecommendedMass * 1000), '-')
   
   , [Rock] = case when sr.Idx = 0 then case m_rk.Suitability when 1 then nchar(0x2713) when 2 then nchar(0x2248) when 3 then nchar(0x2717) else '' end else '"' end
   , [Gravel] = case when sr.Idx = 0 then case m_gr.Suitability when 1 then nchar(0x2713) when 2 then nchar(0x2248) when 3 then nchar(0x2717) else '' end else '"' end
