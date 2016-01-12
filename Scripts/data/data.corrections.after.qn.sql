@@ -141,7 +141,6 @@ BEGIN
 END
 GO
 
-
 -- Patches required for existing ASTM RC screens to maintain compatibility with new screen design
 -- Create missing density / unit weight values for ASTM proctors created under previous screen.
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentMaximumDryDensity' AND COLUMN_NAME = 'MaximumDryDensity')
@@ -167,3 +166,12 @@ BEGIN
 END
 GO
 -- End ASTM RC patches
+
+-- Patch to fix report issue numbers incorrectly set to 1 by QESTNET when never signed
+UPDATE DC SET DC.IssueNo = 0 
+FROM DocumentCertificates DC WHERE DC.IssueNo = 1 and DC.SignatoryDate IS NULL AND 
+NOT EXISTS (SELECT 1 FROM DocumentArchivedTestReports DATR WHERE DATR.QestUniqueParentID = DC.QestUniqueID and DATR.QestParentID = DC.QestID)
+UPDATE DE SET DE.IssueNo = 0 
+FROM DocumentExternal DE WHERE DE.IssueNo = 1 and DE.SignatoryDate IS NULL AND 
+NOT EXISTS (SELECT 1 FROM DocumentArchivedTestReports DATR WHERE DATR.QestUniqueParentID = DE.QestUniqueID and DATR.QestParentID = DE.QestID)
+GO
