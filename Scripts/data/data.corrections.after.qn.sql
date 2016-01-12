@@ -175,3 +175,10 @@ UPDATE DE SET DE.IssueNo = 0
 FROM DocumentExternal DE WHERE DE.IssueNo = 1 and DE.SignatoryDate IS NULL AND 
 NOT EXISTS (SELECT 1 FROM DocumentArchivedTestReports DATR WHERE DATR.QestUniqueParentID = DE.QestUniqueID and DATR.QestParentID = DE.QestID)
 GO
+
+-- Correct Report Mapping UUIDs created prior to a bug fix in QESTLab's QLO > Certificate.cls
+update m set m.TestQestUUID = l.QestUUID
+from qestReportMapping m
+	inner join qestReverseLookup l on l.QestID = m.TestQestID and l.QestUniqueID = m.TestQestUniqueID
+where m.TestQestUUID <> l.QestUUID
+go
