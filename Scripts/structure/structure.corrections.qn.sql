@@ -1607,4 +1607,20 @@ begin
 end
 go
 
+if exists (select 1 from information_schema.columns where table_name = 'WorkOrders' and column_name = 'Inactive' and IS_NULLABLE = 'YES')
+begin
+  exec sp_executesql N'update WorkOrders set Inactive = 0 where Inactive is null'
+end
+go
 
+if exists (select 1 from information_schema.columns where table_name = 'WorkOrders' and column_name = 'FieldWorkComplete' and IS_NULLABLE = 'YES')
+begin
+  exec sp_executesql N'update WorkOrders set FieldWorkComplete = 0 where FieldWorkComplete is null'
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'WorkOrders' and column_name = 'FieldWorkCancelled' and IS_NULLABLE = 'YES')
+begin
+  exec sp_executesql N'update WorkOrders set FieldWorkCancelled = 0 where FieldWorkCancelled is null'
+end
+go
