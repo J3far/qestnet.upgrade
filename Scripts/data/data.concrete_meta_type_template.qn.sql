@@ -19,6 +19,7 @@ GO
 
 -- Create Templates
 -- NOTE:  These should be considered a fixed enumeration, do not change the meaning of a given UniqueID after release.  TemplateNames can be adjusted if required.
+-- NOTE:  Any addition to this list must also be made to the ConcreteSample entity in QESTNET
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'Default' OR TemplateQestUniqueID = 1
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'AS (2015)' OR TemplateQestUniqueID = 2
 DELETE FROM QestSpecimenTypeMetaMap WHERE TemplateName = 'ASTM (2013)' OR TemplateQestUniqueID = 3
