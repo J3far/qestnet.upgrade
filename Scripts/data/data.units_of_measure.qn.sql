@@ -83,8 +83,10 @@ exec dbo.qest_AddUnitOfMeasure @quantity = 'angle', @code = 'g', @symbol=@gradSy
 exec dbo.qest_AddUnitOfMeasure @quantity = 'angle', @code = 'gon', @symbol=@gradSymbol, @slope = @grad, @description = 'gradian';
 
 exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '/s', @slope = 1, @description = 'unit per second';
-exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '/hr', @slope = 0.000277777777777777777777777777777778, @description = 'unit per hour';        -- 1 / (60 * 60)
-exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '%/hr', @slope = 0.00000277777777777777777777777777777778, @description = 'percent per hour';  -- 1 / (60 * 60 * 100)
+exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '/hr', @slope = 0.000277777777777777777777777777777778, @description = 'unit per hour';           -- 1 / (60 * 60)
+exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '/min', @slope = 0.016666666666666666666666666666666667, @description = 'unit per minute';        -- 1 / (60)
+exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '%/hr', @slope = 0.00000277777777777777777777777777777778, @description = 'percent per hour';     -- 1 / (60 * 60 * 100)
+exec dbo.qest_AddUnitOfMeasure @quantity = 'rate', @code = '%/min', @slope = 0.00016666666666666666666666666666666667, @description = 'percent per minute';  -- 1 / (60 * 100)
 
 
 --parts-per notation (percent etc)
