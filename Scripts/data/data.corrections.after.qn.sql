@@ -126,7 +126,7 @@ GO
 
 -- Patch report pictures created with QESTNET ID 90201 over to the QESTLab ID 111278, for compatibility purposes
 -- As report pictures are childless, and these two object IDs are stored the same way, this can be done by straightforward substitution.
-IF EXISTS(SELECT 1 From QestReverseLookup WHERE QestID = 90201)
+IF EXISTS(SELECT 1 From QestReverseLookup WHERE QestID = 90201) OR EXISTS(SELECT 1 FROM DocumentCertificatesPictures WHERE QestID = 90201)
 BEGIN
 	UPDATE DocumentCertificatesPictures SET QestID = 111278 WHERE QestID = 90201
 

@@ -816,7 +816,7 @@ GO
 -- Ensure DocumentCertificatesPictures.QestID is 90201
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentCertificatesPictures' AND COLUMN_NAME = 'QestID')
 BEGIN 
-	UPDATE DocumentCertificatesPictures SET QestID = 90201 WHERE ISNULL(QestID, 0) <> 90201
+	UPDATE DocumentCertificatesPictures SET QestID = 90201 WHERE ISNULL(QestID, 0) = 0
 END
 GO
 
