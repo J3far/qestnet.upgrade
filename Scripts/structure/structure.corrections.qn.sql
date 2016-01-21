@@ -813,10 +813,10 @@ BEGIN
 END
 GO
 
--- Ensure DocumentCertificatesPictures.QestID is 90201
+-- Ensure DocumentCertificatesPictures.QestID is 111287
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentCertificatesPictures' AND COLUMN_NAME = 'QestID')
 BEGIN 
-	UPDATE DocumentCertificatesPictures SET QestID = 90201 WHERE ISNULL(QestID, 0) = 0
+	UPDATE DocumentCertificatesPictures SET QestID = 111287 WHERE ISNULL(QestID, 0) = 0
 END
 GO
 
