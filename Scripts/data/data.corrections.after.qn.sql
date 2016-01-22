@@ -182,3 +182,11 @@ from qestReportMapping m
 	inner join qestReverseLookup l on l.QestID = m.TestQestID and l.QestUniqueID = m.TestQestUniqueID
 where m.TestQestUUID <> l.QestUUID
 go
+
+update m set m.ReportQestUUID = l.QestUUID
+from qestReportMapping m
+	inner join qestReverseLookup l on l.QestID = m.ReportQestID and l.QestUniqueID = m.ReportQestUniqueID
+where m.ReportQestUUID <> l.QestUUID
+	and m.ReportQestID is not null
+	and m.ReportQestUniqueID is not null
+go
