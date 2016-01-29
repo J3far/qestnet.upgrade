@@ -9,6 +9,6 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Reflection.AssemblyVersion("1.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.0.205.37847")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.206.41921")]
 
 
