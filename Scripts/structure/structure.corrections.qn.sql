@@ -1607,6 +1607,13 @@ begin
 end
 go
 
+-- Set existing null qestuuid to newid -- Bug 5324
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Tasks' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
+BEGIN
+	UPDATE dbo.Tasks SET QestUUID=NEWID() WHERE QestUUID IS NULL
+	ALTER TABLE dbo.Tasks ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+END
+
 -- Set existing null qestuuid to guid.empty -- Bug 5324
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestNotifications' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 BEGIN
