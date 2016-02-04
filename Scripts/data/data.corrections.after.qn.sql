@@ -191,6 +191,8 @@ where m.ReportQestUUID <> l.QestUUID
 	and m.ReportQestUniqueID is not null
 go
 
+--- WORK ORDER TIME STAMP PATCHES ---
+
 -- Fix Work Order Duration where negative (QESTLab used to set this negative when StartTime/FinishTime crossed midnight - we now take FinishTime to be next day).
 UPDATE WorkOrders SET
 	Duration = Duration + 24
@@ -201,7 +203,7 @@ WHERE Duration is not null and Duration < 0
 UPDATE WorkOrders SET 
 	StartTime = DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime),
 	WorkDate = DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime),
-	FinishTime = CASE WHEN Duration is null THEN
+	FinishTime = CASE WHEN COALESCE(Duration,0) = 0 THEN
 					--If no Duration is stored, we must assume that FinishTime is
 						-- on the same day if FinishTime >= StartTime
 						-- on the next day if FinishTime < StartTime (eg. 23:00 -> 00:45)
@@ -211,3 +213,10 @@ UPDATE WorkOrders SET
 					DATEADD(hour, Duration, DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime))
 				END
 where WorkDate is not null and StartTime is not null and StartTime <= '1901-01-01'
+
+-- Now we have StartTime/FinishTime sorted out, fix Duration where null or 0.
+UPDATE WorkOrders SET
+	Duration = CAST((FinishTime - StartTime) as real) * 24.0
+WHERE COALESCE(Duration,0) = 0 AND StartTime is not null AND FinishTime is not null
+
+--- END WORK ORDER TIME STAMP PATCHES ---
