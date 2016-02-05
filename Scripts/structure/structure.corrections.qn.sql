@@ -1607,4 +1607,18 @@ begin
 end
 go
 
+-- Set existing null qestuuid to newid -- Bug 5324
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Tasks' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
+BEGIN
+	UPDATE dbo.Tasks SET QestUUID=CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) WHERE QestUUID IS NULL
+	ALTER TABLE dbo.Tasks ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+END
+
+-- Set existing null qestuuid to guid.empty -- Bug 5324
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestNotifications' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
+BEGIN
+	UPDATE dbo.qestNotifications SET QestUUID=(CONVERT([uniqueidentifier],CONVERT([binary],(0),0),0)) WHERE QestUUID IS NULL
+	ALTER TABLE dbo.qestNotifications ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+END
+
 
