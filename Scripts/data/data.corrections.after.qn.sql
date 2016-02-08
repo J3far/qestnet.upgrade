@@ -162,6 +162,11 @@ BEGIN
 	-- The original intention was to only set EnterOversize to 1 if any oversize field contained a value
 	-- However, the impact on execution time (7m30s vs. 5s) and the low number of cases where this distinction would have any meaning (128 out of 1.04 million)
 	--  make it better to set this to 1 for all pre-existing screens, as there's no harm in doing so.
+
+	-- AllowEnterOversize must also be set to true (do this first to only affect tests created before new ASTM screen).
+	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentAggSoilCompaction' AND COLUMN_NAME = 'AllowEnterOversize')
+		UPDATE DocumentAggSoilCompaction SET AllowEnterOversize = 1 WHERE EnterOversize is null AND (QestID in (110201, 110202, 110404))	
+
 	UPDATE DocumentAggSoilCompaction SET EnterOversize = 1 WHERE EnterOversize is null AND (QestID in (110201, 110202, 110404))	
 END
 GO
