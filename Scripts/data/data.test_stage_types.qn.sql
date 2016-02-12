@@ -1153,10 +1153,16 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000932, @TestQestID = 110752
 GO
 
 
--- Moisture Content of Soil and Rock [ASTM D 2216]
+-- Moisture Content of Soil and Rock [ASTM D 2216] - 2006
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000941, @TestQestID = 110060, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
 GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000942, @TestQestID = 110060, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+-- Moisture Content of Soil and Rock [ASTM D 2216] - 2010
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000951, @TestQestID = 110066, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000952, @TestQestID = 110066, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
 GO
 
 
