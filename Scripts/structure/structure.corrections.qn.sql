@@ -57,27 +57,6 @@ BEGIN
 END
 GO
 
--- Add identity to SessionLocks.QestUniqueID if column exists without identity (can be done as SessionLocks is cleared by data.corrections.before.qn.sql)
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMNPROPERTY(object_id('SessionLocks'), 'QestUniqueID', 'IsIdentity') = 0)
-BEGIN 
-	-- Clear SessionLocks again in case script was interrupted
-	DELETE FROM SessionLocks
-	-- Add new temp column with identity
-	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SessionLocks' AND COLUMN_NAME = 'QestUniqueID_TEMP')
-		 ALTER TABLE SessionLocks DROP COLUMN QestUniqueID_TEMP
-	ALTER TABLE SessionLocks ADD QestUniqueID_TEMP int NOT NULL IDENTITY(1,1)
-	--Drop old column (have to drop primary key first)
-	ALTER TABLE SessionLocks DROP CONSTRAINT PK_SessionLocks
-	ALTER TABLE SessionLocks DROP COLUMN QestUniqueID
-	--Rename temp column, add primary key back
-	EXEC sp_rename 'SessionLocks.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
-	ALTER TABLE [dbo].[SessionLocks] ADD CONSTRAINT [PK_SessionLocks] PRIMARY KEY CLUSTERED 
-	(
-		[QestUniqueID] ASC
-	)
-END
-GO
-
 -- Set ListLanguageTranslations.QestID non-nullable
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ListLanguageTranslations' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
 BEGIN 
@@ -183,12 +162,6 @@ BEGIN
 END
 GO
 
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTest' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
-BEGIN
-  ALTER TABLE dbo.LTP_PlannedTest ALTER COLUMN QestID int not null
-END
-GO
-
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'PlannedTestUUID' AND IS_NULLABLE = 'YES')
 BEGIN
   ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN PlannedTestUUID uniqueidentifier not null
@@ -204,18 +177,17 @@ GO
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'LTP_PlannedTestConditions')
 BEGIN 
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID')
-	BEGIN
-		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NULL;
-		EXEC ('UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)') --guid.comb
-		ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+	BEGIN 
+		ALTER TABLE dbo.LTP_PlannedTestConditions ADD QestUUID uniqueidentifier NOT NULL CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID DEFAULT NEWID()
+		ALTER TABLE dbo.LTP_PlannedTestConditions DROP CONSTRAINT DF_LTP_PlannedTestConditions_QestUUID
 	END 
 END
 GO
 
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'LTP_PlannedTestConditions' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 BEGIN 
-  UPDATE dbo.LTP_PlannedTestConditions set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) WHERE QestUUID IS NULL --guid.comb
-  ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
+	UPDATE dbo.LTP_PlannedTestConditions SET QestUUID = NEWID() WHERE QestUUID IS NULL
+	ALTER TABLE dbo.LTP_PlannedTestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
 
@@ -653,8 +625,9 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS C where C.TABLE_NAME = 'Test
 BEGIN
 	IF NOT EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF_TestConditions_QestUUID')	
 	BEGIN 
-		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)) FOR QestUUID
+		ALTER TABLE dbo.TestConditions ADD CONSTRAINT DF_TestConditions_QestUUID DEFAULT (newsequentialid()) FOR QestUUID
 	END
+
 	ALTER TABLE dbo.TestConditions ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
 GO
@@ -765,16 +738,6 @@ BEGIN
 END
 GO
 
--- Set Laboratory.QestID to 90040 where it is 0
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Laboratory' and COLUMN_NAME = 'QestID')
-BEGIN
-	IF EXISTS (SELECT 1 FROM Laboratory WHERE QestID = 0)
-	BEGIN
-		EXEC ('UPDATE Laboratory SET QestID = 90040 WHERE QestID = 0')
-	END
-END
-GO
-
 -- Set CounterMaps.ObjectID non-nullable
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'CounterMaps' and COLUMN_NAME = 'ObjectID' AND IS_NULLABLE = 'YES')
 BEGIN
@@ -813,10 +776,10 @@ BEGIN
 END
 GO
 
--- Ensure DocumentCertificatesPictures.QestID is 111287
+-- Ensure DocumentCertificatesPictures.QestID is 90201
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentCertificatesPictures' AND COLUMN_NAME = 'QestID')
 BEGIN 
-	UPDATE DocumentCertificatesPictures SET QestID = 111287 WHERE ISNULL(QestID, 0) = 0
+	UPDATE DocumentCertificatesPictures SET QestID = 90201 WHERE ISNULL(QestID, 0) <> 90201
 END
 GO
 
@@ -920,18 +883,6 @@ BEGIN
 	EXEC qest_DropIndex 'qestReverseLookup', 'IX_qestReverseLookup_QestOwnerLabNo'
 	EXEC('UPDATE qestReverseLookup SET QestOwnerLabNo = 0 WHERE QestOwnerLabNo IS NULL')
 	EXEC('ALTER TABLE qestReverseLookup ALTER COLUMN QestOwnerLabNo int NOT NULL')
-END
-GO
-
--- Columns required for [dbo].[qest_ConnectDocumentToReverseLookups]
-IF EXISTS (select * from information_schema.tables where table_name = 'qestReverseLookup')
-BEGIN
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestOwnerLabNo', 'int', NULL, 'NO', '((0))'
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedBy', 'int', NULL, 'YES', NULL
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestCreatedDate', 'datetime', NULL, 'YES', NULL
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedBy', 'int', NULL, 'YES', NULL
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestModifiedDate', 'datetime', NULL, 'YES', NULL
-  EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestStatusFlags', 'int', NULL, 'YES', NULL
 END
 GO
 
@@ -1257,7 +1208,7 @@ BEGIN
 			Set @SQL = 'ALTER TABLE ' + @TableName + ' ADD QestID int null'
 			EXEC(@SQL)
 		END
-		Set @SQL = 'UPDATE ' + @TableName + ' SET QestID = ' + CAST(@QestID AS VARCHAR(16)) + ' WHERE ISNULL(QestID,0) <= 0'
+		Set @SQL = 'UPDATE ' + @TableName + ' SET QestID = ' + CAST(@QestID AS VARCHAR(16)) + ' WHERE ISNULL(QestID,0) = 0'
 		EXEC(@SQL)
 	END
 END
@@ -1337,11 +1288,6 @@ EXEC qest_FixRecordQestID_TEMP 'DocumentPermeabilityTest', 111255
 GO
 EXEC qest_FixRecordQestID_TEMP 'DocumentSpallLithologicalSingle', 111264
 GO
-EXEC qest_FixRecordQestID_TEMP 'DocumentBulkDensityFillerSingle', 111239
-GO
-EXEC qest_FixRecordQestID_TEMP 'DocumentResistanceStrippingSpecimen', 111258
-GO
-
 
 IF OBJECT_ID('qest_FixRecordQestID_TEMP', 'P') IS NOT NULL
 BEGIN
@@ -1369,256 +1315,3 @@ BEGIN
 	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN Iqi nvarchar(20)
 END
 GO
-
---InspectionRadiographic: correction related to weld readings
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'NumWelds_12to14')
-BEGIN
-	ALTER TABLE dbo.InspectionRadiographic DROP COLUMN NumWelds_12to14
-END
-GO
-
---InspectionJobSafety: rename column from PlotSurfaces to HotSurfaces
-IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'PlotSurfaces')
-BEGIN
-  IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'HotSurfaces')
-  BEGIN
-    EXEC sp_rename 'dbo.InspectionJobSafety.PlotSurfaces', 'HotSurfaces', 'COLUMN'
-  END
-  ELSE
-  BEGIN
-    ALTER TABLE dbo.InspectionJobSafety DROP COLUMN PlotSurfaces
-  END
-END
-GO
-
--- Drop EyeProtection and Ladder
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'EyeProtection')
-begin
-	alter table InspectionJobSafety drop column EyeProtection
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionJobSafety' and column_name = 'Ladder')
-begin
-	alter table InspectionJobSafety drop column Ladder
-end
-go
-
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionJobSafety' AND COLUMN_NAME = 'AttendantRequired')
-BEGIN
-	ALTER TABLE dbo.InspectionJobSafety ALTER COLUMN AttendantRequired nvarchar(25)
-END
-GO
-
-
--- Add columns added for QESTLab 4.1 to UserDocument tables, where required
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME Like 'UserDocument[0-9]%')
-  BEGIN 
-	-- Iterate cursor over list of table names missing one or more of the columns
-	DECLARE	Table_Cursor CURSOR	FOR
-		SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES as T WHERE TABLE_NAME Like 'UserDocument[0-9]%' 
-			AND (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitability')
-			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestSuitabilityReason')
-			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestOfUUID')
-			OR NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS as C WHERE T.TABLE_NAME = C.TABLE_NAME And C.COLUMN_NAME = 'QestRetestRequired'))
-			
-	DECLARE @TableName nvarchar(50)
-	OPEN Table_Cursor
-	FETCH NEXT FROM Table_Cursor INTO @TableName
-
-	WHILE @@FETCH_STATUS = 0
-		BEGIN
-			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitability', 'int', NULL, 'YES', NULL
-			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestSuitabilityReason', 'nvarchar', 4000, 'YES', NULL
-			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestOfUUID', 'uniqueidentifier', NULL, 'YES', NULL
-			EXEC [dbo].[qest_InsertUpdateColumn] @TableName, 'QestRetestRequired', 'bit', NULL, 'YES', NULL
-			FETCH NEXT FROM Table_Cursor INTO @TableName
-		END
-
-	CLOSE Table_Cursor
-	DEALLOCATE Table_Cursor
-  END
-
--- Correct timekeeping fields
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonCode')
-begin
-	alter table DocumentTimekeeping drop column PersonCode
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'PersonName')
-begin
-	alter table DocumentTimekeeping drop column PersonName
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureBase30')
-begin
-	alter table DocumentTimekeeping drop column CustomerSignatureBase30
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'DocumentTimekeeping' and column_name = 'CustomerSignatureJPG')
-begin
-	alter table DocumentTimekeeping drop column CustomerSignatureJPG
-end
-go
-
---Inspections: shorten Procedure and Revision fields
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'InspectionRadiographic' AND COLUMN_NAME = 'ProcedureRevision')
-BEGIN
-	ALTER TABLE dbo.InspectionRadiographic ALTER COLUMN ProcedureRevision nvarchar(2)
-END
-GO
-
-
--- Radiographic Reader changes
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Strength')
-begin
-	alter table InspectionRadiographicReader alter column Strength real
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Procedure')
-begin
-	alter table dbo.InspectionRadiographicReader alter column [Procedure] nvarchar(10)
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'Revision')
-begin
-	alter table dbo.InspectionRadiographicReader alter column Revision nvarchar(2)
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReader' and column_name = 'PWHT')
-begin
-	alter table InspectionRadiographicReader drop column PWHT
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageIntermediate')
-begin
-	alter table InspectionRadiographicReaderSet alter column StageIntermediate bit
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageFinal')
-begin
-	alter table InspectionRadiographicReaderSet alter column StageFinal bit
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'StageRepair')
-begin
-	alter table InspectionRadiographicReaderSet alter column StageRepair bit
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'SizeOfFilm')
-begin
-	alter table InspectionRadiographicReaderSet alter column SizeOfFilm nvarchar(15)
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'SensitivityLevel')
-begin
-	alter table InspectionRadiographicReaderSet alter column SensitivityLevel nvarchar(10)
-end
-go
-
-if exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderWeld' and column_name = 'WeldNumber')
-begin
-	alter table dbo.InspectionRadiographicReaderWeld alter column WeldNumber nvarchar(20)
-end
-go
-
-if exists (select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'InspectionRadiographicReaderSet' and column_name = 'PbScreensFrontBack')
-begin
-	alter table InspectionRadiographicReaderSet alter column PbScreensFrontBack real
-end
-go
-
-
--- Major Radiation Exposure Inspection rework.
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateStart')
-begin
-	alter table InspectionRadiationExposure drop column DateStart
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposure' and column_name = 'DateEnd')
-begin
-	alter table InspectionRadiationExposure drop column DateEnd
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ReadingDate')
-begin
-	alter table InspectionRadiationExposureAreaPointReading drop column ReadingDate
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposuresCount')
-begin
-	alter table InspectionRadiationExposureAreaPointReading drop column ExposuresCount
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureAreaPointReading' and column_name = 'ExposureTimePerHour')
-begin
-	alter table InspectionRadiationExposureAreaPointReading drop column ExposureTimePerHour
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateOut')
-begin
-	alter table InspectionRadiationExposureEquipmentReading drop column DateOut
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'TimeIn')
-begin
-	alter table InspectionRadiationExposureEquipmentReading drop column TimeIn
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureEquipmentReading' and column_name = 'DateIn')
-begin
-	alter table InspectionRadiationExposureEquipmentReading drop column DateIn
-end
-go
-
-if exists (select * from information_schema.tables where table_name = 'InspectionRadiationExposureTechnician')
-begin
-	drop table dbo.InspectionRadiationExposureTechnician
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureTechnicianReading' and column_name = 'ReadingDate')
-begin
-	alter table InspectionRadiationExposureTechnicianReading drop column ReadingDate
-end
-go
-
-if exists (select 1 from information_schema.columns where table_name = 'InspectionRadiationExposureVehicleReading' and column_name = 'ReadingDate')
-begin
-	alter table InspectionRadiationExposureVehicleReading drop column ReadingDate
-end
-go
-
--- Set existing null qestuuid to newid -- Bug 5324
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Tasks' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
-BEGIN
-	UPDATE dbo.Tasks SET QestUUID=CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) WHERE QestUUID IS NULL
-	ALTER TABLE dbo.Tasks ALTER COLUMN QestUUID uniqueidentifier NOT NULL
-END
-
--- Set existing null qestuuid to guid.empty -- Bug 5324
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestNotifications' AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
-BEGIN
-	UPDATE dbo.qestNotifications SET QestUUID=(CONVERT([uniqueidentifier],CONVERT([binary],(0),0),0)) WHERE QestUUID IS NULL
-	ALTER TABLE dbo.qestNotifications ALTER COLUMN QestUUID uniqueidentifier NOT NULL
-END
-
-

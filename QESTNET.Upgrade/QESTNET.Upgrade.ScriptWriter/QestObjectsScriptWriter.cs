@@ -46,12 +46,6 @@ namespace Spectra.QESTNET.Upgrade.ScriptWriter
 
         private const string headerScriptContent = @"
 -- Stored procedure for adding Qest Object Properties
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_AddObjectProperty' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
-BEGIN
-    DROP PROCEDURE [dbo].[qest_AddObjectProperty]
-END
-GO
-
 CREATE PROC qest_AddObjectProperty @QestID int, @QestActive bit, @QestExtra bit, @Property nvarchar(32), @Value nvarchar(4000) AS 
 INSERT INTO dbo.qestObjects(QestID,QestActive,QestExtra,[Property],[Value]) VALUES(@QestID,@QestActive,@QestExtra,@Property,@Value)
 GO

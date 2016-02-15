@@ -70,8 +70,9 @@ BEGIN
 END
 GO
 
-IF ((SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Documentsteelreinforcing' AND COLUMN_NAME = 'neckingtesttype2_sidewithoutrupture') != 'nvarchar')
+--Delete any records with zero-value QestUniqueID in qestReverseLookup
+IF EXISTS(SELECT 1 FROM qestReverseLookup WHERE QestUniqueID = 0)
 BEGIN
-	ALTER TABLE Documentsteelreinforcing ALTER COLUMN neckingtesttype2_sidewithoutrupture NVARCHAR(10)
+	DELETE FROM qestReverseLookup WHERE QestUniqueID=0
 END
 GO

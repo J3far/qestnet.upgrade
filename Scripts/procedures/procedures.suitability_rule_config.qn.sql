@@ -38,7 +38,7 @@ as
   begin
     select @ruleUUID = sr.QestUUID from SuitabilityRuleConfiguration sr where sr.TestTypeQestID = @testTypeQestID and not exists (select * from SuitabilityRuleConfigurationTestConditions src where sr.QestUUID = src.SuitabilityRuleConfigurationUUID)
     if @ruleUUID is null
-      SELECT @ruleUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) --guid.comb
+      set @ruleUUID = newid();
   end
   
   if exists (select * from SuitabilityRuleConfiguration where QestUUID = @ruleUUID)

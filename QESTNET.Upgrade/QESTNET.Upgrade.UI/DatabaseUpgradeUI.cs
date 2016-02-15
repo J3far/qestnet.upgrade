@@ -23,9 +23,6 @@ namespace Spectra.QESTNET.Upgrade.UI
         Configuration config;
         FileInfo exeScriptWriter;
 
-        bool disableTransactionScope;
-        TimeSpan? transactionTimeout;
-
         public DbUpgradeUI()
         {
             InitializeComponent();
@@ -40,18 +37,6 @@ namespace Spectra.QESTNET.Upgrade.UI
 
             var mp = this.config.AppSettings.Settings["manifestPath"];
             this.OpenManifest(mp != null ? mp.Value : null);
-
-            //Find out if the user has foolishly configured their app NOT to use transactions...
-            if(this.config.AppSettings.Settings["disableTransactionScope"] == null || !bool.TryParse(this.config.AppSettings.Settings["disableTransactionScope"].Value, out disableTransactionScope)) 
-                disableTransactionScope = false;
-
-            //Find out if the user has decided to go for a longer timeout than any sensible person would choose (this is required 
-            //if you wish to upgrade large databases using the 'one transaction per script' way of doing things).
-            TimeSpan ts;
-            if (this.config.AppSettings.Settings["overrideMachineMaximumTransactionTimeout"] != null && TimeSpan.TryParse(this.config.AppSettings.Settings["overrideMachineMaximumTransactionTimeout"].Value, out ts))
-                transactionTimeout = ts;
-            else
-                transactionTimeout = null;
 
             // Show ScriptWriter link when exe is side-by-side
             this.exeScriptWriter = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles("QESTNET.Upgrade.ScriptWriter.UI.exe").SingleOrDefault();
@@ -217,16 +202,9 @@ namespace Spectra.QESTNET.Upgrade.UI
                 this.MessagesWriteLine(string.Empty);
                 var dbu = new DatabaseUpgrade(this.manifest, this.txtConnectionString.Text)
                 {
-                    OptionRepair = chkRepair.Checked,
-                    DisableTransactionScope = disableTransactionScope
+                    OptionRepair = chkRepair.Checked
                 };
                 dbu.Message += this.MessagesWriteLine;
-
-                if (this.transactionTimeout.HasValue && this.transactionTimeout > TransactionUtils.MaximumTransactionTimeout)
-                {
-                    this.MessagesWriteLine(string.Format("Setting transaction timeout to {0}", this.transactionTimeout));
-                    TransactionUtils.MaximumTransactionTimeout = this.transactionTimeout.Value;
-                }
 
                 this.cancelUpgrade = new CancellationTokenSource();
                 this.RefreshControls();
