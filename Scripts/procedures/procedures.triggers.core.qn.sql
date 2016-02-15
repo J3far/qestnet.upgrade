@@ -222,3 +222,8 @@ BEGIN
 		LEFT JOIN DocumentGroundDescription GD
 		ON GD.QestUniqueID = GDS.QestUniqueParentID')
 END
+
+--  Remove trigger for setting Liquid Limit/Plastic Limit QestID as no longer required
+IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_QID', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_QID
+GO
