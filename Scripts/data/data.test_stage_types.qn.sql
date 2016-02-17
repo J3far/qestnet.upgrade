@@ -1139,6 +1139,18 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000924, @TestQestID = 111046, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Moisture Content EN ISO 17892-1]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000931, @TestQestID = 110951, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000932, @TestQestID = 110951, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000933, @TestQestID = 110951, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000934, @TestQestID = 110951, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000935, @TestQestID = 110951, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
