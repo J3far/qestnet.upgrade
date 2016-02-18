@@ -150,13 +150,16 @@ AS
 BEGIN
 	SELECT D.FieldName, D.DisplayType, D.FormatString, D.Caption, D.ReadOnly, D.Hidden, D.Width, D.AutoFill, 
 	D.ListField, D.RestrictField, COALESCE(D.ChildID, D.ListID, D.EquipmentID) As QestID, D.List, D.AdditionalData, D.ElementType, 
-	D.FilterBy, D.Mask, D.Description, COALESCE(D.MaxLength, I.CHARACTER_MAXIMUM_LENGTH) as MaxLength
+	D.FilterBy, D.Mask, D.Description, COALESCE(D.MaxLength, I.CHARACTER_MAXIMUM_LENGTH) as MaxLength, I2.CHARACTER_MAXIMUM_LENGTH as AdditionalDataMaxLength
  	FROM qestDisplayObjectCollection C
  		INNER JOIN qestDisplayObjectDetails D ON C.QestUniqueID = D.QestUniqueParentID
 		LEFT JOIN qestObjects O ON C.QestID = O.QestID AND O.Property = ''TableName''
 		LEFT JOIN INFORMATION_SCHEMA.COLUMNS I ON (
 		I.TABLE_NAME = O.[Value]
-		AND (I.COLUMN_NAME = D.FieldName OR (LEFT(I.COLUMN_NAME, 1) = ''_'' AND ''C'' + I.COLUMN_NAME = D.FieldName))
+		AND (I.COLUMN_NAME = D.FieldName OR (LEFT(I.COLUMN_NAME, 1) = ''_'' AND ''C'' + I.COLUMN_NAME = D.FieldName)))
+		LEFT JOIN INFORMATION_SCHEMA.COLUMNS I2 ON (
+		I2.TABLE_NAME = O.[Value]
+		AND (I2.COLUMN_NAME = D.AdditionalData OR (LEFT(I2.COLUMN_NAME, 1) = ''_'' AND ''C'' + I2.COLUMN_NAME = D.AdditionalData))
 	)
  	WHERE C.QestUniqueID = 
      (                      
