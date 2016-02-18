@@ -115,6 +115,7 @@ BEGIN
 		END
 			
 	END ELSE BEGIN
+	
 		-- INSERT	
 		IF(@IsNullable = 'YES')
 		BEGIN
@@ -133,55 +134,9 @@ BEGIN
 			END
 		END
 
-		-- QestUUID
-		-- special case... we want to generate new values using the 'guid.comb' algorithm to avoid index fragmentation
-		-- if the table already has a non-nullable qestuniqueid column, we can easily update it in batches using that column.
-		-- otherwise we'll do the whole table in a single batch. Note that portion of script replaces the entire alter table statement.
-		-- TODO -- if there is a non-null qestcreated date, we could even consider using that as the 'time' component'... probably unneccessary.
-		if @columnName = 'QestUUID' and @TypeName = 'uniqueidentifier' and @IsNullable = 'NO'
-		begin
-			set nocount on;
-			set @SQL = 'alter table dbo.' + quotename(@tableName) + ' add QestUUID uniqueidentifier null;'
-			EXEC(@SQL)
-			if exists (select * from information_schema.columns where table_schema = 'dbo' and table_name = @tableName and column_name = 'qestuniqueid' and data_type = 'int' and is_nullable = 'no')
-			begin
-				--use batches, based on qestuniqueid
-				set @SQL = 'declare @min int, @i int, @batchSize int, @max int;
-				select @min = min(qestUniqueID), @max = max(qestUniqueID) + 1, @batchSize = 10000 from [dbo].' + quotename(@tableName) + '
-				set @i = @min;
-				while @i < @max
-				begin
-					--display progress
-					if (@i - @min) % (@batchSize * 100) = 0
-					begin
-						declare @num int, @total int;
-						set @num = @i-@min; set @total = @max-@min;
-						raiserror(''%i of %i'', 10, 1, @num, @total) with nowait;
-					end
-					update [dbo].' + quotename(@tableName) + '
-					set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)
-					where QestUniqueID >= @i and QestUniqueID < @i + @batchSize
-					set @i = @i + @batchSize
-				end
-				raiserror(''%i of %i'', 10, 1, @max, @max) with nowait;
-				alter table dbo.' + quotename(@tableName) + ' alter column QestUUID uniqueidentifier not null;'
-			end
-			else
-			begin
-				--no qestuniqueid, we'll go with a single batch instead.
-				set @SQL = 'update [dbo].' + quotename(@tableName) + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER);'
-			end
-			EXEC(@SQL)
-			if @DefaultValue is not null
-			begin
-				set @SQL = 'alter table [dbo].' + quotename(@tableName) + ' add constraint ' + quotename('DF_' + @tableName + '_' + @columnName) + ' default ' + @defaultValue + ' for ' + quotename(@columnName) + ';'
-				EXEC(@SQL)
-			end
-			RETURN
-		end
-
-		EXEC(@SQL)
+		EXEC(@SQL)			
 	END
+	
 END
 GO
 

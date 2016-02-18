@@ -21,8 +21,6 @@ namespace Spectra.QESTNET.Upgrade
         private readonly UpgradeManifest manifest;
         private readonly Version currentVersion;
 
-        public bool DisableTransactionScope { get; set; }
-
         public bool OptionRepair
         {
             get;
@@ -69,67 +67,56 @@ namespace Spectra.QESTNET.Upgrade
                     {
                         this.Message(string.Format("Executing file '{0}' ({1} of {2}) ...", this.manifest.ScriptFiles[i].Name, i + 1, this.manifest.ScriptFiles.Length));
 
-                        TransactionScope ts = null;
-
                         try
                         {
-                            if (!DisableTransactionScope)
-                                ts = TransactionUtils.CreateTransactionScope();
-
-                            using (var conn = new SqlConnection(connectionString))
-                            {
-                                conn.InfoMessage += this.PrintInfoMessage;
-                                conn.Open();
-
-                                var script = new UpgradeScript(this.manifest.ScriptFiles[i], conn);
-                                script.Message = this.Message;
-                                var scriptTask = script.ExecuteAsync(cancellationToken);
-                                scriptTask.Start();
-                                scriptTask.Wait(); // wait for script to finish
-
-                                if (cancellationToken.IsCancellationRequested)
+                            // Transaction scope only supports maximum 10 minutes - PSI individual scripts take longer than that
+                            //using (var ts = new TransactionScope(TransactionScopeOption.Required, new TimeSpan(1, 0, 0)))
+                            //{
+                                using (var conn = new SqlConnection(connectionString))
                                 {
-                                    if (DisableTransactionScope)
-                                        this.Message("Database upgrade cancelled.  WARNING: Transactions have been disabled, so this script may have been partially committed!");
-                                    else
-                                        this.Message("Database upgrade cancelled.  Completed files have been committed.");
-                                    return;
-                                }
-                            }
+                                    conn.InfoMessage += this.PrintInfoMessage;
+                                    conn.Open();
 
-                            if (ts != null)
-                                ts.Complete();
+                                    var script = new UpgradeScript(this.manifest.ScriptFiles[i], conn);
+                                    script.Message = this.Message;
+                                    var scriptTask = script.ExecuteAsync(cancellationToken);
+                                    scriptTask.Start();
+                                    try
+                                    {
+                                        scriptTask.Wait(); // wait for script to finish
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        this.Message(e.ToString());
+                                        if (scriptTask.Exception != null)
+                                        {
+                                            this.Message(scriptTask.Exception.ToString());
+                                        }
+                                        throw;
+                                    }
+                                    if (cancellationToken.IsCancellationRequested)
+                                    {
+                                        this.Message("Database upgrade cancelled.  Completed files have been committed.");
+                                        return;
+                                    }
+                                }
+
+                            //    ts.Complete();
+                            //}
                         }
                         catch (Exception e)
                         {
-                            var sb = new StringBuilder();
-                            sb.Append(e.ToString());
                             this.Message(e.ToString());
                             var innerException = e.InnerException;
                             while (innerException != null)
                             {
-                                if (!sb.ToString().Contains(innerException.ToString()))
-                                {
-                                    this.Message(innerException.ToString());
-                                    sb.Append(innerException.ToString());
-                                }
+                                this.Message(innerException.ToString());
                                 innerException = innerException.InnerException;
                             }
-                            if (this.DisableTransactionScope)
-                                this.Message(string.Format("File '{0}' aborted due to an unhandled exception.  WARNING: Transactions have been disabled, so this script may have been partially committed!", this.manifest.ScriptFiles[i].Name));
-                            else
-                                this.Message(string.Format("File '{0}' aborted due to an unhandled exception.  No changes were committed for this file.", this.manifest.ScriptFiles[i].Name));
+                            this.Message(string.Format("File '{0}' aborted due to an unhandled exception.  No changes were committed for this file.", this.manifest.ScriptFiles[i].Name));
                             this.SetOption("Repair", "False");
                             this.Message("Database upgrade aborted.");
                             return;
-                        }
-                        finally
-                        {
-                            if (ts != null)
-                            {
-                                ts.Dispose();
-                                ts = null;
-                            }
                         }
 
                     }

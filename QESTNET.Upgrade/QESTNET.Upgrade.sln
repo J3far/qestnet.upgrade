@@ -9,10 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QESTNET.Upgrade.ScriptWrite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QESTNET.Upgrade.UI", "QESTNET.Upgrade.UI\QESTNET.Upgrade.UI.csproj", "{4FD0C1F9-4927-4C27-B710-DB5156573327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QESTNET.Upgrade.Console", "QESTNET.Upgrade.Console\QESTNET.Upgrade.Console.csproj", "{9516D7C5-DAA1-4549-AC8B-F98481BB3AE3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QESTNET.Upgrade.ScriptWriter.Console", "QESTNET.Upgrade.ScriptWriter.Console\QESTNET.Upgrade.ScriptWriter.Console.csproj", "{964825AD-4A01-4CF2-A70F-00A799529766}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,14 +31,6 @@ Global
 		{4FD0C1F9-4927-4C27-B710-DB5156573327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FD0C1F9-4927-4C27-B710-DB5156573327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FD0C1F9-4927-4C27-B710-DB5156573327}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9516D7C5-DAA1-4549-AC8B-F98481BB3AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9516D7C5-DAA1-4549-AC8B-F98481BB3AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9516D7C5-DAA1-4549-AC8B-F98481BB3AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9516D7C5-DAA1-4549-AC8B-F98481BB3AE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{964825AD-4A01-4CF2-A70F-00A799529766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{964825AD-4A01-4CF2-A70F-00A799529766}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{964825AD-4A01-4CF2-A70F-00A799529766}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{964825AD-4A01-4CF2-A70F-00A799529766}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

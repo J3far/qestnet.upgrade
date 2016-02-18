@@ -26,36 +26,7 @@ BEGIN
       for xml path ('') ), 3, 4000)
 
 		RAISERROR ('qestReverseLookup corruption detected. Zero-value QestUniqueIDs exist for the following object types: %s
-  For each document table, check that QestUniqueID column marked as the identity column and the *_Insert_UniqueID trigger is operational.
-
-  You may be able to fix this data using the following SQL script, but you should test it first!:
-
-  begin transaction
-  declare curSQL cursor fast_forward for
-  select ''update rl set QestUniqueID = src.QestUniqueID from [dbo].[qestReverseLookup] rl inner join '' + quotename(t.table_name) + '' src on rl.QestUUID = src.QestUUID where rl.QestUniqueID = 0''
-  from INFORMATION_SCHEMA.TABLES t
-  where exists (
-    select *
-      from qestReverseLookup rl
-      inner join qestObjects o on rl.QestID = o.QestID and o.Property = ''TableName''
-      where rl.QestUniqueID = 0
-        and o.Value = t.TABLE_NAME
-  )
-  and t.TABLE_SCHEMA = ''dbo''
-  order by t.TABLE_NAME
-  open curSQL
-  declare @sql_statement nvarchar(max)
-  fetch next from curSQL into @sql_statement
-  while @@FETCH_STATUS = 0
-  begin
-    exec sp_executesql @sql_statement
-    fetch next from curSQL into @sql_statement
-  end
-  close curSQL
-  deallocate curSQL
-  rollback transaction
-
-  ', 16, 0, @list_of_tables)
+  For each document table, check that QestUniqueID column marked as the identity column and the *_Insert_UniqueID trigger is operational.', 16, 0, @list_of_tables)
 	END
 
 	-- VALIDATION: Check for duplicate QestID, QestUniqueID pairs
