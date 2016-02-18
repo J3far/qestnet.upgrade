@@ -386,11 +386,11 @@ begin
 	end
     if @isUnconfined = 0
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2, @fieldCaption =  N'Horizontal Effective Stress (σh’)'     , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2, @fieldCaption =  N'Horizontal Effective Stress (σ′h)'     , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
     end
     if @isAnisotropic = 1
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'AnisotropicStress'                  , @order = 3,  @fieldCaption = N'Vertical Effective Stress (σv’)'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'AnisotropicStress'                  , @order = 3,  @fieldCaption = N'Vertical Effective Stress (σ′v)'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
     end
   end
   else
@@ -425,11 +425,11 @@ begin
   begin
     if @isUnconfined = 0
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageConfiningPressure'             , @order = 14, @fieldCaption = 'Confining Pressure'          , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageConfiningPressure'             , @order = 14, @fieldCaption = N'Horizontal Effective Stress (σ′h)'     , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
     end
     if @isAnisotropic = 1
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageAnisotropicStress'             , @order = 15, @fieldCaption = 'Anisotropic Stress K0'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageAnisotropicStress'             , @order = 15, @fieldCaption = N'Vertical Effective Stress (σ′v)'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
     end
   end
 
