@@ -38,7 +38,6 @@ procedures/procedures.triggers.core.qn.sql
 procedures/procedures.triggers.userdocs.qn.sql
 procedures/procedures.qestnet.qn.sql
 procedures/procedures.workflows.qn.sql
-procedures/procedures.test_methods.qn.sql
 procedures/procedures.suitability_rule_config.qn.sql
 procedures/procedures.units_of_measure.qn.sql
 procedures/procedures.concrete_meta_type.qn.sql

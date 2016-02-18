@@ -104,38 +104,6 @@ BEGIN
 END
 GO
 
--- Get the work orders requiring correction
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetWorkOrdersCorrectionRequired' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
-BEGIN
-    DROP PROCEDURE [dbo].[qest_GetWorkOrdersCorrectionRequired]
-END
-GO
-
--- This stored proc is specific to PSI as it requires some custom fields (CorrectionRequired, CorrectionComplete) to exist.
--- Since a 'create procedure' statement has to be the first query in the batch, if you want an if statement first, you need to
--- use 'EXEC', which means converting the stored proc to a string.  Not nice, but it "works".
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SampleRegister' AND COLUMN_NAME = '_CorrectionRequired')
-OR NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteDestructive' AND COLUMN_NAME = '_CorrectionRequired')
-  PRINT 'Skipped: custom field CorrectionRequired was not found in SampleRegister and DocumentConcreteDestructive tables.'
-ELSE
-EXEC(
-'CREATE procedure [dbo].[qest_GetWorkOrdersCorrectionRequired]
-	@LocationIDs nvarchar (max),
-	@PersonCode nvarchar (30)
-AS
-BEGIN
-	SELECT QestUUID FROM WorkOrders WHERE QestUniqueID in (SELECT DISTINCT W.QESTUniqueID
-	FROM WorkOrders W
-	LEFT JOIN SampleRegister S ON W.QestUniqueID = S.QestUniqueParentID AND W.QestID = S.QestParentID
-	LEFT JOIN DocumentConcreteDestructive D ON W.QestUniqueID = D.QestUniqueParentID AND W.QestID = D.QestParentID
-	LEFT JOIN LaboratoryMapping L ON W.QESTOwnerLabNo = L.LabNo
-	WHERE L.LocationID IN (SELECT NumberVal from dbo.CSVTable(@LocationIDs)) AND W.QestID = 101 AND W.Inactive != 1
-	AND W.PersonCode = @PersonCode
-	AND (S._CorrectionRequired = ''True'' AND S._CorrectionComplete IS NULL) OR S._CorrectionComplete != ''True''
-	OR (D._CorrectionRequired = ''True'' AND D._CorrectionComplete IS NULL) OR D._CorrectionComplete != ''True'')
-	ORDER BY StartTime, FinishTime, ProjectCode, ProjectName, WorkOrderID
-END')
-
 -- Procedure for returning laboratory list for a person
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetLaboratoriesByPerson' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN

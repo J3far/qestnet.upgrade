@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <startup useLegacyV2RuntimeActivationPolicy="true"> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0" />
+    </startup>
+
+    <appSettings>
+      <add key="manifestPath" value="./Scripts/database_upgrade.qn.manifest"/>  
+    </appSettings>
+  
+    <connectionStrings>
+      <!--<add name="Example" connectionString="data source=ADLS0007\CUSTOMER2008R2;initial catalog=QESTLab_EXAMPLE;integrated security=True;multipleactiveresultsets=True;Asynchronous Processing=True;App=QestnetUpgrade"/>-->
+    </connectionStrings>
+  
+</configuration>
+
+

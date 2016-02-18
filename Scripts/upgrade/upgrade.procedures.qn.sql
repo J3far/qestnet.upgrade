@@ -41,34 +41,66 @@ GO
 CREATE PROCEDURE [dbo].[qest_GenerateQestUUID](@TableName nvarchar(255))
 AS
 BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+
+	-- Add QestUUID if it is not present -- we initially add it as a nullable column so that we can do batch-updates
+	-- to set the 'default' value.
+	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID')
+	BEGIN
+		EXEC('ALTER TABLE ' + @TableName + ' ADD QestUUID uniqueidentifier NULL;');
+	END
 
 	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 	BEGIN
-		BEGIN TRANSACTION
-			-- Drop any existing indexing or default
-			DECLARE @IndexName varchar(255)
-			SET @IndexName = 'IX_' + @TableName + '_QestUUID'
-			EXEC qest_DropIndex @TableName = @TableName, @IndexName = @IndexName
-			EXEC qest_DropDefault @TableName = @TableName, @ColumnName = 'QestUUID'
-			
-			EXEC('UPDATE ' + @TableName + ' SET QestUUID = NEWID() WHERE QestUUID IS NULL') -- set a value for each null
-			EXEC('ALTER TABLE ' + @TableName + ' ALTER COLUMN QestUUID uniqueidentifier NOT NULL') -- make non-nullable
-			EXEC('ALTER TABLE ' + @TableName + ' ADD  CONSTRAINT DF_' + @TableName + '_QestUUID DEFAULT (newsequentialid()) FOR QestUUID') -- reapply default
-			PRINT 'QestUUID made not nullable for ' + @TableName 
-		COMMIT
-	END
-	
-	-- Add QestUUID if it is not present
-	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID')
-	BEGIN
-		EXEC('ALTER TABLE ' + @TableName + ' ADD QestUUID uniqueidentifier NOT NULL CONSTRAINT DF_' + @TableName + '_QestUUID DEFAULT newsequentialid()')
-		PRINT 'QestUUID column added to ' + @TableName 
+		-- Drop any existing indexing or default
+	  DECLARE @IndexName varchar(255)
+	  SET @IndexName = 'IX_' + @TableName + '_QestUUID'
+	  EXEC qest_DropIndex @TableName = @TableName, @IndexName = @IndexName
+		EXEC qest_DropDefault @TableName = @TableName, @ColumnName = 'QestUUID'
+
+		--if there is a qestuniqueid column, use that to run a batch process to set the QestUUID column
+		if exists (select 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUniqueID')
+		BEGIN
+		  declare @sql_to_execute nvarchar(max);
+		  set @sql_to_execute = 'declare @i int, @max int;
+		  select @i = min(qestUniqueID), @max = max(qestUniqueID) + 1 from [dbo].' + quotename(@tableName) + '
+		  while @i<@max
+		  begin
+		    update [dbo].' + quotename(@tableName) + '
+		    set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)
+		    where QestUUID IS NULL and qestUniqueID >= @i and qestUniqueID < @i + @batchSize;
+		    set @i = @i + @batchSize
+		  end'
+		  exec sp_executesql @sql_to_execute, N'@batchSize int', 10000
+		END
+		ELSE
+		BEGIN
+		  --otherwise just update the whole lot in one batch
+		  EXEC('update ' + @TableName + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) where QestUUID IS NULL');
+		END
+
+		EXEC('ALTER TABLE ' + @TableName + ' ALTER COLUMN QestUUID uniqueidentifier NOT NULL') -- make non-nullable
+		EXEC('ALTER TABLE ' + @TableName + ' ADD  CONSTRAINT DF_' + @TableName + '_QestUUID DEFAULT (CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)) FOR QestUUID')
+		PRINT 'QestUUID made not nullable for ' + @TableName
 	END
 
 	-- Set as primary key
 	DECLARE @KEYNAME varchar(1000)
 	SET @KEYNAME = 'PK_' + @TableName
 	EXEC qest_SetPrimaryKey @TableName = @TableName, @KeyName = @KEYNAME, @Columns = 'QestUUID'	
+
+	COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		declare @ERR_LINE int, @ERR_MESSAGE nvarchar(max), @ERR_NUMBER int,@ERR_SEVERITY int,@ERR_STATE int;
+		select @ERR_LINE = ERROR_LINE(), @ERR_MESSAGE = ERROR_MESSAGE(), @ERR_NUMBER = ERROR_NUMBER(), @ERR_SEVERITY = ERROR_SEVERITY(), @ERR_STATE = ERROR_STATE();
+		rollback transaction;
+		raiserror('qest_GenerateQestUUID [%s] - Failed - transaction rolled back.
+  Error number:  %d
+  Error message: %s
+  Error line:    %d', @ERR_SEVERITY, @ERR_STATE, @TableName, @ERR_NUMBER, @ERR_MESSAGE, @ERR_LINE);
+	END CATCH
 END
 GO
 
@@ -83,8 +115,6 @@ GO
 CREATE PROCEDURE [dbo].[qest_ConnectDocumentToReverseLookups](@TableName nvarchar(255))
 AS
 BEGIN
-	EXEC('ALTER TABLE ' + @TableName + ' DISABLE TRIGGER ALL')
-	
 	-- Add QestUUID if it is not present
 	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID')
 	BEGIN
@@ -99,26 +129,41 @@ BEGIN
 	WHERE RL.QestID = 0 OR RL.QestUniqueID = 0')
 	
 	-- Create ReverseLookups where any are missing - use the documents QestUUID if it has one, else create one
-	EXEC('INSERT INTO qestReverseLookup (QestUUID, QestID, QestUniqueID, QestParentID, QestUniqueParentID, QestOwnerLabNo)
-	SELECT ISNULL(D.QestUUID,NEWID()), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo FROM ' + @TableName + ' D 
-	LEFT JOIN qestReverseLookup RL ON D.QestID = RL.QestID AND D.QestUniqueID = RL.QestUniqueID WHERE RL.QestUUID IS NULL')
-
+	declare @sql_to_execute nvarchar(max);
+	set @sql_to_execute = 'declare @i int, @max int;
+	  select @i = min(QestUniqueID), @max = max(QestUniqueID) + 1 from [dbo].' + quotename(@tableName) + ';
+	  while @i < @max
+	  begin
+	    insert into qestReverseLookup (QestUUID, QestID, QestUniqueID, QestParentID, QestUniqueParentID, QestOwnerLabNo)
+	    select  ISNULL(D.QestUUID,CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo
+	    from [dbo].' + quotename(@tableName) + ' D
+	    where D.qestUniqueID >= @i and D.qestUniqueID < @i + @batchSize
+	      and not exists (select * from [dbo].[qestReverseLookup] RL where D.QestID = RL.QestID AND D.QestUniqueID = RL.QestUniqueID)
+	    set @i = @i + @batchSize
+	  end'
+	PRINT 'Batch-updating QestUUID'  
+	exec sp_executesql @sql_to_execute, N'@batchSize int', 10000;
+  
+  print 'Updating Document QestUUIDs...'
 	-- Set the QestUUIDs to match ReverseLookups
 	EXEC('UPDATE ' + @TableName + ' SET QestUUID = R.QestUUID FROM ' + @TableName + ' D INNER JOIN qestReverseLookup R 
 		ON D.QestID = R.QestID AND D.QestUniqueID = R.QestUniqueID WHERE D.QestUUID IS NULL OR NOT D.QestUUID = R.QestUUID')
 		
+  print ' Make QestUUID non-nullable (will fail if anything was not in RL)'
 	-- Make QestUUID non-nullable (will fail if anything was not in RL)
 	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
 	BEGIN
 		EXEC('EXEC qest_DropSingleColumnIndexes @TableName = ''' + @TableName + ''', @ColumnName = ''QestUUID''')
 		EXEC('ALTER TABLE ' + @TableName + ' ALTER COLUMN QestUUID uniqueidentifier NOT NULL')
 	END
-		
+	
 	-- Set QestUUID Primary Key
+	PRINT 'Setting QestUUID as primary key'
 	DECLARE @PKNAME varchar(255)
 	SET @PKNAME = 'PK_' + @TableName	
 	EXEC qest_SetPrimaryKey @TableName = @TableName, @KeyName = @PKNAME, @Columns = 'QestUUID'
-		
+  
+  PRINT 'Updating QestReverseLookup columns...'
 	-- Set qestReverseLookup.QestOwnerLabNo
 	EXEC('UPDATE R SET QestOwnerLabNo = D.QestOwnerLabNo FROM qestReverseLookup R INNER JOIN ' + @TableName + ' D 
 	ON D.QestUUID = R.QestUUID WHERE D.QestOwnerLabNo <> R.QestOwnerLabNo')
@@ -277,7 +322,8 @@ BEGIN
 				FROM qestReverseLookup RL 
 				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
 				INNER JOIN ' + @TableName + ' D ON D.QestUUID = RL.QestUUID'
-
+			
+			PRINT 'Creating Trigger: TR_' + @TableName + '_Insert_UniqueIDs'
 			EXEC sp_executesql @Trigger
 		END
 					
@@ -290,11 +336,10 @@ BEGIN
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
-		IF (@@TRANCOUNT > 0)
-			ROLLBACK TRANSACTION
-
 		DECLARE @ErrorSeverity int, @ErrorState int, @ErrorMessage as nvarchar(max)
 		SELECT @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorMessage = ERROR_MESSAGE();
+		IF (@@TRANCOUNT > 0)
+			ROLLBACK TRANSACTION
 		RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState)
 	END CATCH
 END
@@ -313,15 +358,24 @@ BEGIN
 	DECLARE @DocumentTableName varchar(255)
 	DECLARE tableCursor CURSOR LOCAL for
 		SELECT name FROM sys.tables WHERE type_desc = 'USER_TABLE' AND name LIKE @TableLike 
-		AND NOT name IN ('DocumentGroups', 'DocumentReportingBodyMap', 'UserDocuments') ORDER BY name
-
+		AND NOT name IN ('DocumentGroups', 'DocumentReportingBodyMap', 'UserDocuments', 'DocumentConcreteDockets') ORDER BY name
+  
 	OPEN tableCursor
 	FETCH NEXT FROM tableCursor INTO @DocumentTableName
-	WHILE @@FETCH_STATUS = 0 BEGIN
-		EXEC qest_EnableDocumentForQestnet @DocumentTableName	
-		FETCH NEXT FROM tableCursor INTO @DocumentTableName
-	END
-	CLOSE tableCursor
-	DEALLOCATE tableCursor
+	BEGIN TRY
+		WHILE @@FETCH_STATUS = 0 BEGIN
+			EXEC qest_EnableDocumentForQestnet @DocumentTableName	
+			FETCH NEXT FROM tableCursor INTO @DocumentTableName
+		END
+		CLOSE tableCursor
+		DEALLOCATE tableCursor
+	END TRY
+	BEGIN CATCH
+    declare @ERR_LINE int, @ERR_MESSAGE nvarchar(max), @ERR_NUMBER int,@ERR_SEVERITY int,@ERR_STATE int;
+    select @ERR_LINE = ERROR_LINE(), @ERR_MESSAGE = ERROR_MESSAGE(), @ERR_NUMBER = ERROR_NUMBER(), @ERR_SEVERITY = ERROR_SEVERITY(), @ERR_STATE = ERROR_STATE();
+		CLOSE tableCursor
+		DEALLOCATE tableCursor
+    raiserror('%s', @ERR_SEVERITY, @ERR_STATE, @ERR_MESSAGE);
+	END CATCH
 END
 GO
