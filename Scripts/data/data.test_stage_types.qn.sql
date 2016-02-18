@@ -1051,6 +1051,33 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000916, @TestQestID = 111045, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Moisture Content by Means of a Moisture Tester [FM 5-507]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000921, @TestQestID = 110248, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000922, @TestQestID = 110248, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+
+-- Moisture Content of Aggregates [Tex-103-E]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000931, @TestQestID = 110752, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000932, @TestQestID = 110752, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+
+-- Moisture Content of Soil and Rock [ASTM D 2216] - 2006
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000941, @TestQestID = 110060, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000942, @TestQestID = 110060, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+-- Moisture Content of Soil and Rock [ASTM D 2216] - 2010
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000951, @TestQestID = 110066, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000952, @TestQestID = 110066, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN
