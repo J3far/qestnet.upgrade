@@ -1,4 +1,4 @@
---Test condition configuration
+ï»¿--Test condition configuration
 
 if not exists (select 1 from information_schema.routines where routine_name = 'qest_AddTestCondition' and specific_schema = 'dbo' and routine_type = 'PROCEDURE')
 begin
@@ -253,7 +253,7 @@ exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetDen
 exec dbo.qest_AddTestConditionListItem @qestID = 110817, @fieldName = 'TargetDensityMode'                  , @order = 0, @itemValue = 'Natural Density'
 exec dbo.qest_AddTestConditionListItem @qestID = 110817, @fieldName = 'TargetDensityMode'                  , @order = 1, @itemValue = 'Specific Value'
 exec dbo.qest_AddTestConditionListItem @qestID = 110817, @fieldName = 'TargetDensityMode'                  , @order = 2, @itemValue = 'Relative Value'
-exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetDensity'                      , @order = 2, @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³'
+exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetDensity'                      , @order = 2, @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³'
 exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetDensityRelativePercent'       , @order = 3, @fieldCaption = 'Relative %'                , @InputType = @tNumber
 exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetDensityRelativeTo'            , @order = 4, @fieldCaption = 'Relative To'               , @InputType = @tText
 exec dbo.qest_AddTestCondition         @qestID = 110817, @fieldName = 'TargetMoistureContentMode'          , @order = 5, @fieldCaption = 'Target Water Content'      , @InputType = @tList   , @DefaultValue = 'Natural Water Content'
@@ -276,7 +276,7 @@ exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetDen
 exec dbo.qest_AddTestConditionListItem @qestID = 110821, @fieldName = 'TargetDensityMode'                  , @order = 0, @itemValue = 'Natural Density'
 exec dbo.qest_AddTestConditionListItem @qestID = 110821, @fieldName = 'TargetDensityMode'                  , @order = 1, @itemValue = 'Specific Value'
 exec dbo.qest_AddTestConditionListItem @qestID = 110821, @fieldName = 'TargetDensityMode'                  , @order = 2, @itemValue = 'Relative Value'
-exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetDensity'                      , @order = 2, @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³'
+exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetDensity'                      , @order = 2, @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³'
 exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetDensityRelativePercent'       , @order = 3, @fieldCaption = 'Relative %'                , @InputType = @tNumber
 exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetDensityRelativeTo'            , @order = 4, @fieldCaption = 'Relative To'               , @InputType = @tText
 exec dbo.qest_AddTestCondition         @qestID = 110821, @fieldName = 'TargetMoistureContentMode'          , @order = 5, @fieldCaption = 'Target Water Content'      , @InputType = @tList   , @DefaultValue = 'Natural Water Content'
@@ -301,7 +301,7 @@ exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetDen
 exec dbo.qest_AddTestConditionListItem @qestID = 110920, @fieldName = 'TargetDensityType'                  , @order = 0,  @itemValue = 'natural'                      , @itemCaption = 'Natural Density'
 exec dbo.qest_AddTestConditionListItem @qestID = 110920, @fieldName = 'TargetDensityType'                  , @order = 1,  @itemValue = 'specific'                     , @itemCaption = 'Specific Value'
 exec dbo.qest_AddTestConditionListItem @qestID = 110920, @fieldName = 'TargetDensityType'                  , @order = 2,  @itemValue = 'relative'                     , @itemCaption = 'Relative Value'
-exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
+exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
 exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetDensityRelativePercent'       , @order = 6,  @fieldCaption = 'Relative %'                , @InputType = @tNumber, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetDensityRelativeTo'            , @order = 7,  @fieldCaption = 'Relative To'               , @InputType = @tText, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110920, @fieldName = 'TargetWaterContentType'             , @order = 8,  @fieldCaption = 'Target Water Content'      , @InputType = @tList   , @DefaultValue = 'natural', @IsMandatoryWhenFieldName = 'SampleType', @isMandatoryWhenRegExp = '(?i)^reconstituted$'
@@ -326,7 +326,7 @@ exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetDen
 exec dbo.qest_AddTestConditionListItem @qestID = 110921, @fieldName = 'TargetDensityType'                  , @order = 0,  @itemValue = 'natural'                      , @itemCaption = 'Natural Density'
 exec dbo.qest_AddTestConditionListItem @qestID = 110921, @fieldName = 'TargetDensityType'                  , @order = 1,  @itemValue = 'specific'                     , @itemCaption = 'Specific Value'
 exec dbo.qest_AddTestConditionListItem @qestID = 110921, @fieldName = 'TargetDensityType'                  , @order = 2,  @itemValue = 'relative'                     , @itemCaption = 'Relative Value'
-exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
+exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
 exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetDensityRelativePercent'       , @order = 6,  @fieldCaption = 'Relative %'                , @InputType = @tNumber, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetDensityRelativeTo'            , @order = 7,  @fieldCaption = 'Relative To'               , @InputType = @tText, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110921, @fieldName = 'TargetWaterContentType'             , @order = 8,  @fieldCaption = 'Target Water Content'      , @InputType = @tList   , @DefaultValue = 'natural', @IsMandatoryWhenFieldName = 'SampleType', @isMandatoryWhenRegExp = '(?i)^reconstituted$'
@@ -386,18 +386,18 @@ begin
 	end
     if @isUnconfined = 0
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2,  @fieldCaption = 'Confining Pressure'          , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2, @fieldCaption =  N'Horizontal Effective Stress (Ïƒâ€²h)'     , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
     end
     if @isAnisotropic = 1
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'AnisotropicStress'                  , @order = 3,  @fieldCaption = 'Anisotropic Stress K0'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'AnisotropicStress'                  , @order = 3,  @fieldCaption = N'Vertical Effective Stress (Ïƒâ€²v)'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^single|multispecimen$'
     end
   end
   else
   begin
     if @isUnconfined = 0
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2,  @fieldCaption = 'Confining Pressure'          , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @isMandatory = 1
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'ConfiningPressure'                  , @order = 2,  @fieldCaption = 'Confining Pressure'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @isMandatory = 1
     end
     if @isAnisotropic = 1
     begin
@@ -409,7 +409,7 @@ begin
   exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'TargetDensityType'                  , @order = 0,  @itemValue = 'natural'                        , @itemCaption = 'Natural Density'
   exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'TargetDensityType'                  , @order = 1,  @itemValue = 'specific'                       , @itemCaption = 'Specific Value'
   exec dbo.qest_AddTestConditionListItem @qestID = @qestID, @fieldName = 'TargetDensityType'                  , @order = 2,  @itemValue = 'relative'                       , @itemCaption = 'Relative Value'
-  exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'              , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
+  exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'              , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
   exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'TargetDensityRelativePercent'       , @order = 6,  @fieldCaption = 'Relative %'                  , @InputType = @tNumber, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
   exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'TargetDensityRelativeTo'            , @order = 7,  @fieldCaption = 'Relative To'                 , @InputType = @tText, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
   exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'TargetWaterContentType'             , @order = 8,  @fieldCaption = 'Target Water Content'        , @InputType = @tList   , @DefaultValue = 'natural', @IsMandatoryWhenFieldName = 'SampleType', @isMandatoryWhenRegExp = '(?i)^reconstituted$'
@@ -425,11 +425,11 @@ begin
   begin
     if @isUnconfined = 0
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageConfiningPressure'             , @order = 14, @fieldCaption = 'Confining Pressure'          , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageConfiningPressure'             , @order = 14, @fieldCaption = N'Horizontal Effective Stress (Ïƒâ€²h)'     , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
     end
     if @isAnisotropic = 1
     begin
-      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageAnisotropicStress'             , @order = 15, @fieldCaption = 'Anisotropic Stress K0'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
+      exec dbo.qest_AddTestCondition         @qestID = @qestID, @fieldName = 'StageAnisotropicStress'             , @order = 15, @fieldCaption = N'Vertical Effective Stress (Ïƒâ€²v)'       , @InputType = @tNumber , @uom_SI = 'kPa', @uom_US = 'psi', @IsMandatory = 1, @isArray = 1, @IsMandatoryWhenFieldName = 'Staged', @isMandatoryWhenRegExp = '(?i)^multistage$'
     end
   end
 
@@ -456,7 +456,7 @@ exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetDen
 exec dbo.qest_AddTestConditionListItem @qestID = 110902, @fieldName = 'TargetDensityType'                  , @order = 0,  @itemValue = 'natural'                      , @itemCaption = 'Natural Density'
 exec dbo.qest_AddTestConditionListItem @qestID = 110902, @fieldName = 'TargetDensityType'                  , @order = 1,  @itemValue = 'specific'                     , @itemCaption = 'Specific Value'
 exec dbo.qest_AddTestConditionListItem @qestID = 110902, @fieldName = 'TargetDensityType'                  , @order = 2,  @itemValue = 'relative'                     , @itemCaption = 'Relative Value'
-exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/m³', @uom_US = 'lb/ft³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
+exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetDensitySpecific'              , @order = 5,  @fieldCaption = 'Target Density'            , @InputType = @tNumber , @uom_SI = 'Mg/mÂ³', @uom_US = 'lb/ftÂ³', @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^specific$'
 exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetDensityRelativePercent'       , @order = 6,  @fieldCaption = 'Relative %'                , @InputType = @tNumber, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetDensityRelativeTo'            , @order = 7,  @fieldCaption = 'Relative To'               , @InputType = @tText, @IsMandatoryWhenFieldName = 'TargetDensityType', @isMandatoryWhenRegExp = '(?i)^relative$'
 exec dbo.qest_AddTestCondition         @qestID = 110902, @fieldName = 'TargetWaterContentType'             , @order = 8,  @fieldCaption = 'Target Water Content'      , @InputType = @tList   , @DefaultValue = 'natural', @IsMandatoryWhenFieldName = 'SampleType', @isMandatoryWhenRegExp = '(?i)^reconstituted$'
