@@ -1,83 +1,91 @@
 
--- No longer required
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetDocumentIdByBarcode' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+-- Updating GetWorkflow
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetWorkflow' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-    DROP PROCEDURE [dbo].[qest_GetDocumentIdByBarcode]
-    PRINT 'Removed procedure: qest_GetDocumentIdByBarcode'
+    DROP PROCEDURE [dbo].[qest_do_GetWorkflow]
 END
 GO
 
--- No longer required
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetChildStatusFlags' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+-- Updating GetWorkflows
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetWorkflows' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-    DROP PROCEDURE [dbo].[qest_GetChildStatusFlags]
-    PRINT 'Removed procedure: qest_GetChildStatusFlags'
+    DROP PROCEDURE [dbo].[qest_do_GetWorkflows]
 END
 GO
 
--- No longer required
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetWorkOrdersCorrectionRequired' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+-- Updating getWorkflowStages
+-- Procedure for returning workflow stages of a workflow
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetWorkflowStages' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-    DROP PROCEDURE [dbo].[qest_GetWorkOrdersCorrectionRequired]
-	PRINT 'Removed procedure: qest_GetWorkOrdersCorrectionRequired'
+    DROP PROCEDURE [dbo].[qest_do_GetWorkflowStages]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentTimekeepingRecords_RL', 'TR') IS NOT NULL
+-- GetViewDetails
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetViewDetails' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-	DROP TRIGGER TR_DocumentTimekeepingRecords_RL
-	PRINT 'Removed trigger: TR_DocumentTimekeepingRecords_RL'
+    DROP PROCEDURE [dbo].[qest_do_GetViewDetails]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentConcreteDestructiveSpecimen_RL', 'TR') IS NOT NULL
+-- GetDisplayObjectCollectionByViewID
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetDisplayObjectCollectionByViewID' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-	DROP TRIGGER TR_DocumentConcreteDestructiveSpecimen_RL
-	PRINT 'Removed trigger: TR_DocumentConcreteDestructiveSpecimen_RL'
+    DROP PROCEDURE [dbo].[qest_do_GetDisplayObjectCollectionByViewID]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentPSDHydrometer_RL', 'TR') IS NOT NULL
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetDisplayObjectCollectionByViewID_WithLength' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-	DROP TRIGGER TR_DocumentPSDHydrometer_RL
-	PRINT 'Removed trigger: TR_DocumentPSDHydrometer_RL'
+    DROP PROCEDURE [dbo].qest_do_GetDisplayObjectCollectionByViewID_WithLength
 END
 GO
 
-IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_RL', 'TR') IS NOT NULL
+-- GetViewByName
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_do_GetViewByName' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_RL
-	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsSpecimen_RL'
+    DROP PROCEDURE [dbo].[qest_do_GetViewByName]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentAtterbergLimitsCPSpecimens_RL', 'TR') IS NOT NULL
+-- CSV table function - used in work orders requiring correction procedure below
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'CSVTable' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'FUNCTION')
 BEGIN
-	DROP TRIGGER TR_DocumentAtterbergLimitsCPSpecimens_RL
-	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsCPSpecimens_RL'
+    DROP FUNCTION [dbo].[CSVTable]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentTriaxialSingleReading_RL', 'TR') IS NOT NULL
+-- Procedure for business rule names
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetRuleTypeNames' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
-	DROP TRIGGER TR_DocumentTriaxialSingleReading_RL
-	PRINT 'Removed trigger: TR_DocumentTriaxialSingleReading_RL'
+    DROP PROCEDURE [dbo].[qest_GetRuleTypeNames]
 END
 GO
 
-IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_RL', 'TR') IS NOT NULL
-	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_RL
-	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsSpecimen_RL'
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_UserDocumentBaseInitialise' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+	DROP PROCEDURE [dbo].[qest_UserDocumentBaseInitialise]
+END
 GO
 
-IF OBJECT_ID('TR_DocumentAtterbergLimitsCPSpecimens_RL', 'TR') IS NOT NULL
-	DROP TRIGGER TR_DocumentAtterbergLimitsCPSpecimens_RL
-	PRINT 'Removed trigger: TR_DocumentAtterbergLimitsCPSpecimens_RL'
+CREATE PROC dbo.qest_UserDocumentBaseInitialise @QestID int = 0
+AS
+	-- TODO: Remove calls to this proc from QL
 GO
 
-IF OBJECT_ID('TR_DocumentConcreteShrinkageSpecimen_RL', 'TR') IS NOT NULL
-	DROP TRIGGER TR_DocumentConcreteShrinkageSpecimen_RL
-	PRINT 'Removed trigger: TR_DocumentConcreteShrinkageSpecimen_RL'
+-- Remove UserDocumentBase triggers
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Delete', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Delete
+GO
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Insert', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Insert
+GO
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Update', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Update
 GO
 
+-- Remove qestReverseLookup Insert UniqueIDs trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+GO
 

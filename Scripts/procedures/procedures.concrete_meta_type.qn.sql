@@ -1,19 +1,5 @@
 --Stored Procs
 
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeBrand_GetTestMethodList]') and type in (N'P', N'PC'))
-  exec ('drop proc qest_TypeBrand_GetTestMethodList');
-go
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeBrand_GetTypeMetaSizeList]') and type in (N'P', N'PC'))
-  exec ('drop proc qest_TypeBrand_GetTypeBrandSizeList');
-GO
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeBrand_GetTemplateBrandNotesList]') and type in (N'P', N'PC'))
-  exec ('drop proc qest_TypeBrand_GetTemplateBrandNotesList');
-GO
-if exists (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'QestSpecimenTypeBrandMap') 
-  exec ('drop table QestSpecimenTypeBrandMap');
-GO
-
-
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_TypeMeta_GetTestMethodList]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_TypeMeta_GetTestMethodList] as select 0 tmp');
 go

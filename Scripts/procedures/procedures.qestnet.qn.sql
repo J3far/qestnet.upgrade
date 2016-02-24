@@ -69,41 +69,6 @@ BEGIN
 END
 GO
 
--- CSV table function - used in work orders requiring correction procedure below
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'CSVTable' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'FUNCTION')
-BEGIN
-    DROP FUNCTION [dbo].[CSVTable]
-END
-GO
-
-CREATE FUNCTION dbo.CSVTable(@Str varchar(7000))
-RETURNS @t table (numberval int, stringval varchar(100), DateVal datetime)
-AS
-BEGIN
-	DECLARE @i int;
-	DECLARE @c varchar(100);
-
-	SET @Str = @Str + ','
-	SET @i = 1;
-	SET @c = '';
-
-	WHILE @i <= len(@Str)
-	BEGIN
-		IF substring(@Str,@i,1) = ','
-	BEGIN
-		INSERT INTO @t
-		VALUES (CASE WHEN isnumeric(@c)=1 THEN @c ELSE Null END, rtrim(ltrim(@c)), 
-				CASE WHEN isdate(@c)=1 THEN @c ELSE Null END)
-		SET @c = ''
-	END
-	ELSE
-		SET @c = @c + substring(@Str,@i,1)
-		SET @i = @i +1
-	END
-	RETURN
-END
-GO
-
 -- Procedure for returning laboratory list for a person
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetLaboratoriesByPerson' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
@@ -132,26 +97,6 @@ BEGIN
 	FROM dbo.qest_GetLocations(@PersonID, @AID, '', 1) -- READ permission test
 	
 	SELECT * FROM @t
-END
-GO
-
--- Procedure for business rule names
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_GetRuleTypeNames' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
-BEGIN
-    DROP PROCEDURE [dbo].[qest_GetRuleTypeNames]
-END
-GO
-
-CREATE procedure [dbo].[qest_GetRuleTypeNames]
-  @EntityType nvarchar(255),
-  @QestID int,
-  @RuleTrigger int
-AS
-BEGIN
-	SELECT BR.TypeName FROM qestBusinessRule BR
-	INNER JOIN qestEntity E on E.QestEntityUUID = BR.QestEntityUUID
-	WHERE E.TypeName = @EntityType AND BR.QestID = @QestID AND BR.RuleTrigger = @RuleTrigger
-	ORDER BY BR.ExecutionOrder ASC
 END
 GO
 
@@ -233,7 +178,8 @@ CREATE procedure [dbo].[qest_GetMappedExternals]
 	@AutoCreate bit = 1
 AS
 BEGIN
-	SELECT DISTINCT EXT.QestUniqueID As QestUniqueID, ISNULL(CLS.AllowSign,0) As AllowSign
+	SELECT DISTINCT EXT.QestUUID As QestUUID
+	--, ISNULL(CLS.AllowSign,0) As AllowSign
 	--, MAP.QestID As DocumentTypeID,
 	--EXT.DocumentName, EXT.DocumentDescription, CLS.QestUniqueID As ClassID,
 	--CLS.ClassCode, CLS.ClassName, CLS.IsDefault, CLS.IsTemplate,
