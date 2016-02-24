@@ -1140,10 +1140,10 @@ EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000924, @TestQestID = 111046
 GO
 
 -- Moisture Content by Means of a Moisture Tester [FM 5-507]
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000921, @TestQestID = 110248, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
-GO
-EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000922, @TestQestID = 110248, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
-GO
+--EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000921, @TestQestID = 110248, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+--GO
+--EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000922, @TestQestID = 110248, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+--GO
 
 
 -- Moisture Content of Aggregates [Tex-103-E]
