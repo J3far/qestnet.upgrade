@@ -1,18 +1,9 @@
 
---  Remove trigger for automatic creation of LaboratoryMapping rows
-IF OBJECT_ID('TR_LaboratoryMapping', 'TR') IS NOT NULL
-	DROP TRIGGER TR_LaboratoryMapping
-GO
-
---  Remove trigger for copying client/project details from WO to Billing (no longer required)
-IF OBJECT_ID('TR_CopyProjectToBilling', 'TR') IS NOT NULL
-	DROP TRIGGER TR_CopyProjectToBilling
-GO
-
 -- Trigger for automatic creation of qestObject rows (QestIDs)
 IF OBJECT_ID('TR_qestObjects_QestObjectID', 'TR') IS NOT NULL
 	DROP TRIGGER TR_qestObjects_QestObjectID
 GO
+
 CREATE TRIGGER TR_qestObjects_QestObjectID
 ON qestObjects INSTEAD OF INSERT
 AS
@@ -187,43 +178,4 @@ AS
 	FROM qestReverseLookup RL 
 	INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
 	INNER JOIN WorkProgress D ON D.QestUUID = RL.QestUUID
-GO
-
--- Correct bug in trigger TR_INS_UPD_DocumentGDS, where installed
-IF OBJECT_ID('TR_INS_UPD_DocumentGDS', 'TR') IS NOT NULL
-BEGIN
-    EXEC('ALTER TRIGGER [dbo].[TR_INS_UPD_DocumentGDS]
-	ON [dbo].[DocumentGroundDescriptionSingle] AFTER INSERT, UPDATE
-	AS		
-		--Find first soil description from affected tests
-		UPDATE GD
-		SET 
-		GD.SoilDescription1 = GDS.[Description],
-		GD.Offset1_SI = GDS.Offset_SI,
-		GD.Offset1_IP = GDS.Offset_IP,
-		GD.Height1_SI = GDS.Height_SI,
-		GD.Height1_IP = GDS.Height_IP
-		FROM
-		(    SELECT 
-				-- Where at least one offset (ie. depth) is null, use the record with the lowest QestUniqueId
-				-- Otherwise use the record with the lowest offset (ie. the shallowest)
-				CASE WHEN COUNT(*) - COUNT(s.Offset) <> 0
-				THEN MIN(S.QESTUniqueID)
-				ELSE (SELECT s1.QestUniqueID from DocumentGroundDescriptionSingle S1 where s1.Offset = Min(S.offset) and s1.QestUniqueParentID = i.QestUniqueParentID)
-				END AS FirstUID,
-				i.QESTUniqueParentID 
-			FROM DocumentGroundDescriptionSingle S 
-			INNER JOIN inserted i 
-			ON S.QestUniqueParentID = i.QestUniqueParentID
-			GROUP BY i.QestUniqueParentID
-		) UPD
-		INNER JOIN DocumentGroundDescriptionSingle GDS
-		ON GDS.QestUniqueID = UPD.FirstUID	
-		LEFT JOIN DocumentGroundDescription GD
-		ON GD.QestUniqueID = GDS.QestUniqueParentID')
-END
-
---  Remove trigger for setting Liquid Limit/Plastic Limit QestID as no longer required
-IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_QID', 'TR') IS NOT NULL
-	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_QID
 GO
