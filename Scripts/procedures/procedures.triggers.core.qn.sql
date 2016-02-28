@@ -227,3 +227,22 @@ END
 IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_QID', 'TR') IS NOT NULL
 	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_QID
 GO
+
+-- Add trigger to clear QESTLab permissions cache on logout / session termination
+IF OBJECT_ID('dbo.TR_SessionConnections_InvalidatePermissionsCache', 'TR') IS NOT NULL
+    DROP TRIGGER TR_SessionConnections_InvalidatePermissionsCache
+GO
+
+CREATE TRIGGER TR_SessionConnections_InvalidatePermissionsCache
+ON dbo.SessionConnections AFTER DELETE
+AS
+  DECLARE @PersonID int
+  SELECT @PersonID = u.PersonID
+  FROM deleted d
+    inner join dbo.Users u on u.QestUniqueID = d.UserID
+
+  if @PersonID is not null
+  BEGIN
+    EXEC dbo.qest_InvalidatePermissionsCache 0, @PersonID
+  END
+go
