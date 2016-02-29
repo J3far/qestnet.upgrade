@@ -374,17 +374,17 @@ end
 if exists(select 1 from qestViewConfiguration where Active = 1 and Code in ('US', 'ME', 'Default'))
 begin
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSBLOCK', 69070
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSCOUP', 69070
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSCOUP', 69080
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSGPU', 69400
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSGPUC', 69400
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSGPUC', 69410
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSIPU', 69360
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSIPUC', 69360
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSIPUC', 69370
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSPAVC', 69310
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSPAVER', 69310
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSRWU', 69210
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSRWUC', 69210
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'ABSRWUC', 69220
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'AREABLOC', 69060
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'AREACOUP', 69060
+	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'AREACOUP', 69090
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'AREAPRIS', 68930
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPAVC', 69300
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPAVER', 69300
