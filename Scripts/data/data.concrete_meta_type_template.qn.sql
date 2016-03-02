@@ -394,7 +394,7 @@ begin
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPGPUC', 69380
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPIPU', 69340
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPIPUC', 69340
-	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPRWU', 69200
+	--exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPRWU', 69200 -removed as they're not supported by the standard
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'COMPRWUC', 69200
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'CRMSQ50', 68731
 	exec temp_AddToSpecimenTypeMetaMap 'ASTM (2014)', 15, -1, 1605, 'GRO50', 68751
