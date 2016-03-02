@@ -54,14 +54,13 @@ namespace Spectra.QESTNET.Upgrade
             var regexCommentBlock = new Regex(@"/\*[\S\s]*?\*/");
             var regexCommentLine = new Regex(@"//.*$", RegexOptions.Multiline);
 
-            // Perhaps regex this but cbf
             var manifest = File.ReadAllText(updateManifest.FullName);
 
             // Strip out comments
             manifest = regexCommentBlock.Replace(manifest, string.Empty);
             manifest = regexCommentLine.Replace(manifest, string.Empty);
 
-            var validLines = manifest.Split(new string[] { Environment.NewLine }, StringSplitOptions.None)
+            var validLines = manifest.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
                 .Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
 
             this.version = validLines
