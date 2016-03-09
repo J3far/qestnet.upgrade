@@ -40,4 +40,22 @@ BEGIN
 END
 GO
 
+-- Add Index on TestQestUUID. Added here in order to allow the 'WHERE' clause in the index.
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
+DROP INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
+CREATE NONCLUSTERED INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
+(
+	[TestQestUUID] ASC
+)
+INCLUDE ( 	[ReportQestID],
+	[TestQestID],
+	[ReportQestUniqueID],
+	[TestQestUniqueID],
+	[Mapping]) 
+WHERE ([TestQestUUID] IS NOT NULL)
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
