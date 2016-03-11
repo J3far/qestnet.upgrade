@@ -326,7 +326,7 @@ BEGIN
 GO
 
 -- Add QestOwnerLabNo column to Defaults, set to 0 where null
-IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'Defaults'))
+IF EXISTS(SELECT 1 FROM sys.tables WHERE [name] = N'Defaults') AND NOT EXISTS(SELECT 1 FROM sys.columns WHERE [name] = N'QestOwnerLabNo' AND [object_id] = OBJECT_ID(N'Defaults'))
 BEGIN
   ALTER TABLE Defaults ADD QestOwnerLabNo INT NULL
 END
@@ -725,7 +725,8 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' and COLUMN_NAME = 'QestParentUUID')
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestReverseLookup')
+AND NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReverseLookup' and COLUMN_NAME = 'QestParentUUID')
 BEGIN
 	ALTER TABLE qestReverseLookup ADD QestParentUUID uniqueidentifier null
 END
@@ -893,7 +894,7 @@ END
 GO
 
 -- Cleanup of a badly named default
-IF EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF__qestRever__QestO__486B4D8B')	
+IF EXISTS(SELECT 1 FROM sys.tables WHERE Name = 'qestReverseLookup') AND EXISTS(SELECT 1 FROM sys.default_constraints WHERE Name = 'DF__qestRever__QestO__486B4D8B')
 BEGIN 
 	ALTER TABLE qestReverseLookup DROP CONSTRAINT DF__qestRever__QestO__486B4D8B END
 GO

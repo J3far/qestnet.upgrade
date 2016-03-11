@@ -45,7 +45,8 @@ IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestR
 DROP INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestReportMapping')
+AND NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
 CREATE NONCLUSTERED INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
 (
 	[TestQestUUID] ASC
