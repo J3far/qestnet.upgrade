@@ -1620,5 +1620,49 @@ BEGIN
 	UPDATE dbo.qestNotifications SET QestUUID=(CONVERT([uniqueidentifier],CONVERT([binary],(0),0),0)) WHERE QestUUID IS NULL
 	ALTER TABLE dbo.qestNotifications ALTER COLUMN QestUUID uniqueidentifier NOT NULL
 END
+GO
+
+-- WorkProgress: Set QestID not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
+BEGIN
+	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestID'
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestID int NOT NULL
+END
+GO
+
+-- WorkProgress: Get rid of QestUniqueID Identity Specification
+IF EXISTS(SELECT 1 WHERE COLUMNPROPERTY(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
+BEGIN
+	-- Add new temp column without identity (will be set to NOT NULL in later batch)
+	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUniqueID_TEMP')
+		ALTER TABLE dbo.WorkProgress ADD QestUniqueID_TEMP int
+END
+GO
+IF EXISTS(SELECT 1 WHERE COLUMNPROPERTY(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
+BEGIN
+	-- Copy values to new column
+	UPDATE dbo.WorkProgress SET QestUniqueID_TEMP = QestUniqueID
+	-- Drop old column
+	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
+	ALTER TABLE dbo.WorkProgress DROP COLUMN QestUniqueID
+	-- Rename temp column
+	EXEC sp_rename 'dbo.WorkProgress.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
+END
+GO
+
+-- WorkProgress: Set QestUniqueID not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUniqueID' AND IS_NULLABLE = 'YES')
+BEGIN
+	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestUniqueID int NOT NULL
+END
+GO
+
+-- WorkProgress: Set QestOwnerLabNo not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestOwnerLabNo int NOT NULL
+END
+GO
 
 
