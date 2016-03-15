@@ -1668,4 +1668,12 @@ BEGIN
 END
 GO
 
+-- WorkProgress: FK_WorkProgress_qestReverseLookup should be ON DELETE CASCADE
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_WorkProgress_qestReverseLookup' AND DELETE_RULE = 'NO ACTION')
+BEGIN
+	ALTER TABLE [dbo].[WorkProgress] DROP CONSTRAINT [FK_WorkProgress_qestReverseLookup]
+	ALTER TABLE [dbo].[WorkProgress] WITH CHECK ADD CONSTRAINT [FK_WorkProgress_qestReverseLookup] FOREIGN KEY([QestUUID]) REFERENCES [dbo].[qestReverseLookup] ([QestUUID]) ON UPDATE NO ACTION ON DELETE CASCADE
+END
+GO
+
 
