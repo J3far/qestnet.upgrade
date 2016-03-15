@@ -70,3 +70,8 @@ BEGIN
 END
 GO
 
+IF ((SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Documentsteelreinforcing' AND COLUMN_NAME = 'neckingtesttype2_sidewithoutrupture') != 'nvarchar')
+BEGIN
+	ALTER TABLE Documentsteelreinforcing ALTER COLUMN neckingtesttype2_sidewithoutrupture NVARCHAR(10)
+END
+GO
