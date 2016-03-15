@@ -1635,24 +1635,23 @@ END
 GO
 
 -- WorkProgress: Get rid of QestUniqueID Identity Specification
-IF EXISTS(SELECT 1 WHERE COLUMNPROPERTY(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
-BEGIN
+if exists(select 1 where columnproperty(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
+begin
 	-- Add new temp column without identity (will be set to NOT NULL in later batch)
-	IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUniqueID_TEMP')
-		ALTER TABLE dbo.WorkProgress ADD QestUniqueID_TEMP int
-END
-GO
-IF EXISTS(SELECT 1 WHERE COLUMNPROPERTY(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
-BEGIN
+	if not exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'WorkProgress' and column_name = 'QestUniqueID_TEMP')
+		 alter table dbo.WorkProgress ADD QestUniqueID_TEMP int
+
 	-- Copy values to new column
-	UPDATE dbo.WorkProgress SET QestUniqueID_TEMP = QestUniqueID
+	exec('update dbo.WorkProgress set QestUniqueID_TEMP = QestUniqueID')
+
 	-- Drop old column
-	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
-	ALTER TABLE dbo.WorkProgress DROP COLUMN QestUniqueID
+	exec qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
+	alter table dbo.WorkProgress drop column QestUniqueID
+
 	-- Rename temp column
-	EXEC sp_rename 'dbo.WorkProgress.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
-END
-GO
+	exec sp_rename 'dbo.WorkProgress.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
+end
+go
 
 -- WorkProgress: Set QestUniqueID not null
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUniqueID' AND IS_NULLABLE = 'YES')
