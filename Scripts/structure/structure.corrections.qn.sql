@@ -1668,6 +1668,14 @@ BEGIN
 END
 GO
 
+-- Work Progress: drop foreign key because the definition changed, so we want to ensure it is re-added in the foreign keys script. This is performant because it's not on the Primary Key.
+if exists (select 1 from information_schema.referential_constraints where constraint_name = 'FK_WorkProgress_qestReverseLookup')
+begin
+	alter table dbo.WorkProgress drop constraint FK_WorkProgress_qestReverseLookup
+end
+go
+
+
 -- Delete unused field from Relative Compaction table
 if exists (select 1 from information_schema.columns where table_name = 'DocumentAggSoilCompaction' and column_name = 'ImportedPercentageRockFromField')
 begin
