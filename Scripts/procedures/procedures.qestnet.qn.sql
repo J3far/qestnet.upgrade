@@ -178,7 +178,8 @@ CREATE procedure [dbo].[qest_GetMappedExternals]
 	@AutoCreate bit = 1
 AS
 BEGIN
-	SELECT DISTINCT EXT.QestUniqueID As QestUniqueID, ISNULL(CLS.AllowSign,0) As AllowSign
+	SELECT DISTINCT EXT.QestUUID As QestUUID
+	--, ISNULL(CLS.AllowSign,0) As AllowSign
 	--, MAP.QestID As DocumentTypeID,
 	--EXT.DocumentName, EXT.DocumentDescription, CLS.QestUniqueID As ClassID,
 	--CLS.ClassCode, CLS.ClassName, CLS.IsDefault, CLS.IsTemplate,

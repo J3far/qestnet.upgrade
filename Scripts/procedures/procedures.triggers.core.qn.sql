@@ -27,40 +27,44 @@ AS
 	INNER JOIN TestStageData D ON D.QestParentUUID = RL.QestUUID
 GO
 
--- Remove parent reference update trigger
-IF NOT OBJECT_ID('TR_qestReverseLookup_Update_Parent', 'TR') IS NULL
-	DROP TRIGGER TR_qestReverseLookup_Update_Parent
+
+-- Remove uniqueid update trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Update_UniqueID', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Update_UniqueID
 GO
 
--- Add parent reference update trigger
-CREATE TRIGGER TR_qestReverseLookup_Update_Parent
+-- Add uniqueid update trigger
+CREATE TRIGGER TR_qestReverseLookup_Update_UniqueID
 ON qestReverseLookup AFTER UPDATE
 AS
-	IF UPDATE(QestParentUUID)
+	IF UPDATE(QestUniqueID)
 	BEGIN
 		BEGIN TRANSACTION
 		BEGIN TRY
 		
-			-- Set ParentIDs in qestReverseLookups
-			UPDATE RL SET 
-			QestParentID = P.QestID, 
-			QestUniqueParentID = P.QestUniqueID
+			-- Set ids into child reverselookups
+			UPDATE C SET 
+			QestParentID = RL.QestID, 
+			QestUniqueParentID = RL.QestUniqueID
 			FROM qestReverseLookup RL
 			INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
 			INNER JOIN deleted D ON D.QestUUID = RL.QestUUID
-			INNER JOIN qestReverseLookup P ON P.QestUUID = I.QestParentUUID
-			WHERE NOT D.QestParentUUID = I.QestParentUUID
+			INNER JOIN qestReverseLookup C ON RL.QestUUID = C.QestParentUUID
+			WHERE NOT D.QestUniqueID = I.QestUniqueID
+			AND NOT (C.QestParentID = RL.QestID AND C.QestUniqueParentID = RL.QestUniqueID)
 			
 			-- Update ParentIDs in document table (eek)
 			DECLARE @QestUUID uniqueidentifier
 			DECLARE @TableName nvarchar(255)
 				
 			DECLARE InsertedCursor CURSOR FOR
-				SELECT I.QestUUID, Q.[Value] 
-				FROM inserted I
-				INNER JOIN deleted D ON D.QestUUID = I.QestUUID 
-				LEFT JOIN qestObjects Q ON Q.QestID = I.QestID AND Q.Property = 'TableName'
-				WHERE D.QestParentUUID <> I.QestParentUUID
+				SELECT C.QestUUID, Q.[Value] 
+				FROM qestReverseLookup RL
+				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
+				INNER JOIN deleted D ON D.QestUUID = RL.QestUUID
+				INNER JOIN qestReverseLookup C ON RL.QestUUID = C.QestParentUUID
+				LEFT JOIN qestObjects Q ON Q.QestID = C.QestID AND Q.Property = 'TableName'
+				WHERE NOT D.QestUniqueID = I.QestUniqueID
 				
 			OPEN InsertedCursor		
 			FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
@@ -90,60 +94,69 @@ AS
 	END
 GO
 
--- Remove qestReverseLookup Insert UniqueIDs trigger
-IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
-	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+-- Remove parent reference update trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Update_Parent', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Update_Parent
 GO
 
--- Add qestReverseLookup Insert UniqueIDs trigger
-CREATE TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
-ON qestReverseLookup AFTER INSERT
+-- Add parent reference update trigger
+CREATE TRIGGER TR_qestReverseLookup_Update_Parent
+ON qestReverseLookup AFTER UPDATE
 AS
-	BEGIN TRANSACTION
-	BEGIN TRY
+	IF UPDATE(QestParentUUID)
+	BEGIN
+		BEGIN TRANSACTION
+		BEGIN TRY
 		
-		DECLARE @QestUUID uniqueidentifier
-		DECLARE @TableName nvarchar(255)
-				
-		DECLARE InsertedCursor CURSOR FOR
-			SELECT I.QestUUID, Q.[Value] 
-			FROM inserted I
-			LEFT JOIN qestObjects Q ON Q.QestID = I.QestID AND Q.Property = 'TableName'
-				
-		OPEN InsertedCursor		
-		FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
-		WHILE @@FETCH_STATUS = 0
-		BEGIN
-			IF (@TableName IS NULL)
-			BEGIN
-				RAISERROR('TableName not found in qestObjects.', 16, 1) 
-			END ELSE BEGIN
-				-- Set QestUniqueParentID, QestParentID in qestReverseLookup from parent qestReverseLookup
-				EXEC('UPDATE D SET QestUniqueParentID = PRL.QestUniqueID, QestParentID = PRL.QestID
-				FROM ' + @TableName + ' D 
-				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID
-				INNER JOIN qestReverseLookup PRL ON PRL.QestUUID = RL.QestParentUUID
-				WHERE D.QestUUID = ''' + @QestUUID  + '''')
-
-				-- Set QestUniqueID, QestUniqueParentID, QestParentID in qestReverseLookup from document			
-				EXEC('UPDATE RL SET QestUniqueID = D.QestUniqueID, QestUniqueParentID = D.QestUniqueParentID, QestParentID = D.QestParentID
-				FROM ' + @TableName + ' D 
-				INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID 
-				WHERE D.QestUUID = ''' + @QestUUID  + '''')
-			END
-				
-			FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
-		END
-	    
-		CLOSE InsertedCursor
-		DEALLOCATE InsertedCursor
+			-- Set ParentIDs in qestReverseLookups
+			UPDATE RL SET 
+			QestParentID = P.QestID, 
+			QestUniqueParentID = P.QestUniqueID
+			FROM qestReverseLookup RL
+			INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
+			INNER JOIN deleted D ON D.QestUUID = RL.QestUUID
+			INNER JOIN qestReverseLookup P ON P.QestUUID = I.QestParentUUID
+			WHERE NOT D.QestParentUUID = I.QestParentUUID
+			AND NOT (RL.QestParentID = P.QestID AND RL.QestUniqueParentID = P.QestUniqueID)
 			
-		COMMIT
-	END TRY		
-	BEGIN CATCH
-		ROLLBACK
-		RAISERROR('TableName not found in qestObjects.', 16, 1) 
-	END CATCH
+			-- Update ParentIDs in document table (eek)
+			DECLARE @QestUUID uniqueidentifier
+			DECLARE @TableName nvarchar(255)
+				
+			DECLARE InsertedCursor CURSOR FOR
+				SELECT I.QestUUID, Q.[Value] 
+				FROM qestReverseLookup RL
+				INNER JOIN inserted I ON I.QestUUID = RL.QestUUID
+				INNER JOIN deleted D ON D.QestUUID = RL.QestUUID
+				LEFT JOIN qestObjects Q ON Q.QestID = I.QestID AND Q.Property = 'TableName'
+				WHERE NOT D.QestParentUUID = I.QestParentUUID
+				
+			OPEN InsertedCursor		
+			FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+			WHILE @@FETCH_STATUS = 0
+			BEGIN
+				IF (@TableName IS NULL)
+				BEGIN
+					RAISERROR('TableName not found in qestObjects.', 16, 1) 
+				END ELSE BEGIN			
+					EXEC('UPDATE D SET QestParentID = RL.QestParentID, QestUniqueParentID = RL.QestUniqueParentID
+					FROM ' + @TableName + ' D INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID 
+					WHERE D.QestUUID = ''' + @QestUUID  + '''')
+				END
+				
+				FETCH NEXT FROM InsertedCursor INTO @QestUUID, @TableName
+			END
+	    
+			CLOSE InsertedCursor
+			DEALLOCATE InsertedCursor
+			
+			COMMIT
+		END TRY		
+		BEGIN CATCH
+			ROLLBACK
+			RAISERROR('TableName not found in qestObjects.', 16, 1) 
+		END CATCH
+	END
 GO
 
 -- Add trigger to generate object keys for audit

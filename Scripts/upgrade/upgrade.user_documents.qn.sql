@@ -1,5 +1,3 @@
-EXEC qest_EnableDocumentForQestnet_TableNameLike 'UserDocumentBase' --
-GO
 EXEC qest_EnableDocumentForQestnet_TableNameLike 'UserDocument1' --
 GO
 EXEC qest_EnableDocumentForQestnet_TableNameLike 'UserDocument10%' --

@@ -59,3 +59,10 @@ BEGIN
 	ALTER TABLE dbo.qestWorkflow DROP CONSTRAINT FK_qestWorkflow_qestEntity
 END
 GO
+
+-- Remove UserDocumentBase as it is no longer required
+IF EXISTS(SELECT 1 FROM sys.tables WHERE name = 'UserDocumentBase' AND type_desc = 'USER_TABLE')
+BEGIN
+	DROP TABLE dbo.UserDocumentBase
+END
+GO

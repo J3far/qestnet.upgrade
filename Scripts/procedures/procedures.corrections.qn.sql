@@ -62,5 +62,30 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_UserDocumentBaseInitialise' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+	DROP PROCEDURE [dbo].[qest_UserDocumentBaseInitialise]
+END
+GO
 
+CREATE PROC dbo.qest_UserDocumentBaseInitialise @QestID int = 0
+AS
+	-- TODO: Remove calls to this proc from QL
+GO
+
+-- Remove UserDocumentBase triggers
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Delete', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Delete
+GO
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Insert', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Insert
+GO
+IF NOT OBJECT_ID('TR_DocumentExternal_TableSync_Update', 'TR') IS NULL
+	DROP TRIGGER TR_DocumentExternal_TableSync_Update
+GO
+
+-- Remove qestReverseLookup Insert UniqueIDs trigger
+IF NOT OBJECT_ID('TR_qestReverseLookup_Insert_UniqueIDs', 'TR') IS NULL
+	DROP TRIGGER TR_qestReverseLookup_Insert_UniqueIDs
+GO
 
