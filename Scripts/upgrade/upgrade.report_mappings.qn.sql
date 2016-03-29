@@ -1,4 +1,9 @@
 
+-- Add Index on TestQestUUID. Added here in order to allow the 'WHERE' clause in the index.
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
+	DROP INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
+GO
+
 -- Ensure TestQestUUID & ReportQestUUID
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'qestReportMapping')
 BEGIN
@@ -15,7 +20,7 @@ END
 GO	
 
 -- Set TestQestUUID from qestReverseLookups	
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReportMapping' AND COLUMN_NAME = 'TestQestUUID')
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReportMapping' AND COLUMN_NAME = 'TestQestUUID' AND IS_NULLABLE = 'YES')
 BEGIN
 	UPDATE M SET TestQestUUID = R.QestUUID FROM qestReportMapping M 
 	INNER JOIN qestReverseLookup R ON R.QestID = M.TestQestID AND R.QestUniqueID = M.TestQestUniqueID 
@@ -23,7 +28,7 @@ BEGIN
 	
 	-- Any report mapping without a test is invalid  (REVIEW)
 	DELETE FROM qestReportMapping WHERE TestQestUUID IS NULL
-	
+
 	ALTER TABLE qestReportMapping ALTER COLUMN TestQestUUID uniqueidentifier NOT NULL
 END
 GO
@@ -40,4 +45,17 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[qestReportMapping]') AND name = N'IX_qestReportMapping_TestQestUUID')
+CREATE NONCLUSTERED INDEX [IX_qestReportMapping_TestQestUUID] ON [dbo].[qestReportMapping]
+(
+	[TestQestUUID] ASC
+)
+INCLUDE ( 	[ReportQestID],
+	[TestQestID],
+	[ReportQestUniqueID],
+	[TestQestUniqueID],
+	[Mapping]) 
+WHERE ([TestQestUUID] IS NOT NULL)
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
