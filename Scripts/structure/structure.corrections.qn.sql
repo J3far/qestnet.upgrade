@@ -1661,6 +1661,41 @@ BEGIN
 END
 GO
 
+-- WorkProgress: Set QestID not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
+BEGIN
+	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestID'
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestID int NOT NULL
+END
+GO
+
+-- WorkProgress: Get rid of QestUniqueID Identity Specification
+if exists(select 1 where columnproperty(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
+begin
+	-- Add new temp column without identity (will be set to NOT NULL in later batch)
+	if not exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'WorkProgress' and column_name = 'QestUniqueID_TEMP')
+		 alter table dbo.WorkProgress ADD QestUniqueID_TEMP int
+
+	-- Copy values to new column
+	exec('update dbo.WorkProgress set QestUniqueID_TEMP = QestUniqueID')
+
+	-- Drop old column
+	exec qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
+	alter table dbo.WorkProgress drop column QestUniqueID
+
+	-- Rename temp column
+	exec sp_rename 'dbo.WorkProgress.QestUniqueID_TEMP', 'QestUniqueID', 'COLUMN';
+end
+go
+
+-- WorkProgress: Set QestUniqueID not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestUniqueID' AND IS_NULLABLE = 'YES')
+BEGIN
+	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestUniqueID'
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestUniqueID int NOT NULL
+END
+GO
+
 -- WorkProgress: Set QestOwnerLabNo not null
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
 BEGIN
@@ -1668,4 +1703,32 @@ BEGIN
 END
 GO
 
+-- WorkProgress: FK_WorkProgress_qestReverseLookup should be ON DELETE CASCADE
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_WorkProgress_qestReverseLookup' AND DELETE_RULE = 'NO ACTION')
+BEGIN
+	ALTER TABLE [dbo].[WorkProgress] DROP CONSTRAINT [FK_WorkProgress_qestReverseLookup]
+	ALTER TABLE [dbo].[WorkProgress] WITH CHECK ADD CONSTRAINT [FK_WorkProgress_qestReverseLookup] FOREIGN KEY([QestUUID]) REFERENCES [dbo].[qestReverseLookup] ([QestUUID]) ON UPDATE NO ACTION ON DELETE CASCADE
+END
+GO
 
+-- WorkProgress: Set QestOwnerLabNo not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
+BEGIN
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestOwnerLabNo int NOT NULL
+END
+GO
+
+-- Work Progress: drop foreign key because the definition changed, so we want to ensure it is re-added in the foreign keys script. This is performant because it's not on the Primary Key.
+if exists (select 1 from information_schema.referential_constraints where constraint_name = 'FK_WorkProgress_qestReverseLookup')
+begin
+	alter table dbo.WorkProgress drop constraint FK_WorkProgress_qestReverseLookup
+end
+go
+
+
+-- Delete unused field from Relative Compaction table
+if exists (select 1 from information_schema.columns where table_name = 'DocumentAggSoilCompaction' and column_name = 'ImportedPercentageRockFromField')
+begin
+	alter table DocumentAggSoilCompaction drop column ImportedPercentageRockFromField
+end
+go
