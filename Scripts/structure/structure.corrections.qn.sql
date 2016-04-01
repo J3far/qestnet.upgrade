@@ -1676,19 +1676,19 @@ BEGIN
 END
 GO
 
--- Altering the type of field 'OrganicImpurities' in DocumentOrganicImpurities, from but to nvarchar(10). B#5424
+-- Altering the type of field 'OrganicImpurities' in DocumentOrganicImpurities, from bit to nvarchar(10). B#5424
 
-		-- check if the default constraint on the column is hanging around, if it is then remove it so we can alter the 'OrganicImpurities' column.
+		-- if the table exists then we are going to alter the column, change the data type to nvarchar(10) and change the default to 'fail', as it used to be '0' (fail)
 
-		if exists (select * from sys.default_constraints where name='DF_DocumentOrganicImpurities_OrganicImpurities')
+		IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_NAME='DocumentOrganicImpurities' AND COLUMN_NAME='OrganicImpurities' and DATA_TYPE='bit' )
+		begin
+			-- check if the default constraint on the column is hanging around, if it is then remove it so we can alter the 'OrganicImpurities' column.
+			if exists (select * from sys.default_constraints where name='DF_DocumentOrganicImpurities_OrganicImpurities')
 				begin
 					alter table DocumentOrganicImpurities drop constraint DF_DocumentOrganicImpurities_OrganicImpurities
 				end
 
-		-- if the table exists then we are going to alter the column, change the data type to nvarchar(10) and change the default to 'fail', as it used to be '0' (fail)
-		IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE TABLE_NAME='DocumentOrganicImpurities' AND COLUMN_NAME='OrganicImpurities' and DATA_TYPE='bit' )
-		begin
 			alter table DocumentOrganicImpurities alter column OrganicImpurities nvarchar(10) null -- change type
 			alter table DocumentOrganicImpurities add constraint DF_DocumentOrganicImpurities_OrganicImpurities default 'Fail' for [OrganicImpurities] -- add default constraint
 			update DocumentOrganicImpurities set OrganicImpurities='Pass' where OrganicImpurities='1' -- update values
