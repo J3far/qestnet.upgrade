@@ -1740,3 +1740,9 @@ begin
 	alter table DocumentAggSoilCompaction drop column ImportedPercentageRockFromField
 end
 go
+
+if ((select data_type from information_schema.columns where table_name = 'DocumentSteelReinforcing' and column_name = 'NeckingTestType2_SideWithoutRupture') != 'nvarchar')
+begin
+	alter table DocumentSteelReinforcing alter column NeckingTestType2_SideWithoutRupture nvarchar(10)
+end
+go
