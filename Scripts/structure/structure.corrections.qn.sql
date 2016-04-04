@@ -1157,6 +1157,14 @@ BEGIN
 END
 GO
 
+-- Change DocumentConcreteDestructiveSpecimen.SamplingLocation to nvarchar(50) from nchar(50)
+if exists(select 1 from information_schema.columns where table_name = 'DocumentConcreteDestructiveSpecimen' and column_name = 'SamplingLocation')
+begin
+	alter table DocumentConcreteDestructiveSpecimen alter column SamplingLocation nvarchar(50)
+end
+go
+
+
 -- Remove incorrectly named Primary Key so that structure update can re-create it
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'PK_TestAnalysisTriaxial_1' AND CONSTRAINT_TYPE = 'PRIMARY KEY')
 BEGIN
