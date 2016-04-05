@@ -75,14 +75,3 @@ BEGIN
 	ALTER TABLE Documentsteelreinforcing ALTER COLUMN neckingtesttype2_sidewithoutrupture NVARCHAR(10)
 END
 GO
-
---Correct the report names in listcomments--Bug#5481
-IF EXISTS(SELECT 1 FROM ListComments WHERE ReportName = CAST(ReportID as nvarchar(50)) AND NOT ReportID IS NULL)
-BEGIN
-	UPDATE L
-	SET L.ReportName = QO.Value
-	FROM ListComments L
-	LEFT JOIN qestObjects QO ON L.ReportID = QO.QestID and QO.Property = 'Name'
-	WHERE CAST(L.ReportID as nvarchar(50)) = L.ReportName AND NOT L.ReportID IS NULL
-END
-GO
