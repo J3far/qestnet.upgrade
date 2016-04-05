@@ -42,6 +42,8 @@ begin
 end
 GO
 
+EXEC [dbo].[qest_InsertUpdateColumn] 'Accreditation', 'TestColumn', 'nvarchar', 255, 'YES', '(0)'
+ALTER TABLE Accreditation ALTER COLUMN TestColumn nvarchar NULL
 
 -------------------------------------------------
 -- qest_InsertUpdateColumn function
@@ -61,17 +63,6 @@ CREATE PROCEDURE [dbo].[qest_InsertUpdateColumn]
 	@DefaultValue nvarchar(128)
 AS
 BEGIN
-	DECLARE @COL nvarchar(1000)
-	SET @COL = '[' + @ColumnName + '] ' + @TypeName 	
-	IF(@TypeName IN ('varbinary', 'varchar', 'binary', 'char', 'nvarchar', 'nchar'))
-	BEGIN
-		IF(ISNULL(@Length,0) = -1)
-		BEGIN
-			SET @COL = @COL + '(max)'
-		END ELSE BEGIN
-			SET @COL = @COL + '(' + CAST(@Length As nvarchar(12)) + ')'
-		END
-	END
 				
 	DECLARE @SQL nvarchar(max)	
 	IF EXISTS
@@ -85,27 +76,56 @@ BEGIN
 		-- UPDATE
 		DECLARE @PrevLength int
 		DECLARE @PrevTypeName nvarchar(128)	
-		DECLARE @PrevNullable nvarchar(12)	
-		
+		DECLARE @PrevNullable nvarchar(12)
+
 		SELECT @PrevLength = CHARACTER_MAXIMUM_LENGTH, @PrevTypeName = DATA_TYPE,
-		@PrevNullable = CASE IS_NULLABLE WHEN 'YES' THEN 'NULL' ELSE 'NOT NULL' END
+		@PrevNullable = CASE IS_NULLABLE WHEN 'YES' THEN 'NULL' ELSE 'NOT NULL' END 
 		FROM INFORMATION_SCHEMA.TABLES T
 		INNER JOIN INFORMATION_SCHEMA.COLUMNS C ON T.TABLE_NAME = C.TABLE_NAME
 		WHERE T.TABLE_NAME = @TableName AND C.COLUMN_NAME = @ColumnName
 		
-		-- Only includes length extensions and changes TO nullable
-		IF (@TypeName = @PrevTypeName AND (ISNULL(@Length,0) > ISNULL(@PrevLength,0) OR (ISNULL(@Length,0) = -1 AND ISNULL(@Length,0) != ISNULL(@PrevLength,0))))
+
+		IF(@TypeName = @PrevTypeName)
 		BEGIN
-			IF(@IsNullable = 'YES')
+
+			DECLARE @SetLength int
+			DECLARE @SetNullable nvarchar(12)
+			
+			-- Handle changes TO nullable		
+			SELECT @SetNullable = @PrevNullable
+			IF (@IsNullable = 'YES' AND @PrevNullable = 'NOT NULL')
 			BEGIN
-				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' NULL'	
-			END ELSE BEGIN
-				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @COL + ' ' + @PrevNullable	
-			END						
+				SELECT @SetNullable = 'NULL'
+			END
+			
+			-- Handle increases in length or changes to MAX (-1)
+			SELECT @SetLength = @PrevLength
+			IF ((ISNULL(@PrevLength,0) > -1 AND ISNULL(@Length,0) > ISNULL(@PrevLength,0))  OR  (ISNULL(@Length,0) = -1 AND ISNULL(@Length,0) != ISNULL(@PrevLength,0)))
+			BEGIN 
+				SELECT @SetLength = @Length
+			END
+
+			IF (ISNULL(@SetLength,0) != ISNULL(@PrevLength,0) OR @SetNullable != @PrevNullable)
+			BEGIN
+				DECLARE @SetColumn nvarchar(1000)
+				SET @SetColumn = '[' + @ColumnName + '] ' + @TypeName 	
+				IF(@TypeName IN ('varbinary', 'varchar', 'binary', 'char', 'nvarchar', 'nchar'))
+				BEGIN
+					IF(ISNULL(@SetLength,0) = -1)
+					BEGIN
+						SET @SetColumn = @SetColumn + '(max)'
+					END ELSE BEGIN
+						SET @SetColumn = @SetColumn + '(' + CAST(@SetLength As nvarchar(12)) + ')'
+					END
+				END
+
+				SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ALTER COLUMN ' + @SetColumn + ' ' + @SetNullable	
+				PRINT @SQL
+				EXEC(@SQL)
+			END
+
 		END
 
-		EXEC(@SQL)
-		
 		-- Cannot set identity on existing column and counts as no default
 		IF (@DefaultValue = 'IDENTITY')
 		BEGIN
@@ -115,7 +135,20 @@ BEGIN
 		END
 			
 	END ELSE BEGIN
-		-- INSERT	
+
+		-- INSERT		
+		DECLARE @COL nvarchar(1000)
+		SET @COL = '[' + @ColumnName + '] ' + @TypeName 	
+		IF(@TypeName IN ('varbinary', 'varchar', 'binary', 'char', 'nvarchar', 'nchar'))
+		BEGIN
+			IF(ISNULL(@Length,0) = -1)
+			BEGIN
+				SET @COL = @COL + '(max)'
+			END ELSE BEGIN
+				SET @COL = @COL + '(' + CAST(@Length As nvarchar(12)) + ')'
+			END
+		END
+			
 		IF(@IsNullable = 'YES')
 		BEGIN
 			SET @SQL = 'ALTER TABLE [dbo].[' + @TableName + '] ADD ' + @COL + ' NULL'	
