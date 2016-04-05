@@ -1,8 +1,4 @@
 
--- FIXMES:
--- LOG ISSUE:  Update QL to use the qestReportMapping UUID columns & update the casion upgrade tool to remove the UniqueID ones, announce removal
--- LOG ISSUE:  Update QL to use the QestUUID and not QestUniqueID, ensure QL does not use QestUniqueID, QestParentID & QestUniqueParentID, add removal to upgrade tool, announce removal.
--- LOG ISSUE:  Check activity 32 Equipment-Test Mapping not showing up anywhere it shouldn't.  Update QL to set QestOwnerLabNo on ETM.  Update QL to use UUIDs and not UniqueIDs.  Announce removal.
 
 -- TestQestUniqueID & ReportQestUniqueID to no longer be populated
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'qestReportMapping' AND COLUMN_NAME = 'TestQestUniqueID' AND IS_NULLABLE = 'NO')

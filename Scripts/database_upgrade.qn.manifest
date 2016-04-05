@@ -6,51 +6,34 @@ procedures/procedures.corrections.qn.sql
 procedures/procedures.database.qn.sql
 structure/structure.corrections.qn.sql
 
-// qestids required for upgrade.documents
+// Structure - Tables
+structure/structure.tables.qn.sql
+
+// qestids required for upgrade.documents (i think?)
 data/data.object_types.qn.sql
 
 // Upgrade
 upgrade/upgrade.procedures.qn.sql
-upgrade/upgrade.remove_foreignkeys.qn.sql
-upgrade/upgrade.core.qn.sql
 upgrade/upgrade.activities.qn.sql
 upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 upgrade/upgrade.user_documents.qn.sql
-upgrade/upgrade.document_relationships.qn.sql
-upgrade/upgrade.report_mappings.qn.sql
-upgrade/upgrade.equipment_test_mapping.qn.sql
-upgrade/upgrade.work_progress.qn.sql
 
-// Structure - Tables
-structure/structure.tables.qn.sql
-
-// Re-do these to pick up new tables - lazy/slow way of doing this
-upgrade/upgrade.activities.qn.sql
-upgrade/upgrade.lists.qn.sql
-upgrade/upgrade.documents.qn.sql
-upgrade/upgrade.user_documents.qn.sql
-upgrade/upgrade.user_documents_base.qn.sql
 
 // Procedures
 procedures/procedures.core.qn.sql
 procedures/procedures.triggers.core.qn.sql
-procedures/procedures.triggers.userdocs.qn.sql
 procedures/procedures.qestnet.qn.sql
-procedures/procedures.workflows.qn.sql
 procedures/procedures.suitability_rule_config.qn.sql
 procedures/procedures.units_of_measure.qn.sql
 procedures/procedures.concrete_meta_type.qn.sql
 
 // Data
 data/data.corrections.after.qn.sql
-data/data.entities.qn.sql
-data/data.business_rules.qn.sql
 data/data.object_types.qn.sql
 data/data.test_stage_types.qn.sql
 data/data.units_of_measure.qn.sql
 data/data.concrete_meta_type_template.qn.sql
-data/data.concrete_meta_type_patch.qn.sql
 
 // Structure - Foreign Keys
 structure/structure.foreignkeys.qn.sql
