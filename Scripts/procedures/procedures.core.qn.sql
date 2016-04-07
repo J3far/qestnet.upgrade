@@ -92,3 +92,19 @@ BEGIN CATCH
 	  Procedure: %s', @errSeverity, @errState, @TestStageQestID, @errMessage, @errProcedure);
 END CATCH
 GO
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_InvalidatePermissionsCache' AND SPECIFIC_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
+BEGIN
+    DROP PROCEDURE [dbo].[qest_InvalidatePermissionsCache]
+END
+GO
+
+CREATE PROCEDURE dbo.qest_InvalidatePermissionsCache
+  @MaximumAgeInSeconds int = 0,
+  @PersonID int = 0
+as
+delete from dbo.qestRolePermissionsCache
+where LastChecked <= DATEADD(SECOND, -@MaximumAgeInSeconds, GETDATE())
+and (PersonID = @PersonID or @PersonID = 0)
+
+go
