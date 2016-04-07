@@ -70,8 +70,14 @@ BEGIN
 END
 GO
 
-IF ((SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Documentsteelreinforcing' AND COLUMN_NAME = 'neckingtesttype2_sidewithoutrupture') != 'nvarchar')
+
+--Correct the report names in listcomments--Bug#5481
+IF EXISTS(SELECT 1 FROM ListComments WHERE ReportName = CAST(ReportID as nvarchar(50)) AND NOT ReportID IS NULL)
 BEGIN
-	ALTER TABLE Documentsteelreinforcing ALTER COLUMN neckingtesttype2_sidewithoutrupture NVARCHAR(10)
+	UPDATE L
+	SET L.ReportName = QO.Value
+	FROM ListComments L
+	LEFT JOIN qestObjects QO ON L.ReportID = QO.QestID and QO.Property = 'Name'
+	WHERE CAST(L.ReportID as nvarchar(50)) = L.ReportName AND NOT L.ReportID IS NULL
 END
 GO

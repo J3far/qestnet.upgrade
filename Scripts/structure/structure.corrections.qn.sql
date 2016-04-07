@@ -1157,6 +1157,14 @@ BEGIN
 END
 GO
 
+-- Change DocumentConcreteDestructiveSpecimen.SamplingLocation to nvarchar(50) from nchar(50)
+if exists(select 1 from information_schema.columns where table_name = 'DocumentConcreteDestructiveSpecimen' and column_name = 'SamplingLocation')
+begin
+	alter table DocumentConcreteDestructiveSpecimen alter column SamplingLocation nvarchar(50)
+end
+go
+
+
 -- Remove incorrectly named Primary Key so that structure update can re-create it
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'PK_TestAnalysisTriaxial_1' AND CONSTRAINT_TYPE = 'PRIMARY KEY')
 BEGIN
@@ -1661,18 +1669,18 @@ BEGIN
 END
 GO
 
--- WorkProgress: Set QestID not null
-IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestID' AND IS_NULLABLE = 'YES')
+-- WorkProgress: Set QestOwnerLabNo not null
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
 BEGIN
-	EXEC qest_DropIndex 'WorkProgress', 'IX_WorkProgress_QestID'
-	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestID int NOT NULL
+	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestOwnerLabNo int NOT NULL
 END
 GO
 
--- WorkProgress: Get rid of QestUniqueID Identity Specification
-if exists(select 1 where columnproperty(object_id('dbo.WorkProgress'), 'QestUniqueID', 'IsIdentity') = 1)
-begin
-	-- Add new temp column without identity (will be set to NOT NULL in later batch)
+-- WorkProgress: FK_WorkProgress_qestReverseLookup should be ON DELETE CASCADE
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_WorkProgress_qestReverseLookup' AND DELETE_RULE = 'NO ACTION')
+BEGIN
+	ALTER TABLE [dbo].[WorkProgress] DROP CONSTRAINT [FK_WorkProgress_qestReverseLookup]
+	ALTER TABLE [dbo].[WorkProgress] WITH CHECK ADD CONSTRAINT [FK_WorkProgress_qestReverseLookup] FOREIGN KEY([QestUUID]) REFERENCES [dbo].[qestReverseLookup] ([QestUUID]) ON UPDATE NO ACTION ON DELETE CASCADE
 	if not exists(select 1 from information_schema.columns where table_schema = 'dbo' and table_name = 'WorkProgress' and column_name = 'QestUniqueID_TEMP')
 		 alter table dbo.WorkProgress ADD QestUniqueID_TEMP int
 
@@ -1695,6 +1703,25 @@ BEGIN
 	ALTER TABLE dbo.WorkProgress ALTER COLUMN QestUniqueID int NOT NULL
 END
 GO
+
+-- Altering the type of field 'OrganicImpurities' in DocumentOrganicImpurities, from bit to nvarchar(10). B#5424
+
+		-- if the table exists then we are going to alter the column, change the data type to nvarchar(10) and change the default to 'fail', as it used to be '0' (fail)
+
+		IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_NAME='DocumentOrganicImpurities' AND COLUMN_NAME='OrganicImpurities' and DATA_TYPE='bit' )
+		begin
+			-- check if the default constraint on the column is hanging around, if it is then remove it so we can alter the 'OrganicImpurities' column.
+			if exists (select * from sys.default_constraints where name='DF_DocumentOrganicImpurities_OrganicImpurities')
+				begin
+					alter table DocumentOrganicImpurities drop constraint DF_DocumentOrganicImpurities_OrganicImpurities
+				end
+
+			alter table DocumentOrganicImpurities alter column OrganicImpurities nvarchar(10) null -- change type
+			alter table DocumentOrganicImpurities add constraint DF_DocumentOrganicImpurities_OrganicImpurities default 'Fail' for [OrganicImpurities] -- add default constraint
+			update DocumentOrganicImpurities set OrganicImpurities='Pass' where OrganicImpurities='1' -- update values
+			update DocumentOrganicImpurities set OrganicImpurities='Fail' where OrganicImpurities='0'
+		end
 
 -- WorkProgress: Set QestOwnerLabNo not null
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'WorkProgress' AND COLUMN_NAME = 'QestOwnerLabNo' AND IS_NULLABLE = 'YES')
@@ -1730,5 +1757,11 @@ go
 if exists (select 1 from information_schema.columns where table_name = 'DocumentAggSoilCompaction' and column_name = 'ImportedPercentageRockFromField')
 begin
 	alter table DocumentAggSoilCompaction drop column ImportedPercentageRockFromField
+end
+go
+
+if ((select data_type from information_schema.columns where table_name = 'DocumentSteelReinforcing' and column_name = 'NeckingTestType2_SideWithoutRupture') != 'nvarchar')
+begin
+	alter table DocumentSteelReinforcing alter column NeckingTestType2_SideWithoutRupture nvarchar(10)
 end
 go
