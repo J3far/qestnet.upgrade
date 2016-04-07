@@ -41,6 +41,8 @@ IF NOT OBJECT_ID('TR_qestReverseLookup_Update_Parent', 'TR') IS NULL
 	DROP TRIGGER TR_qestReverseLookup_Update_Parent
 GO
 
+
+
 -- Add parent reference update trigger
 CREATE TRIGGER TR_qestReverseLookup_Update_Parent
 ON qestReverseLookup AFTER UPDATE
@@ -132,3 +134,61 @@ AS
 	INNER JOIN inserted I ON I.QestUUID = RL.QestUUID 
 	INNER JOIN WorkProgress D ON D.QestUUID = RL.QestUUID
 GO
+
+-- Correct bug in trigger TR_INS_UPD_DocumentGDS, where installed
+IF OBJECT_ID('TR_INS_UPD_DocumentGDS', 'TR') IS NOT NULL
+BEGIN
+    EXEC('ALTER TRIGGER [dbo].[TR_INS_UPD_DocumentGDS]
+	ON [dbo].[DocumentGroundDescriptionSingle] AFTER INSERT, UPDATE
+	AS		
+		--Find first soil description from affected tests
+		UPDATE GD
+		SET 
+		GD.SoilDescription1 = GDS.[Description],
+		GD.Offset1_SI = GDS.Offset_SI,
+		GD.Offset1_IP = GDS.Offset_IP,
+		GD.Height1_SI = GDS.Height_SI,
+		GD.Height1_IP = GDS.Height_IP
+		FROM
+		(    SELECT 
+				-- Where at least one offset (ie. depth) is null, use the record with the lowest QestUniqueId
+				-- Otherwise use the record with the lowest offset (ie. the shallowest)
+				CASE WHEN COUNT(*) - COUNT(s.Offset) <> 0
+				THEN MIN(S.QESTUniqueID)
+				ELSE (SELECT s1.QestUniqueID from DocumentGroundDescriptionSingle S1 where s1.Offset = Min(S.offset) and s1.QestUniqueParentID = i.QestUniqueParentID)
+				END AS FirstUID,
+				i.QESTUniqueParentID 
+			FROM DocumentGroundDescriptionSingle S 
+			INNER JOIN inserted i 
+			ON S.QestUniqueParentID = i.QestUniqueParentID
+			GROUP BY i.QestUniqueParentID
+		) UPD
+		INNER JOIN DocumentGroundDescriptionSingle GDS
+		ON GDS.QestUniqueID = UPD.FirstUID	
+		LEFT JOIN DocumentGroundDescription GD
+		ON GD.QestUniqueID = GDS.QestUniqueParentID')
+END
+
+--  Remove trigger for setting Liquid Limit/Plastic Limit QestID as no longer required
+IF OBJECT_ID('TR_DocumentAtterbergLimitsSpecimen_QID', 'TR') IS NOT NULL
+	DROP TRIGGER TR_DocumentAtterbergLimitsSpecimen_QID
+GO
+ 
+ -- Add trigger to clear QESTLab permissions cache on logout / session termination
+ IF OBJECT_ID('dbo.TR_SessionConnections_InvalidatePermissionsCache', 'TR') IS NOT NULL
+     DROP TRIGGER TR_SessionConnections_InvalidatePermissionsCache
+ GO
+ 
+ CREATE TRIGGER TR_SessionConnections_InvalidatePermissionsCache
+ ON dbo.SessionConnections AFTER DELETE
+ AS
+   DECLARE @PersonID int
+   SELECT @PersonID = u.PersonID
+   FROM deleted d
+     inner join dbo.Users u on u.QestUniqueID = d.UserID
+ 
+   if @PersonID is not null
+   BEGIN
+     EXEC dbo.qest_InvalidatePermissionsCache 0, @PersonID
+   END
+ go
