@@ -2177,6 +2177,7 @@ as
        , UndrainedShearStress_SI = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'kPa')  
        , UndrainedShearStress_IP = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'ksf')
        , UseMoistureInitial = case when ISNULL(t.FinalMoistureContentUsedForCalculation,'') = 'FMC' then 0 else 1 end
+	   , StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
