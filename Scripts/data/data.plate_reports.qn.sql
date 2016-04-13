@@ -1548,13 +1548,14 @@ as
 	   , TotalMass = dbo.uomMass(psd.TotalMass,'g')
 	   , OvenDryWashedMass = dbo.uomMass(psd.OvenDryWashedMass,'g')
 	   , psd.Sieve_Finer75
+	   , psd.Finer75umPrecision
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
     inner join Samples s on s.QestUUID = rl.SampleArticleUUID 
     inner join DocumentPSDTest t on t.QestUUID = m.TestUUID
 	left join (
-	           select [QestUUID] = p.QestUUID, [QestParentUUID] = rp.QestParentUUID, [TotalMass] = p.TotalMass, [OvenDryWashedMass] = p.OvenDryWashedMass, [Sieve_Finer75] = p.Sieve_Finer75
+	           select [QestUUID] = p.QestUUID, [QestParentUUID] = rp.QestParentUUID, [TotalMass] = p.TotalMass, [OvenDryWashedMass] = p.OvenDryWashedMass, [Sieve_Finer75] = p.Sieve_Finer75, Finer75umPrecision = p.Finer75umPrecision
 			   from DocumentParticleSizeDistribution p
 					inner join qestReverseLookup rp on p.QestUUID = rp.QestUUID
 			  ) psd on psd.QestParentUUID = t.QestUUID
