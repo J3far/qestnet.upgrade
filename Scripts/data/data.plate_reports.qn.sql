@@ -2484,7 +2484,12 @@ as
 
   --Stage 1 set saturation method
   UPDATE tsd SET  
-  SaturationClause = case ts.SaturationMethod when 'Increments of cell and back pressure' then 1 else 0 end
+  SaturationClause = case ts.SaturationMethod 
+			when 'Increments of cell and back pressure' then 1 
+			when 'ASTM D 7181 Section 8.2.1' then 1 
+			when 'ASTM D 4767 Section 8.2.1' then 1 
+			else 0 
+		end
   FROM @TableSetData tsd
 	   inner join DocumentTriaxial t on tsd.QestUUID = t.TestAnalysisUUID
 	   inner join DocumentTriaxialSingle ts on ts.QestUniqueParentID = t.QestUniqueID and ts.QestID = 111024
@@ -2492,7 +2497,12 @@ as
 
   --Stage 2 and 3 set saturation method
   UPDATE tsd SET 
-    SaturationClause = case tg.SaturationMethod when 'Increments of cell and back pressure' then 1 else 0 end
+    SaturationClause = case tg.SaturationMethod 
+			when 'Increments of cell and back pressure' then 1 
+			when 'ASTM D 7181 Section 8.2.1' then 1 
+			when 'ASTM D 4767 Section 8.2.1' then 1 
+			else 0 
+		end
   FROM @TableSetData tsd
        inner join (
 	       select t.TestAnalysisUUID as 'qestuuid', MAX(ts.SaturationMethod) as 'SaturationMethod'
@@ -2574,7 +2584,18 @@ FROM @TableSetData tsd
        , SaturationFinalCellPressure_IP = dbo.uomPressure(ts.SaturationCellPressureOnCompletion,'ksf')
        , SaturationFinalPorePressure_SI = dbo.uomPressure(ts.SaturationPorePressureOnCompletion,'kPa')
        , SaturationFinalPorePressure_IP = dbo.uomPressure(ts.SaturationPorePressureOnCompletion,'ksf')
-       , SaturationMethodText = case when StageType = 3 then (case ts.SaturationMethod when 'Increments of cell and back pressure' then 'A' when 'Constant moisture content' then 'B' when 'Fugro in-house' then 'C' when 'Client specific' then 'D' else null end) else ts.SaturationMethod end
+       , SaturationMethodText = case when StageType = 3 then (
+											case ts.SaturationMethod 
+												when 'Increments of cell and back pressure' then 'A' 
+												when 'ASTM D 7181 Section 8.2.1' then 'A' 
+												when 'ASTM D 4767 Section 8.2.1' then 'A' 
+												when 'Constant moisture content' then 'B' 
+												when 'ASTM D 7181 Section 8.2.2' then 'B' 
+												when 'ASTM D 4767 Section 8.2.2' then 'B' 
+												when 'Fugro in-house' then 'C' 
+												when 'Client specific' then 'D' 
+												else null end
+								) else ts.SaturationMethod end
        , SaturationMethodConstant = 0
        , SideDrainsType = t.TypeSideDrainsFitted
        , t.SpecificGravity
