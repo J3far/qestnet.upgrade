@@ -2317,20 +2317,25 @@ as
        , AxialStrainAtHalf = ts.PeakStressAxialStrainAtHalf
        , CellPressure_IP = dbo.uomPressure(ts.IsotropicCellPressure,'ksf')
        , CellPressure_SI = dbo.uomPressure(ts.IsotropicCellPressure,'kPa')
-       , FailureModeComment = ts.FailureTypeCode+' - '+ts.FailureTypeName
        , FailureStrain = ts.PeakStressStrain
        , FailureStress_IP = dbo.uomPressure(ts.PeakStressStress,'ksf')
        , FailureStress_SI = dbo.uomPressure(ts.PeakStressStress,'kPa')
-       , FailureTypeReported = ts.FailureTypeCode
+       -- For Failure Type, use Code and add legend as a comment if more than 2 tests are on report. Otherwise report failure type directly.
+       , FailureTypeReported = CASE WHEN count(*) OVER() > 2 THEN t.FailureTypeCode ELSE t.FailureTypeName END
+       , FailureModeComment = CASE WHEN count(*) OVER() > 2 THEN cast(substring((
+                                          select distinct ', ' + fm_t.FailureTypeCode + ' = ' + fm_t.FailureTypeName 
+                                           from DocumentTriaxial fm_t where fm_t.QestUUID IN (SELECT TestUUID FROM qestPlateReportMapping fm_m WHERE fm_m.ReportUUID = c.QestUUID)
+                                          for xml path('')), 3, 1000) as nvarchar(1000)) 
+                                   ELSE null END
        , FinalMoistureContent = t.FinalMoistureContentForCalculation
        , FinalMoistureSourcedFrom = t.FinalMoistureContentObtainedFrom
        , HeightDiameterRatio = case when t.InitialHeight > 0 and t.InitialDiameter > 0 then t.InitialHeight / t.InitialDiameter else null end
-       , InitialBulkDensity_IP = dbo.uomDensity(t.InitialBulkDensity,'ksf')
-       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'kPa')
+       , InitialBulkDensity_IP = dbo.uomDensity(t.InitialBulkDensity,'pcf')
+       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/m³')
        , InitialDiameter_IP = dbo.uomLength(t.InitialDiameter,'in')
        , InitialDiameter_SI = dbo.uomLength(t.InitialDiameter,'mm')
-       , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'ksf')
-       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'kPa')
+       , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'pcf')
+       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/m³')
        , InitialHeight_IP = dbo.uomLength(t.InitialHeight,'in')
        , InitialHeight_SI = dbo.uomLength(t.InitialHeight,'mm')
        , InitialMoistureContent = t.InitialMoistureContentForCalculation
@@ -2341,8 +2346,8 @@ as
        , MembraneThickness_SI = dbo.uomPressure(ts.MembraneThickness,'mm')
        , OffOnshoreText = 'Onshore'
        , StrainRate = dbo.uomRate(Coalesce(ts.StrainRate, t.DataFileRateOfStrain,ts.RequestedRateOfStrain),'/hr')
-       , UndrainedShearStress_IP = dbo.uomPressure(ts.UndrainedShearStress,'ksf') -- PeakStressUndrainedShearStress 
-       , UndrainedShearStress_SI = dbo.uomPressure(ts.UndrainedShearStress,'kPa') -- PeakStressUndrainedShearStress 
+       , UndrainedShearStress_IP = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'ksf') -- PeakStressUndrainedShearStress 
+       , UndrainedShearStress_SI = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'kPa') -- PeakStressUndrainedShearStress 
        , UseMoistureInitial = case when ISNULL(t.FinalMoistureContentUsedForCalculation,'') = 'FMC' then 0 else 1 end
        , VisualDescription = t.VisualDescription
   from DocumentCertificates c
