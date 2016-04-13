@@ -2913,7 +2913,7 @@ GO
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_plate_oedometer]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_plate_oedometer] as select 0 tmp');
 GO
-alter proc [dbo].[qest_plate_oedometer]
+ALTER proc [dbo].[qest_plate_oedometer]
   @reportUUID uniqueidentifier
 as
   set nocount on;
@@ -3000,10 +3000,10 @@ order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID
     , InvertYAxis = case when t.MethodTimeFitting = 'Log Time' then cc.InvertYAxis when t.MethodTimeFitting = 'Root Time' then ct.InvertYAxis else null end
     , Pressure_SI = dbo.uomPressure(ls.FinalLoad, 'kPa')
     , Pressure_IP = dbo.uomPressure(ls.FinalLoad, 'ksf')
-    , ConsolidationCoefficient_SI = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'m²/MN') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'m²/MN') else null end
-    , ConsolidationCoefficient_IP = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'ft²/lbf') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'ft²/lbf') else null end
-    , VolumeCoefficient_SI = case when cc.CoefficientConsolidation is null and cc.CoefficientSecondaryConsolidation is null then null else dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'m²/yr') end
-    , VolumeCoefficient_IP = case when cc.CoefficientConsolidation is null and cc.CoefficientSecondaryConsolidation is null then null else dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'ft²/yr') end
+    , ConsolidationCoefficient_SI = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'m²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'m²/yr') else null end
+    , ConsolidationCoefficient_IP = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'ft²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'ft²/yr') else null end
+    , VolumeCoefficient_SI = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'m²/MN')
+    , VolumeCoefficient_IP = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'ft²/lbf')
     , SecondaryConsolidationCoefficient = case when t.MethodTimeFitting = 'Log Time' then cc.CoefficientSecondaryConsolidation when t.MethodTimeFitting = 'Root Time' then ct.CoefficientSecondaryConsolidation else null end
     , WorkPerUnitVolume_SI = dbo.uomPressure(ls.WorkPerUnitVolume,'kPa')
     , WorkPerUnitVolume_IP = dbo.uomPressure(ls.WorkPerUnitVolume,'ksf')
