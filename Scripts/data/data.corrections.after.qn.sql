@@ -114,3 +114,17 @@ UPDATE DocumentFallcone SET FallconeCodeRemoulded = FallconeCode WHERE FallconeC
 GO
 UPDATE DocumentFallcone SET ConeTypeRemoulded = ConeType WHERE ConeTypeRemoulded IS NULL AND ConeType IS NOT NULL
 GO
+
+-- Patch Document Image File Path - Remove File Name
+IF EXISTS (SELECT 1 FROM DocumentImage WHERE FilePath like '%\' + [FileName])
+BEGIN
+	UPDATE DocumentImage SET FilePath = SUBSTRING(FilePath,1,CHARINDEX(FileName,FilePath,1)-2) WHERE FilePath like '%\' + [FileName]
+END
+GO
+
+-- Patch Document Image FilePath - Remove Trailing \
+IF EXISTS (SELECT 1 FROM DocumentImage WHERE FilePath like '%\')
+BEGIN
+	UPDATE DocumentImage SET FilePath = LEFT(FilePath,len(FilePath)-1) WHERE FilePath like '%\'
+END
+GO
