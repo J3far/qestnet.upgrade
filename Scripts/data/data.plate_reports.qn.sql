@@ -2177,7 +2177,6 @@ as
        , UndrainedShearStress_SI = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'kPa')  
        , UndrainedShearStress_IP = dbo.uomPressure(ts.PeakStressUndrainedShearStress,'ksf')
        , UseMoistureInitial = case when ISNULL(t.FinalMoistureContentUsedForCalculation,'') = 'FMC' then 0 else 1 end
-	   , StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2212,6 +2211,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , AdjustedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa')
        , AdjustedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf')
+	   , StopStrainUsed = ts.StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2247,6 +2247,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , NormalisedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa') / x.AdjustedStress_SI
        , NormalisedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf') / x.AdjustedStress_IP
+	   , StopStrainUsed = ts.StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2369,6 +2370,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , AdjustedStress_IP = cr.AxialStress / 47.88
        , AdjustedStress_SI = cr.AxialStress
+	   , StopStrainUsed = ts.StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2389,6 +2391,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , NormalisedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf') / x.AdjustedStress_IP
        , NormalisedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa') / x.AdjustedStress_SI
+	   , StopStrainUsed = ts.StopStrainUsed
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2860,6 +2863,7 @@ FROM @TableSetData tsd
 	   , T_value_SI = dbo.uomPressure(cr.T,'kPa')
 	   , T_value_IP = dbo.uomPressure(cr.T,'ksf')
 	   , InterpretationNotPerformed = COALESCE(ta.InterpretationNotPerformed,1)
+	   , StopStrainUsed = ts.StopStrainUsed
   from @TableSetData tsd
     inner join DocumentTriaxial t on tsd.QestUUID = t.TestAnalysisUUID
     inner join DocumentTriaxialSingle ts on ts.QestUniqueParentID = t.QestUniqueID and ts.QestID = 111024
