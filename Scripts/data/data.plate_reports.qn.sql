@@ -1036,28 +1036,34 @@ as
        , Remarks = t.Remarks
        , WaterContent = t.MoistureContentReported
        , MethodAB = t.Method
-	   --, MoistureContentFormat = case t.QestID when 110951 then 'R:t10:2sf;t99.9:0.0;:0' when 110941 then 'R:t10:2sf;:0' when 110386 then 'R:t10:2sf;:0' else '0.00' end
+	   , MoistureContentFormat = t.MoistureContentFormat
 	  
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join 
-    (
+    ( 
+	   --case t.QestID when 110951 then '' when 110941 then 'R:t10:2sf;:0' when 110386 then '' else '0.00' end
       select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContentReported, ''), Remarks, Method = MoistureMethod
+	       , MoistureContentFormat = '@'
         from DocumentMoistureContent where QestID in (110940, 110066)
       union all
 	  select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContent, ''), Remarks, Method = MoistureMethod
-        from DocumentMoistureContent where QestID in (110941, 110386, 110951)
+	       , MoistureContentFormat = 'R:t10:2sf;:0'
+        from DocumentMoistureContent where QestID in (110941, 110386)
+      union all
+	  select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContent, ''), Remarks, Method = MoistureMethod
+	       , MoistureContentFormat = 'R:t10:2sf;t99.9:0.0;:0'
+        from DocumentMoistureContent where QestID in (110951)
       union all
         select [QestID] = idmap.ReportAsQestId, x.QestUniqueID, x.QestUUID, x.QestSpecification, x.QestCheckedDate, [MoistureContentReported] =
         cast(
           case 
-			when idmap.ReportAsQestId = 110951 then x.MoistureContent    
             when idmap.RoundingDecimalPlaces is not null then round(x.MoistureContent, idmap.RoundingDecimalPlaces)         
             when idmap.RoundingSignificantFigures > 0    then [dbo].[round_sf](x.MoistureContent, idmap.RoundingSignificantFigures)
             else round(x.MoistureContent, 2)             --no rounding specified - we'll default to 2 decimal places...
           end 
           as nvarchar(10))
-        , x.Remarks, x.Method
+        , x.Remarks, x.Method, MoistureContentFormat = '@'
         from
         (
           select rls.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
