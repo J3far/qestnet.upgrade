@@ -1089,3 +1089,10 @@ BEGIN
 	ALTER TABLE DocumentParticleSizeDistributionSieve DROP COLUMN Caption
 END
 GO
+
+-- Change type of DocumentShearStrengthLabVaneReading.RotationAboveMax from real to bit
+IF EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentShearStrengthLabVaneReading' AND COLUMN_NAME = 'RotationAboveMax')
+BEGIN
+	ALTER TABLE DocumentShearStrengthLabVaneReading ALTER COLUMN RotationAboveMax bit NULL;
+END
+GO
