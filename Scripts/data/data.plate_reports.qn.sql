@@ -2211,7 +2211,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , AdjustedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa')
        , AdjustedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf')
-	   , StopStrainUsed = ts.StopStrainUsed
+	   , StopStrainUsed = case when (ts.StopStrainUsed < isnull(ts.EndPlotStrain,999)) then ts.StopStrainUsed else ts.EndPlotStrain end
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2219,7 +2219,7 @@ as
     inner join DocumentTriaxial t on rl.QestUUID = t.QestUUID
     inner join DocumentTriaxialSingle ts on ts.QestUniqueParentID = t.QestUniqueID and ts.QestID = 111024
 	left join DocumentTriaxialSingleReading cr on cr.QestUniqueParentID = ts.QestUniqueID and cr.QestID = 111020
-  where c.QestUUID = @reportUUID
+  where c.QestUUID = @reportUUID and (cr.Exclude is null or cr.Exclude = 0)
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID,   
   CASE WHEN @NullTime = 1 THEN cr.Idx ELSE cr.ElapsedTime END,
   CASE WHEN @NullTime = 1 THEN cr.ElapsedTime ELSE cr.Idx END, cr.QestCreatedDate
@@ -2247,7 +2247,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , NormalisedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa') / x.AdjustedStress_SI
        , NormalisedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf') / x.AdjustedStress_IP
-	   , StopStrainUsed = ts.StopStrainUsed
+	   , StopStrainUsed = case when (ts.StopStrainUsed < isnull(ts.EndPlotStrain,999)) then ts.StopStrainUsed else ts.EndPlotStrain end
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2267,7 +2267,7 @@ as
 	left join DocumentTriaxialSingleReading cr on cr.QestUniqueParentID = ts.QestUniqueID and cr.QestID = 111020
       group by ts.QestUUID
     ) x on x.QestUUID = ts.QestUUID
-  where c.QestUUID = @reportUUID
+  where c.QestUUID = @reportUUID and (cr.Exclude is null or cr.Exclude = 0)
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID, 
   CASE WHEN @NullTime = 1 THEN cr.Idx ELSE cr.ElapsedTime END,
   CASE WHEN @NullTime = 1 THEN cr.ElapsedTime ELSE cr.Idx END, cr.QestCreatedDate
@@ -2297,7 +2297,7 @@ GO
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_plate_unconfinedcompressivestrength]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_plate_unconfinedcompressivestrength] as select 0 tmp');
 GO
-alter proc [dbo].[qest_plate_unconfinedcompressivestrength]
+ALTER proc [dbo].[qest_plate_unconfinedcompressivestrength]
   @reportUUID uniqueidentifier
 as
   set nocount on;
@@ -2368,9 +2368,11 @@ as
        , Borehole = s.BoreholeCode
        , BezierTension = ts.BezierTension
        , AdjustedStrain = cr.AxialStrain
-       , AdjustedStress_IP = cr.AxialStress / 47.88
-       , AdjustedStress_SI = cr.AxialStress
-	   , StopStrainUsed = ts.StopStrainUsed
+       --, AdjustedStress_IP = cr.AxialStress / 47.88
+       --, AdjustedStress_SI = cr.AxialStress
+	   , AdjustedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa')
+       , AdjustedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf')
+	   , StopStrainUsed = case when (ts.StopStrainUsed < isnull(ts.EndPlotStrain,999)) then ts.StopStrainUsed else ts.EndPlotStrain end
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2378,7 +2380,7 @@ as
     inner join DocumentTriaxial t on rl.QestUUID = t.QestUUID 
     inner join DocumentTriaxialSingle ts on ts.QestUniqueParentID = t.QestUniqueID and ts.QestID = 111024
 	left join DocumentTriaxialSingleReading cr on cr.QestUniqueParentID = ts.QestUniqueID and cr.QestID = 111020
-  where c.QestUUID = @reportUUID
+  where c.QestUUID = @reportUUID and (cr.Exclude is null or cr.Exclude = 0)
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID, cr.ElapsedTime, cr.Idx, cr.QestCreatedDate
 
 
@@ -2391,7 +2393,7 @@ as
        , AdjustedStrain = cr.AxialStrain
        , NormalisedStress_IP = dbo.uomPressure(cr.AxialStress,'ksf') / x.AdjustedStress_IP
        , NormalisedStress_SI = dbo.uomPressure(cr.AxialStress,'kPa') / x.AdjustedStress_SI
-	   , StopStrainUsed = ts.StopStrainUsed
+	   , StopStrainUsed = case when (ts.StopStrainUsed < isnull(ts.EndPlotStrain,999)) then ts.StopStrainUsed else ts.EndPlotStrain end
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
@@ -2411,7 +2413,7 @@ as
 	left join DocumentTriaxialSingleReading cr on cr.QestUniqueParentID = ts.QestUniqueID and cr.QestID = 111020
       group by ts.QestUUID
     ) x on x.QestUUID = ts.QestUUID
-  where c.QestUUID = @reportUUID
+  where c.QestUUID = @reportUUID and (cr.Exclude is null or cr.Exclude = 0)
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID, cr.ElapsedTime, cr.Idx, cr.QestCreatedDate
  
   select PathAndFileName = I.FilePath+'\'+I.FileName
@@ -2428,8 +2430,6 @@ as
     inner join DocumentImage I on I.QestParentID = t.QestID and I.QestUniqueParentID = t.QestUniqueID and I.QestID = 111019
   where c.QestUUID = @reportUUID
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID
- 
-GO
 
 ----------------------------------------------------------------------------------------------------
 
@@ -2863,7 +2863,7 @@ FROM @TableSetData tsd
 	   , T_value_SI = dbo.uomPressure(cr.T,'kPa')
 	   , T_value_IP = dbo.uomPressure(cr.T,'ksf')
 	   , InterpretationNotPerformed = COALESCE(ta.InterpretationNotPerformed,1)
-	   , StopStrainUsed = ts.StopStrainUsed
+	   , StopStrainUsed = case when (ts.StopStrainUsed < isnull(ts.EndPlotStrain,999)) then ts.StopStrainUsed else ts.EndPlotStrain end
   from @TableSetData tsd
     inner join DocumentTriaxial t on tsd.QestUUID = t.TestAnalysisUUID
     inner join DocumentTriaxialSingle ts on ts.QestUniqueParentID = t.QestUniqueID and ts.QestID = 111024
