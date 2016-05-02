@@ -129,13 +129,15 @@ BEGIN
 	WHERE RL.QestID = 0 OR RL.QestUniqueID = 0')
 	
 	-- Create ReverseLookups where any are missing - use the documents QestUUID if it has one, else create one
+	-- To have a natural order, the trailing part of QestUUID is based on qestCreateDate + QestUniqueID*4 in milliseconds.
+	-- We add QestUniqueID as many records only have qestCreatedDate to nearest second (and we multiply by 4 as SQL dates are only precise to 1/300 s). 
 	declare @sql_to_execute nvarchar(max);
 	set @sql_to_execute = 'declare @i int, @max int;
 	  select @i = min(QestUniqueID), @max = max(QestUniqueID) + 1 from [dbo].' + quotename(@tableName) + ';
 	  while @i < @max
 	  begin
 	    insert into qestReverseLookup (QestUUID, QestID, QestUniqueID, QestParentID, QestUniqueParentID, QestOwnerLabNo)
-	    select  ISNULL(D.QestUUID,CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo
+	    select  ISNULL(D.QestUUID,CAST(CAST(NEWID() AS BINARY(10)) + CAST(DATEADD(MILLISECOND, D.QestUniqueID * 4, D.QestCreatedDate) as BINARY(6)) AS UNIQUEIDENTIFIER)), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo
 	    from [dbo].' + quotename(@tableName) + ' D
 	    where D.qestUniqueID >= @i and D.qestUniqueID < @i + @batchSize
 	      and not exists (select * from [dbo].[qestReverseLookup] RL where D.QestID = RL.QestID AND D.QestUniqueID = RL.QestUniqueID)
