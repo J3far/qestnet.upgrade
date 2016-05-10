@@ -52,11 +52,26 @@ BEGIN
 	END
 
 	IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUUID' AND IS_NULLABLE = 'YES')
-	BEGIN
+	BEGIN	
+		-- Determine how to generate UUID
+		DECLARE @UUIDGenerator nvarchar(4000)
+		SET @UUIDGenerator = CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestCreatedDate')
+									AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUniqueID')
+								THEN
+									-- To have a natural order, the trailing part of QestUUID is based on qestCreateDate + QestUniqueID*4 in milliseconds.
+									-- We add QestUniqueID as many records only have qestCreatedDate to nearest second (and we multiply by 4 as SQL dates are only precise to 1/300 s). 
+									N'CASE WHEN QestCreatedDate IS NOT NULL AND QestUniqueID IS NOT NULL 
+										THEN CAST(CAST(NEWID() AS BINARY(10)) + CAST(DATEADD(MILLISECOND, QestUniqueID * 4, QestCreatedDate) as BINARY(6)) AS UNIQUEIDENTIFIER)
+										ELSE CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) END'
+								ELSE
+									-- No created date, base on current time
+									N'CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)'
+								END
+
 		-- Drop any existing indexing or default
-	  DECLARE @IndexName varchar(255)
-	  SET @IndexName = 'IX_' + @TableName + '_QestUUID'
-	  EXEC qest_DropIndex @TableName = @TableName, @IndexName = @IndexName
+		DECLARE @IndexName varchar(255)
+		SET @IndexName = 'IX_' + @TableName + '_QestUUID'
+		EXEC qest_DropIndex @TableName = @TableName, @IndexName = @IndexName
 		EXEC qest_DropDefault @TableName = @TableName, @ColumnName = 'QestUUID'
 
 		--if there is a qestuniqueid column, use that to run a batch process to set the QestUUID column
@@ -68,7 +83,7 @@ BEGIN
 		  while @i<@max
 		  begin
 		    update [dbo].' + quotename(@tableName) + '
-		    set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)
+		    set QestUUID = ' + @UUIDGenerator + '
 		    where QestUUID IS NULL and qestUniqueID >= @i and qestUniqueID < @i + @batchSize;
 		    set @i = @i + @batchSize
 		  end'
@@ -77,7 +92,7 @@ BEGIN
 		ELSE
 		BEGIN
 		  --otherwise just update the whole lot in one batch
-		  EXEC('update ' + @TableName + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) where QestUUID IS NULL');
+		  EXEC('update ' + @TableName + ' set QestUUID = ' + @UUIDGenerator + ' where QestUUID IS NULL');
 		END
 
 		EXEC('ALTER TABLE ' + @TableName + ' ALTER COLUMN QestUUID uniqueidentifier NOT NULL') -- make non-nullable
@@ -126,26 +141,44 @@ BEGIN
 	-- Repair any unset QestID/QestUniqueID where UUID match already exists
 	EXEC('UPDATE RL SET QestID = D.QestID, QestUniqueID = D.QestUniqueID
 	FROM ' + @TableName + ' D INNER JOIN qestReverseLookup RL ON D.QestUUID = RL.QestUUID 
-	WHERE RL.QestID = 0 OR RL.QestUniqueID = 0')
+	WHERE RL.QestID = 0 OR RL.QestUniqueID = 0')	
 	
+	-- Determine how to generate UUID
+	DECLARE @UUIDGenerator nvarchar(4000)
+	SET @UUIDGenerator = CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestCreatedDate')
+								AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUniqueID')
+								THEN
+									-- To have a natural order, the trailing part of QestUUID is based on qestCreateDate + QestUniqueID*4 in milliseconds.
+									-- We add QestUniqueID as many records only have qestCreatedDate to nearest second (and we multiply by 4 as SQL dates are only precise to 1/300 s). 
+									N'CASE WHEN D.QestCreatedDate IS NOT NULL AND D.QestUniqueID IS NOT NULL 
+										THEN CAST(CAST(NEWID() AS BINARY(10)) + CAST(DATEADD(MILLISECOND, D.QestUniqueID * 4, D.QestCreatedDate) as BINARY(6)) AS UNIQUEIDENTIFIER)
+										ELSE CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) END'
+								ELSE
+									-- No created date, base on current time
+									N'CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)'
+								END
+
 	-- Create ReverseLookups where any are missing - use the documents QestUUID if it has one, else create one
-	-- To have a natural order, the trailing part of QestUUID is based on qestCreateDate + QestUniqueID*4 in milliseconds.
-	-- We add QestUniqueID as many records only have qestCreatedDate to nearest second (and we multiply by 4 as SQL dates are only precise to 1/300 s). 
 	declare @sql_to_execute nvarchar(max);
 	set @sql_to_execute = 'declare @i int, @max int;
 	  select @i = min(QestUniqueID), @max = max(QestUniqueID) + 1 from [dbo].' + quotename(@tableName) + ';
 	  while @i < @max
 	  begin
-	    insert into qestReverseLookup (QestUUID, QestID, QestUniqueID, QestParentID, QestUniqueParentID, QestOwnerLabNo)
-	    select  ISNULL(D.QestUUID,CAST(CAST(NEWID() AS BINARY(10)) + CAST(DATEADD(MILLISECOND, D.QestUniqueID * 4, D.QestCreatedDate) as BINARY(6)) AS UNIQUEIDENTIFIER)), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo
-	    from [dbo].' + quotename(@tableName) + ' D
-	    where D.qestUniqueID >= @i and D.qestUniqueID < @i + @batchSize
-	      and not exists (select * from [dbo].[qestReverseLookup] RL where D.QestID = RL.QestID AND D.QestUniqueID = RL.QestUniqueID)
-	    set @i = @i + @batchSize
+		UPDATE R SET R.QestUUID = ISNULL(D.QestUUID,' + @UUIDGenerator + ') FROM ' + @TableName + ' D INNER JOIN qestReverseLookup R 
+		ON D.QestID = R.QestID AND D.QestUniqueID = R.QestUniqueID 
+		WHERE D.qestUniqueID >= @i AND D.qestUniqueID < @i + @batchSize AND R.QestUUID IS NULL
+
+		INSERT INTO qestReverseLookup (QestUUID, QestID, QestUniqueID, QestParentID, QestUniqueParentID, QestOwnerLabNo)
+		SELECT  ISNULL(D.QestUUID,' + @UUIDGenerator + '), D.QestID, D.QestUniqueID, NULLIF(D.QestParentID,0), NULLIF(D.QestUniqueParentID,0), D.QestOwnerLabNo
+		FROM [dbo].' + quotename(@tableName) + ' D
+		WHERE D.qestUniqueID >= @i AND D.qestUniqueID < @i + @batchSize
+			AND NOT EXISTS (SELECT * FROM [dbo].[qestReverseLookup] RL where D.QestID = RL.QestID AND D.QestUniqueID = RL.QestUniqueID)
+
+		SET @i = @i + @batchSize
 	  end'
 	PRINT 'Batch-updating QestUUID'  
 	exec sp_executesql @sql_to_execute, N'@batchSize int', 10000;
-  
+
   print 'Updating Document QestUUIDs...'
 	-- Set the QestUUIDs to match ReverseLookups
 	EXEC('UPDATE ' + @TableName + ' SET QestUUID = R.QestUUID FROM ' + @TableName + ' D INNER JOIN qestReverseLookup R 
