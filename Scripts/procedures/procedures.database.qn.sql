@@ -143,6 +143,22 @@ BEGIN
 			set nocount on;
 			set @SQL = 'alter table dbo.' + quotename(@tableName) + ' add QestUUID uniqueidentifier null;'
 			EXEC(@SQL)
+
+			-- Determine how to generate UUID
+			DECLARE @UUIDGenerator nvarchar(4000)
+			SET @UUIDGenerator = CASE WHEN EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestCreatedDate')
+									  AND EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName AND COLUMN_NAME = 'QestUniqueID')
+									THEN
+										-- To have a natural order, the trailing part of QestUUID is based on qestCreateDate + QestUniqueID*4 in milliseconds.
+										-- We add QestUniqueID as many records only have qestCreatedDate to nearest second (and we multiply by 4 as SQL dates are only precise to 1/300 s). 
+										N'CASE WHEN QestCreatedDate IS NOT NULL AND QestUniqueID IS NOT NULL 
+											THEN CAST(CAST(NEWID() AS BINARY(10)) + CAST(DATEADD(MILLISECOND, QestUniqueID * 4, QestCreatedDate) as BINARY(6)) AS UNIQUEIDENTIFIER)
+											ELSE CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER) END'
+									ELSE
+										-- No created date, base on current time
+										N'CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)'
+									END
+
 			if exists (select * from information_schema.columns where table_schema = 'dbo' and table_name = @tableName and column_name = 'qestuniqueid' and data_type = 'int' and is_nullable = 'no')
 			begin
 				--use batches, based on qestuniqueid
@@ -159,7 +175,7 @@ BEGIN
 						raiserror(''%i of %i'', 10, 1, @num, @total) with nowait;
 					end
 					update [dbo].' + quotename(@tableName) + '
-					set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER)
+					set QestUUID = ' + @UUIDGenerator + '
 					where QestUniqueID >= @i and QestUniqueID < @i + @batchSize
 					set @i = @i + @batchSize
 				end
@@ -169,7 +185,7 @@ BEGIN
 			else
 			begin
 				--no qestuniqueid, we'll go with a single batch instead.
-				set @SQL = 'update [dbo].' + quotename(@tableName) + ' set QestUUID = CAST(CAST(NEWID() AS BINARY(10)) + cast(getutcdate() as BINARY(6)) AS UNIQUEIDENTIFIER);'
+				set @SQL = 'update [dbo].' + quotename(@tableName) + ' set QestUUID = ' + @UUIDGenerator + ';'
 			end
 			EXEC(@SQL)
 			if @DefaultValue is not null

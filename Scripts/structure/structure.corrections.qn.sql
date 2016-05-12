@@ -1752,11 +1752,16 @@ begin
 end
 go
 
-
 -- Delete unused field from Relative Compaction table
 if exists (select 1 from information_schema.columns where table_name = 'DocumentAggSoilCompaction' and column_name = 'ImportedPercentageRockFromField')
 begin
 	alter table DocumentAggSoilCompaction drop column ImportedPercentageRockFromField
+end
+go
+
+if exists (select 1 from information_schema.columns where table_name = 'DocumentAggSoilCompaction' and column_name = 'ImportedOversizePct')
+begin
+	alter table DocumentAggSoilCompaction drop column ImportedOversizePct
 end
 go
 
