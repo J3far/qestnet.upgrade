@@ -71,9 +71,8 @@ BEGIN
 	  having count(*) > 1
 	', 16, 0, @number_of_duplicates)
 	END
-
-	EXEC qest_GenerateQestUUID 'qestReverseLookup'
-	
+		
+	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestUUID', 'uniqueidentifier', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'QestParentUUID', 'uniqueidentifier', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'SampleArticleUUID', 'uniqueidentifier', NULL, 'YES', NULL
 	EXEC [dbo].[qest_InsertUpdateColumn] 'qestReverseLookup', 'TestPlanUUID', 'uniqueidentifier', NULL, 'YES', NULL
