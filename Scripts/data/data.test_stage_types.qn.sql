@@ -1139,6 +1139,69 @@ GO
 EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000924, @TestQestID = 111046, @Idx = 5, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
 GO
 
+-- Moisture Content EN ISO 17892-1]
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000931, @TestQestID = 110951, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000932, @TestQestID = 110951, @Idx = 1, @Code = 'WW', @Name = 'Wet Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000933, @TestQestID = 110951, @Idx = 2, @Code = 'DW', @Name = 'Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000934, @TestQestID = 110951, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000935, @TestQestID = 110951, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Bulk Density [EN ISO 17892-2:2014 cl 5.1] (110952)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000941, @TestQestID = 110952, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000944, @TestQestID = 110952, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000945, @TestQestID = 110952, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000942, @TestQestID = 110952, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000943, @TestQestID = 110952, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Bulk Density [EN ISO 17892-2:2014 cl 5.2] (110953)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000951, @TestQestID = 110953, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000954, @TestQestID = 110953, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000955, @TestQestID = 110953, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000952, @TestQestID = 110953, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000953, @TestQestID = 110953, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+-- Bulk Density [EN ISO 17892-2:2014 cl 5.3] (110954)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000961, @TestQestID = 110954, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000964, @TestQestID = 110954, @Idx = 1, @Code = 'M', @Name = 'Measurement'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000965, @TestQestID = 110954, @Idx = 2, @Code = 'MCDW', @Name = 'Moisture Content Dry Weights'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000962, @TestQestID = 110954, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000963, @TestQestID = 110954, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
+
+-- Material Finer than 75-µm (No.200) Sieve [ASTM D 1140] (110955)
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000971, @TestQestID = 110955, @Idx = 0, @Code = 'MP', @Name = 'Material Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000972, @TestQestID = 110955, @Idx = 1, @Code = 'P', @Name = 'Preparation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000973, @TestQestID = 110955, @Idx = 2, @Code = 'SA', @Name = 'Sieve Analysis'
+GO
+EXEC qest_DeleteTestStage @TestStageQestID = 2000974
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000975, @TestQestID = 110955, @Idx = 3, @Code = 'MF', @Name = 'Material Finalisation'
+GO
+EXEC qest_InsertUpdateTestStage @TestStageQestID = 2000976, @TestQestID = 110955, @Idx = 4, @Code = 'FC', @Name = 'Final Check', @IsCheckStage = 1
+GO
+
 -- Restore uniqueness constraint
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'IX_qestTestStage_TestQestID_Idx' AND CONSTRAINT_TYPE = 'UNIQUE')
 BEGIN

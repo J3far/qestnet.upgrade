@@ -1,4 +1,4 @@
-ï»¿----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 --
 -- Plate reports
 --
@@ -653,14 +653,19 @@ select
 	    and (coalesce(finalCheck.CheckRejected, 0) = 0)
     )
     then 1 else 0 end as bit)
-from Samples s
-  inner join qestReverseLookup rl on s.QestUUID = rl.SampleArticleUUID
+from ('
+      + @sql_testTables +
+      ') t
+  inner join (
+              select rlt.QestUUID, SampleArticleUUID = coalesce(rlt.SampleArticleUUID, rls.SampleArticleUUID), rlt.QestID
+              from qestReverseLookup rlt 
+                   left join qestReverseLookup rls on rlt.SampleArticleUUID is null and rlt.QestParentUUID = rls.QestUUID
+             ) rl on rl.QestUUID = t.QestUUID
+  inner join Samples s on rl.SampleArticleUUID = s.QestUUID 
+
   left join QestObjects tm on rl.QestID = tm.QestID and tm.Property = ''Method''
   left join QestObjects ta on rl.QestID = ta.QestID and ta.Property = ''Abbreviation''
-  inner join 
-  ('
-  + @sql_testTables +
-  ') t on rl.QestID = t.QestID and rl.QestUniqueID = t.QestUniqueID
+  
   left join Users u_chk on t.QestCheckedBy = u_chk.QESTUniqueID
   left join People p_chk on u_chk.PersonID = p_chk.QestUniqueID
   left join Users u_tst on t.QestTestedBy = u_tst.QESTUniqueID
@@ -881,7 +886,7 @@ GO
 
 ----------------------------------------------------------------------------------------------------
 
--- 3.1 Sample Description -- WORK IN PROGRESS --
+-- 3.1 Sample Description --
 
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_plate_sampledescription]') and type in (N'P', N'PC'))
   exec ('create proc [dbo].[qest_plate_sampledescription] as select 0 tmp');
@@ -945,11 +950,19 @@ if not exists (select * from INFORMATION_SCHEMA.VIEWS where TABLE_SCHEMA = 'dbo'
 GO
 
 alter view dbo.WaterContentPlateReportView as
+	
   select m.QestUUID, m.QestID, m.QestUniqueID, m.QestCheckedBy, QestCheckedDate, QestTestedBy, QestTestedDate, Remarks, GroupUUID = null
     from DocumentMoistureContent m
     inner join qestReverseLookup rl on rl.QestUUID = m.QestUUID
     inner join Samples s on s.QestUUID = rl.SampleArticleUUID
-    where s.Disturbed = 0 or m.QestParentID between 1000 and 9999; --Can't have disturbed Oedometer or Triaxial Moisture Contents
+    where rl.SampleArticleUUID is not null 
+  union all
+  select m.QestUUID, m.QestID, m.QestUniqueID, m.QestCheckedBy, QestCheckedDate, QestTestedBy, QestTestedDate, Remarks, GroupUUID = null
+    from DocumentMoistureContent m
+    inner join qestReverseLookup rl on rl.QestUUID = m.QestUUID
+    inner join qestReverseLookup rlp on rlp.QestUUID = rl.QestParentUUID
+    inner join Samples s on s.QestUUID = rlp.SampleArticleUUID
+    where rl.SampleArticleUUID is null and s.Disturbed = 0 --Can't have disturbed Oedometer or Triaxial Moisture Contents
 GO
 
 if not exists (select * from sys.objects where object_id = object_id(N'[dbo].[qest_plate_watercontent]') and type in (N'P', N'PC'))
@@ -984,24 +997,32 @@ as
     union all select 110828, 110940 , 111026,    1 , null -- ASTM UU Triaxial final
     union all select 110920, 110940 , 111036,    1 , null -- ASTM OED
     union all select 110920, 110940 , 111037,    1 , null -- ASTM OED
+    union all select 110912, 110940 , 111025,    1 , null -- ASTM UCS	
     union all select 110948, 110940 , 111038,    1 , null -- Bulk Density/Unit Weight
     union all select 110949, 110940 , 111038,    1 , null -- Bulk Density/Unit Weight
-    union all select 110823, 110941 , 111025, null ,    2 -- BS CIU Triaxial initial
-    union all select 110825, 110941 , 111025, null ,    2 -- BS CID Triaxial initial
-    union all select 110829, 110941 , 111025, null ,    2 -- BS UU Triaxial initial
-    union all select 110830, 110941 , 111025, null ,    2 -- BS CAD Triaxial initial
-    union all select 110831, 110941 , 111025, null ,    2 -- BS CAU Triaxial initial
-    union all select 110823, 110941 , 111026, null ,    2 -- BS CIU Triaxial final
-    union all select 110825, 110941 , 111026, null ,    2 -- BS CID Triaxial final
-    union all select 110829, 110941 , 111026, null ,    2 -- BS UU Triaxial final
-    union all select 110830, 110941 , 111026, null ,    2 -- BS CAD Triaxial final
-    union all select 110831, 110941 , 111026, null ,    2 -- BS CAU Triaxial final
-    union all select 110921, 110941 , 111036, null ,    2 -- BS OED
-    union all select 110921, 110941 , 111037, null ,    2 -- BS OED
-    union all select 110917, 110941 , 111038,    1 , null -- Bulk Density/Unit Weight
-    union all select 110929, 110941 , 111038,    1 , null -- Bulk Density/Unit Weight
-    union all select 110939, 110941 , 111038,    1 , null -- Bulk Density/Unit Weight
-    
+    union all select 110823, 110951 , 111025, null ,    2 -- BS CIU Triaxial initial
+    union all select 110825, 110951 , 111025, null ,    2 -- BS CID Triaxial initial
+    union all select 110829, 110951 , 111025, null ,    2 -- BS UU Triaxial initial
+    union all select 110830, 110951 , 111025, null ,    2 -- BS CAD Triaxial initial
+    union all select 110831, 110951 , 111025, null ,    2 -- BS CAU Triaxial initial
+	union all select 110914, 110951 , 111025, null ,    2 -- BS UCS Triaxial initial 
+    union all select 110823, 110951 , 111026, null ,    2 -- BS CIU Triaxial final
+    union all select 110825, 110951 , 111026, null ,    2 -- BS CID Triaxial final
+    union all select 110829, 110951 , 111026, null ,    2 -- BS UU Triaxial final
+    union all select 110830, 110951 , 111026, null ,    2 -- BS CAD Triaxial final
+    union all select 110831, 110951 , 111026, null ,    2 -- BS CAU Triaxial final	    
+	union all select 110914, 110951 , 111026, null ,    2 -- BS UCS Triaxial final
+    union all select 110921, 110951 , 111036, null ,    2 -- BS OED
+    union all select 110921, 110951 , 111037, null ,    2 -- BS OED
+    union all select 110914, 110940 , 111025, null ,    2 -- BS UCS
+    union all select 110917, 110941 , 111038,    1 , null -- BS Bulk Density/Unit Weight
+    union all select 110929, 110941 , 111038,    1 , null -- BS Bulk Density/Unit Weight
+    union all select 110939, 110941 , 111038,    1 , null -- BS Bulk Density/Unit Weight
+    union all select 110952, 110951 , 111038,    1 , null -- ISO Bulk Density/Unit Weight
+    union all select 110953, 110951 , 111038,    1 , null -- ISO Bulk Density/Unit Weight
+    union all select 110954, 110951 , 111038,    1 , null -- ISO Bulk Density/Unit Weight
+	
+
   select t.QestID
        , t.QestUniqueID
        , t.QestUUID
@@ -1015,17 +1036,26 @@ as
        , Remarks = t.Remarks
        , WaterContent = t.MoistureContentReported
        , MethodAB = t.Method
-  
+	   , MoistureContentFormat = t.MoistureContentFormat
+	  
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
-    inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
-    inner join Samples s on s.QestUUID = rl.SampleArticleUUID 
     inner join 
-    (
+    ( 
+	   --case t.QestID when 110951 then '' when 110941 then 'R:t10:2sf;:0' when 110386 then '' else '0.00' end
       select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContentReported, ''), Remarks, Method = MoistureMethod
-        from DocumentMoistureContent where QestID in (110940, 110941, 110066, 110386)
+	       , MoistureContentFormat = '@'
+        from DocumentMoistureContent where QestID in (110940, 110066)
       union all
-        select idmap.ReportAsQestId, x.QestUniqueID, x.QestUUID, x.QestSpecification, x.QestCheckedDate, 
+	  select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContent, ''), Remarks, Method = MoistureMethod
+	       , MoistureContentFormat = 'R:t10:2sf;:0'
+        from DocumentMoistureContent where QestID in (110941, 110386)
+      union all
+	  select QestID, QestUniqueID, QestUUID, QestSpecification, QestCheckedDate, MoistureContentReported = NULLIF(MoistureContent, ''), Remarks, Method = MoistureMethod
+	       , MoistureContentFormat = 'R:t10:2sf;t99.9:0.0;:0'
+        from DocumentMoistureContent where QestID in (110951)
+      union all
+        select [QestID] = idmap.ReportAsQestId, x.QestUniqueID, x.QestUUID, x.QestSpecification, x.QestCheckedDate, [MoistureContentReported] =
         cast(
           case 
             when idmap.RoundingDecimalPlaces is not null then round(x.MoistureContent, idmap.RoundingDecimalPlaces)         
@@ -1033,23 +1063,23 @@ as
             else round(x.MoistureContent, 2)             --no rounding specified - we'll default to 2 decimal places...
           end 
           as nvarchar(10))
-        , x.Remarks, x.Method
+        , x.Remarks, x.Method, MoistureContentFormat = '@'
         from
         (
-          select dtt.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
-          from DocumentMoistureContent mct inner join DocumentTriaxial dtt on mct.QestParentID = dtt.QestID and mct.QestUniqueParentID = dtt.QestUniqueID
-          union all   
-          select dot.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
-          from DocumentMoistureContent mct inner join DocumentIncrementalOedometer dot on mct.QestParentID = dot.QestID and mct.QestUniqueParentID = dot.QestUniqueID
-          union all   
-          select dot.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
-          from DocumentMoistureContent mct inner join DocumentBulkDensityCoated dot on mct.QestParentID = dot.QestID and mct.QestUniqueParentID = dot.QestUniqueID
-          union all   
-          select dot.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
-          from DocumentMoistureContent mct inner join DocumentBulkDensityDirectMeasurement dot on mct.QestParentID = dot.QestID and mct.QestUniqueParentID = dot.QestUniqueID
-          ) x 
+          select rls.QestID, MoistureID = mct.QestID, mct.QestUniqueID, mct.QestUUID, mct.QestSpecification, mct.QestCheckedDate, MoistureContent = mct.MoistureContent, mct.Remarks, Method = null
+          from DocumentMoistureContent mct 
+		       inner join qestReverseLookup rlt on rlt.QestUUID = mct.QestUUID
+			   inner join qestReverseLookup rls on rlt.SampleArticleUUID is null and rlt.QestParentUUID = rls.QestUUID
+		  where mct.QestID in (111025, 111026, 111037, 111038)
+         ) x 
         inner join @qestIdMapping idmap on x.QestID = idmap.QestID and x.MoistureID = idmap.MoistureContentID
     ) t on t.QestUUID = m.TestUUID
+    inner join (
+	            select rlt.QestUUID, SampleArticleUUID = coalesce(rlt.SampleArticleUUID, rls.SampleArticleUUID)
+			    from qestReverseLookup rlt 
+				     left join qestReverseLookup rls on rlt.SampleArticleUUID is null and rlt.QestParentUUID = rls.QestUUID
+			   ) rl on rl.QestUUID = t.QestUUID
+    inner join Samples s on s.QestUUID = rl.SampleArticleUUID 
     left join [dbo].[view_SampleDescription] d on s.QestUUID = d.SampleArticleUUID
   where c.QestUUID = @reportUUID
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, s.QestUUID, t.QestUUID 
@@ -1078,17 +1108,17 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , BulkUnitWeight_SI = dbo.uomDensity(tbd.BulkUnitWeight,'Mg/mÂ³')
+       , BulkUnitWeight_SI = dbo.uomDensity(tbd.BulkUnitWeight,'Mg/m³')
        , BulkUnitWeight_IP = dbo.uomDensity(tbd.BulkUnitWeight,'pcf')
-       , BulkDensity_SI = dbo.uomDensity(tbd.BulkDensity,'Mg/mÂ³')
+       , BulkDensity_SI = dbo.uomDensity(tbd.BulkDensity,'Mg/m³')
        , BulkDensity_IP = dbo.uomDensity(tbd.BulkDensity,'pcf')
-       , DryUnitWeight_SI = dbo.uomDensity(tbd.DryUnitWeight,'Mg/mÂ³')
+       , DryUnitWeight_SI = dbo.uomDensity(tbd.DryUnitWeight,'Mg/m³')
        , DryUnitWeight_IP = dbo.uomDensity(tbd.DryUnitWeight,'pcf')
-       , DryDensity_SI = dbo.uomDensity(tbd.DryDensity,'Mg/mÂ³')
+       , DryDensity_SI = dbo.uomDensity(tbd.DryDensity,'Mg/m³')
        , DryDensity_IP = dbo.uomDensity(tbd.DryDensity,'pcf')
        , MoistureContent = tbd.MoistureContent
        , VisualDescription = d.GroupSymbol+' '+d.GroupName
-       , MethodUsed = case tbd.QestID when 110917 then 'Clause 7.2' when 110929 then 'Clause 7.3' when 110939 then 'Clause 7.4' else NULL end
+       , MethodUsed = case tbd.QestID when 110917 then 'Clause 7.2' when 110929 then 'Clause 7.3' when 110939 then 'Clause 7.4' when 110952 then 'Clause 5.1' when 110953 then 'Clause 5.2' when 110954 then 'Clause 5.3' else NULL end
        , SampleType = ''
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
@@ -1106,17 +1136,17 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , BulkUnitWeight_SI = dbo.uomDensity(tbd.BulkUnitWeight,'Mg/mÂ³')
+       , BulkUnitWeight_SI = dbo.uomDensity(tbd.BulkUnitWeight,'Mg/m³')
        , BulkUnitWeight_IP = dbo.uomDensity(tbd.BulkUnitWeight,'pcf')
-       , BulkDensity_SI = dbo.uomDensity(tbd.BulkDensity,'Mg/mÂ³')
+       , BulkDensity_SI = dbo.uomDensity(tbd.BulkDensity,'Mg/m³')
        , BulkDensity_IP = dbo.uomDensity(tbd.BulkDensity,'pcf')
-       , DryUnitWeight_SI = dbo.uomDensity(tbd.DryUnitWeight,'Mg/mÂ³')
+       , DryUnitWeight_SI = dbo.uomDensity(tbd.DryUnitWeight,'Mg/m³')
        , DryUnitWeight_IP = dbo.uomDensity(tbd.DryUnitWeight,'pcf')
-       , DryDensity_SI = dbo.uomDensity(tbd.DryDensity,'Mg/mÂ³')
+       , DryDensity_SI = dbo.uomDensity(tbd.DryDensity,'Mg/m³')
        , DryDensity_IP = dbo.uomDensity(tbd.DryDensity,'pcf')
        , MoistureContent = tbd.MoistureContent
        , VisualDescription = d.GroupSymbol+' '+d.GroupName
-       , MethodUsed = case tbd.QestID when 110917 then 'Clause 7.2' when 110929 then 'Clause 7.3' when 110939 then 'Clause 7.4' else NULL end
+       , MethodUsed = case tbd.QestID when 110917 then 'Clause 7.2' when 110929 then 'Clause 7.3' when 110939 then 'Clause 7.4' when 110952 then 'Clause 5.1' when 110953 then 'Clause 5.2' when 110954 then 'Clause 5.3' else NULL end
        , SampleType = ''
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
@@ -1134,13 +1164,13 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , BulkUnitWeight_SI = dbo.uomDensity(tbdc.BulkUnitWeight,'Mg/mÂ³')
+       , BulkUnitWeight_SI = dbo.uomDensity(tbdc.BulkUnitWeight,'Mg/m³')
        , BulkUnitWeight_IP = dbo.uomDensity(tbdc.BulkUnitWeight,'pcf')
-       , BulkDensity_SI = dbo.uomDensity(tbdc.BulkDensity,'Mg/mÂ³')
+       , BulkDensity_SI = dbo.uomDensity(tbdc.BulkDensity,'Mg/m³')
        , BulkDensity_IP = dbo.uomDensity(tbdc.BulkDensity,'pcf')
-       , DryUnitWeight_SI = dbo.uomDensity(tbdc.DryUnitWeight,'Mg/mÂ³')
+       , DryUnitWeight_SI = dbo.uomDensity(tbdc.DryUnitWeight,'Mg/m³')
        , DryUnitWeight_IP = dbo.uomDensity(tbdc.DryUnitWeight,'pcf')
-       , DryDensity_SI = dbo.uomDensity(tbdc.DryDensity,'Mg/mÂ³')
+       , DryDensity_SI = dbo.uomDensity(tbdc.DryDensity,'Mg/m³')
        , DryDensity_IP = dbo.uomDensity(tbdc.DryDensity,'pcf')
        , MoistureContent = tbdc.MoistureContent
        , VisualDescription = d.GroupSymbol+' '+d.GroupName
@@ -1163,13 +1193,13 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , BulkUnitWeight_SI = dbo.uomDensity(tbdm.BulkUnitWeight,'Mg/mÂ³')
+       , BulkUnitWeight_SI = dbo.uomDensity(tbdm.BulkUnitWeight,'Mg/m³')
        , BulkUnitWeight_IP = dbo.uomDensity(tbdm.BulkUnitWeight,'pcf')
-       , BulkDensity_SI = dbo.uomDensity(tbdm.BulkDensity,'Mg/mÂ³')
+       , BulkDensity_SI = dbo.uomDensity(tbdm.BulkDensity,'Mg/m³')
        , BulkDensity_IP = dbo.uomDensity(tbdm.BulkDensity,'pcf')
-       , DryUnitWeight_SI = dbo.uomDensity(tbdm.DryUnitWeight,'Mg/mÂ³')
+       , DryUnitWeight_SI = dbo.uomDensity(tbdm.DryUnitWeight,'Mg/m³')
        , DryUnitWeight_IP = dbo.uomDensity(tbdm.DryUnitWeight,'pcf')
-       , DryDensity_SI = dbo.uomDensity(tbdm.DryDensity,'Mg/mÂ³')
+       , DryDensity_SI = dbo.uomDensity(tbdm.DryDensity,'Mg/m³')
        , DryDensity_IP = dbo.uomDensity(tbdm.DryDensity,'pcf')
        , MoistureContent = tbdm.MoistureContent
        , VisualDescription = d.GroupSymbol+' '+d.GroupName
@@ -1521,16 +1551,20 @@ as
        , cat.Silt
        , cat.Clay
        , VisualDescription = d.GroupSymbol+' '+d.GroupName 
+	   , TotalMass = dbo.uomMass(psd.TotalMass,'g')
+	   , OvenDryWashedMass = dbo.uomMass(psd.OvenDryWashedMass,'g')
+	   , psd.Sieve_Finer75
+	   , psd.Finer75umPrecision
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
     inner join qestReverseLookup rl on m.TestUUID = rl.QestUUID
     inner join Samples s on s.QestUUID = rl.SampleArticleUUID 
     inner join DocumentPSDTest t on t.QestUUID = m.TestUUID
-	--left join (
-	--           select [QestUUID] = p.QestUUID, [QestParentUUID] = rp.QestParentUUID
-	--		   from DocumentParticleSizeDistribution p
-	--				inner join qestReverseLookup rp on p.QestUUID = rp.QestUUID
-	--		  ) psd on psd.QestParentUUID = t.QestUUID
+	left join (
+	           select [QestUUID] = p.QestUUID, [QestParentUUID] = rp.QestParentUUID, [TotalMass] = p.TotalMass, [OvenDryWashedMass] = p.OvenDryWashedMass, [Sieve_Finer75] = p.Sieve_Finer75, Finer75umPrecision = p.Finer75umPrecision
+			   from DocumentParticleSizeDistribution p
+					inner join qestReverseLookup rp on p.QestUUID = rp.QestUUID
+			  ) psd on psd.QestParentUUID = t.QestUUID
 	left join (
 	           select [QestUUID] = h.QestUUID, [QestParentUUID] = rp.QestParentUUID, [MethodPretreatment] = h.MethodPretreatment
 			   from DocumentPSDHydrometerTest h
@@ -1731,7 +1765,7 @@ as
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
        , MethodBSClause = case t.QestID when 110909 then 'Clause 8.3' when 110913 then 'Clause 8.4' else null end
-       , AvgParticleDensity_SI = dbo.uomDensity(t.AvgParticleDensityDry,'Mg/mÂ³')
+       , AvgParticleDensity_SI = dbo.uomDensity(t.AvgParticleDensityDry,'Mg/m³')
        , AvgParticleDensity_IP = dbo.uomDensity(t.AvgParticleDensityDry,'pcf')
   from DocumentCertificates c
     inner join qestPlateReportMapping m on c.QestUUID = m.ReportUUID
@@ -1807,18 +1841,18 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , MouldSize_SI = dbo.uomVolume(tmax.MouldVolume,'cmÂ³')
-       , MouldSize_IP = dbo.uomVolume(tmax.MouldVolume,'ftÂ³')
+       , MouldSize_SI = dbo.uomVolume(tmax.MouldVolume,'cm³')
+       , MouldSize_IP = dbo.uomVolume(tmax.MouldVolume,'ft³')
        , MethodUsed = isnull(tmin.Method,'')+' / '+isnull(tmax.Method,'')
-       , MinimumDensity_SI = dbo.uomDensity(tmin.MinDensity,'Mg/mÂ³')
+       , MinimumDensity_SI = dbo.uomDensity(tmin.MinDensity,'Mg/m³')
        , MinimumDensity_IP = dbo.uomDensity(tmin.MinDensity,'pcf')
-       , MaximumDensity_SI = dbo.uomDensity(coalesce(tmax.MaxDensity, mdd.MaximumDryDensity),'Mg/mÂ³')
+       , MaximumDensity_SI = dbo.uomDensity(coalesce(tmax.MaxDensity, mdd.MaximumDryDensity),'Mg/m³')
        , MaximumDensity_IP = dbo.uomDensity(coalesce(tmax.MaxDensity, mdd.MaximumDryDensity),'pcf')
        , OptimumWaterContent = mdd.OptimumMoistureContent
        , PreparationProcedure = mdd.PreparationMethod
        , AssumedParticleDensityText = case mdd.AssumedAPD when 1 then 'Assumed' else 'Measured' end
        , RetainedMassPercent = mdd.PercentRetained_37_5
-       , ParticleDensity_SI = dbo.uomDensity(mdd.ParticleDensity,'Mg/mÂ³')
+       , ParticleDensity_SI = dbo.uomDensity(mdd.ParticleDensity,'Mg/m³')
        , ParticleDensity_IP = dbo.uomDensity(mdd.ParticleDensity,'pcf')
        , VisualDescription = d.GroupSymbol+' '+d.GroupName
   from DocumentCertificates c
@@ -1842,7 +1876,7 @@ as
        , Borehole = s.BoreholeCode
        , Sample = s.SampleArticleID
        , Depth = [dbo].[qest_GetDepth](s.Depth, s.Length, @sampleDepthMode, @IPUnits)
-       , DryDensity_SI = dbo.uomDensity(ts.DryDensity,'Mg/mÂ³')
+       , DryDensity_SI = dbo.uomDensity(ts.DryDensity,'Mg/m³')
        , DryDensity_IP = dbo.uomDensity(ts.DryDensity,'pcf') 
        , ts.MoistureContent
   from DocumentCertificates c
@@ -1966,11 +2000,11 @@ as
        , VaneDiameter_SI = dbo.uomLength(sr.VaneBladeDiameter,'mm')
        , VaneDiameter_IP = dbo.uomLength(sr.VaneBladeDiameter,'in')
        , SpringCode = sr.SpringCode	   
-       , SpringConstant_SI = dbo.uomtorque(sr.SpringConstant,'Nm/Â°')
-       , SpringConstant_IP = dbo.uomtorque(sr.SpringConstant,'lbfÂ·ft/Â°')
-	   , FailureTorqueReading_IP = dbo.uomtorque(sr.Torque,'lbfÂ·ft')
-       , FailureTorqueReading_SI = dbo.uomtorque(sr.Torque,'NÂ·m')
-       , RotationRate = dbo.uomrevrate(sr.RotationRate,'Â°/min')
+       , SpringConstant_SI = dbo.uomtorque(sr.SpringConstant,'Nm/°')
+       , SpringConstant_IP = dbo.uomtorque(sr.SpringConstant,'lbf·ft/°')
+	   , FailureTorqueReading_IP = dbo.uomtorque(sr.Torque,'lbf·ft')
+       , FailureTorqueReading_SI = dbo.uomtorque(sr.Torque,'N·m')
+       , RotationRate = dbo.uomrevrate(sr.RotationRate,'°/min')
        , ShearRate_IP = dbo.uomSpeed(sr.ShearRate,'in/min')
        , ShearRate_SI = dbo.uomSpeed(sr.ShearRate,'mm/min')
        , FailureTime = dbo.uomTime(sr.TimeToFailure,'sec')
@@ -1979,9 +2013,9 @@ as
 	   , RotationAboveMax =sr.RotationAboveMax
        , RemouldRevolutions = rr.RemouldRevolutions
        , ResidualFailureTime = dbo.uomTime(rr.TimeToFailure,'sec')
-       , ResidualFailureTorqueReading_IP = dbo.uomtorque(rr.Torque,'lbfÂ·ft')
-       , ResidualFailureTorqueReading_SI = dbo.uomtorque(rr.Torque,'NÂ·m')
-       , ResidualRotationRate = dbo.uomrevrate(rr.RotationRate,'Â°/min')
+       , ResidualFailureTorqueReading_IP = dbo.uomtorque(rr.Torque,'lbf·ft')
+       , ResidualFailureTorqueReading_SI = dbo.uomtorque(rr.Torque,'N·m')
+       , ResidualRotationRate = dbo.uomrevrate(rr.RotationRate,'°/min')
        , ResidualShearRate_IP = dbo.uomSpeed(rr.ShearRate,'in/min')
        , ResidualShearRate_SI = dbo.uomSpeed(rr.ShearRate,'mm/min')
        , ResidualShearStrengthEstimate_IP = dbo.uomPressure(rr.ShearStrength,'ksf')
@@ -2152,11 +2186,11 @@ as
        , FailureStress_IP = dbo.uomPressure(ts.PeakStressStress,'ksf')
        , FailureStress_SI = dbo.uomPressure(ts.PeakStressStress,'kPa')
        , InitialBulkDensity_IP = dbo.uomDensity(t.InitialBulkDensity,'pcf')
-       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/mÂ³')
+       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/m³')
        , InitialDiameter_IP = dbo.uomLength(t.InitialDiameter,'in')
        , InitialDiameter_SI = dbo.uomLength(t.InitialDiameter,'mm')
        , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'pcf')
-       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/mÂ³')
+       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/m³')
        , InitialHeight_IP = dbo.uomLength(t.InitialHeight,'in')
        , InitialHeight_SI = dbo.uomLength(t.InitialHeight,'mm')
        , InitialMoistureContent = t.InitialMoistureContentForCalculation
@@ -2332,11 +2366,11 @@ as
        , FinalMoistureSourcedFrom = t.FinalMoistureContentObtainedFrom
        , HeightDiameterRatio = case when t.InitialHeight > 0 and t.InitialDiameter > 0 then t.InitialHeight / t.InitialDiameter else null end
        , InitialBulkDensity_IP = dbo.uomDensity(t.InitialBulkDensity,'pcf')
-       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/mÂ³')
+       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/m³')
        , InitialDiameter_IP = dbo.uomLength(t.InitialDiameter,'in')
        , InitialDiameter_SI = dbo.uomLength(t.InitialDiameter,'mm')
        , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'pcf')
-       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/mÂ³')
+       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/m³')
        , InitialHeight_IP = dbo.uomLength(t.InitialHeight,'in')
        , InitialHeight_SI = dbo.uomLength(t.InitialHeight,'mm')
        , InitialMoistureContent = t.InitialMoistureContentForCalculation
@@ -2430,6 +2464,8 @@ as
     inner join DocumentImage I on I.QestParentID = t.QestID and I.QestUniqueParentID = t.QestUniqueID and I.QestID = 111019
   where c.QestUUID = @reportUUID
   order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID
+ 
+GO
 
 ----------------------------------------------------------------------------------------------------
 
@@ -2560,16 +2596,16 @@ FROM @TableSetData tsd
        , EndDrainsType = t.TypeEndDrainsFitted
        , FailureMode = case when tsd.StageType <> 3 then t.FailureTypeCode + ' - ' + t.FailureTypeName else t.FailureTypeCode end
        , FailureModeComment = tsd.FailureModeComment
-       , FinalBulkDensity_SI = dbo.uomDensity(t.FinalBulkDensity,'Mg/mÂ³')
+       , FinalBulkDensity_SI = dbo.uomDensity(t.FinalBulkDensity,'Mg/m³')
        , FinalBulkDensity_IP = dbo.uomDensity(t.FinalBulkDensity,'pcf')
-       , FinalDryDensity_SI = dbo.uomDensity(t.FinalDryDensity,'Mg/mÂ³')
+       , FinalDryDensity_SI = dbo.uomDensity(t.FinalDryDensity,'Mg/m³')
        , FinalDryDensity_IP = dbo.uomDensity(t.FinalDryDensity,'pcf')
        , FinalMoistureContent = t.FinalMoistureContentForCalculation
-       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/mÂ³')
+       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialBulkDensity,'Mg/m³')
        , InitialBulkDensity_IP = dbo.uomDensity(t.InitialBulkDensity,'pcf')
        , InitialDiameter_SI = dbo.uomLength(t.InitialDiameter,'mm')
        , InitialDiameter_IP = dbo.uomLength(t.InitialDiameter,'in')
-       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/mÂ³')
+       , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/m³')
        , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'pcf')
        , InitialHeight_SI = dbo.uomLength(t.InitialHeight,'mm')
        , InitialHeight_IP = dbo.uomLength(t.InitialHeight,'in')
@@ -2578,8 +2614,8 @@ FROM @TableSetData tsd
        , InitialSaturation = case when t.InitialSaturation > 100 then 100 else t.InitialSaturation end
        , InitialVoidRatio = t.InitialVoids
 	   , ParticleDensity_SI = case 
-								when t.ParticleDensity is not null then dbo.uomDensity(t.ParticleDensity,'Mg/mÂ³')
-								else dbo.uomDensity(t.SpecificGravity * 998.21,'Mg/mÂ³')
+								when t.ParticleDensity is not null then dbo.uomDensity(t.ParticleDensity,'Mg/m³')
+								else dbo.uomDensity(t.SpecificGravity * 998.21,'Mg/m³')
 							end
        , ParticleDensity_IP = case 
 								when t.ParticleDensity is not null then dbo.uomDensity(t.ParticleDensity,'pcf')
@@ -2636,13 +2672,13 @@ FROM @TableSetData tsd
        , BackPressure_IP = dbo.uomPressure(ts.IsotropicBackPressure,'ksf')
        , CellPressure_SI = dbo.uomPressure(ts.IsotropicCellPressure,'kPa')
        , CellPressure_IP = dbo.uomPressure(ts.IsotropicCellPressure,'ksf')
-       , ConsolidationArea_SI = dbo.uomArea(ts.IsotropicArea,'mmÂ²')
-       , ConsolidationArea_IP = dbo.uomArea(ts.IsotropicArea,'inÂ²')
+       , ConsolidationArea_SI = dbo.uomArea(ts.IsotropicArea,'mm²')
+       , ConsolidationArea_IP = dbo.uomArea(ts.IsotropicArea,'in²')
        , ConsolidationAreaMethod = ts.IsotropicAreaMethod
        , ConsolidationAxialStrain = ts.IsotropicAxialStrain
-       , ConsolidationBulkDensity_SI = dbo.uomDensity(ts.IsotropicBulkDensity,'Mg/mÂ³')
+       , ConsolidationBulkDensity_SI = dbo.uomDensity(ts.IsotropicBulkDensity,'Mg/m³')
        , ConsolidationBulkDensity_IP = dbo.uomDensity(ts.IsotropicBulkDensity,'pcf')
-       , ConsolidationDryDensity_SI = dbo.uomDensity(ts.IsotropicDryDensity,'Mg/mÂ³')
+       , ConsolidationDryDensity_SI = dbo.uomDensity(ts.IsotropicDryDensity,'Mg/m³')
        , ConsolidationDryDensity_IP = dbo.uomDensity(ts.IsotropicDryDensity,'pcf')
        , ConsolidationFinalPorePressure_SI = dbo.uomPressure(ts.IsotropicPorePressureOnCompletion,'kPa')
        , ConsolidationFinalPorePressure_IP = dbo.uomPressure(ts.IsotropicPorePressureOnCompletion,'ksf')
@@ -2679,13 +2715,13 @@ FROM @TableSetData tsd
        , BackPressure_IP = dbo.uomPressure(ts.AnisotropicBackPressure,'ksf')
        , CellPressure_SI = dbo.uomPressure(ts.AnisotropicCellPressure,'kPa')
        , CellPressure_IP = dbo.uomPressure(ts.AnisotropicCellPressure,'ksf')
-       , ConsolidationArea_SI = dbo.uomArea(ts.AnisotropicArea,'mmÂ²')
-       , ConsolidationArea_IP = dbo.uomArea(ts.AnisotropicArea,'inÂ²')
+       , ConsolidationArea_SI = dbo.uomArea(ts.AnisotropicArea,'mm²')
+       , ConsolidationArea_IP = dbo.uomArea(ts.AnisotropicArea,'in²')
        , ConsolidationAreaMethod = ts.AnisotropicAreaMethod
        , ConsolidationAxialStrain = ts.AnisotropicAxialStrain
-       , ConsolidationBulkDensity_SI = dbo.uomDensity(ts.AnisotropicBulkDensity,'Mg/mÂ³')
+       , ConsolidationBulkDensity_SI = dbo.uomDensity(ts.AnisotropicBulkDensity,'Mg/m³')
        , ConsolidationBulkDensity_IP = dbo.uomDensity(ts.AnisotropicBulkDensity,'pcf')
-       , ConsolidationDryDensity_SI = dbo.uomDensity(ts.AnisotropicDryDensity,'Mg/mÂ³')
+       , ConsolidationDryDensity_SI = dbo.uomDensity(ts.AnisotropicDryDensity,'Mg/m³')
        , ConsolidationDryDensity_IP = dbo.uomDensity(ts.AnisotropicDryDensity,'pcf')
        , ConsolidationFinalPorePressure_SI = dbo.uomPressure(ts.AnisotropicPorePressureOnCompletion,'kPa')
        , ConsolidationFinalPorePressure_IP = dbo.uomPressure(ts.AnisotropicPorePressureOnCompletion,'ksf')
@@ -2964,7 +3000,7 @@ as
        , SwellPressure_SI = dbo.uomPressure(t.SwellingPressure,'kPa')
        , SwellPressure_IP = dbo.uomPressure(t.SwellingPressure,'psi')
        , ParticleSpecificGravity = t.SpecificGravity
-       , ParticleDensity_SI = dbo.uomDensity(t.ParticleDensity,'Mg/mÂ³')
+       , ParticleDensity_SI = dbo.uomDensity(t.ParticleDensity,'Mg/m³')
        , ParticleDensity_IP = dbo.uomDensity(t.ParticleDensity,'pcf')
        , AssumedParticleSpecificGravity = case when t.IsSpecificGravityAssumed = 1 then 'Assumed' else 'Measured' end
        , AssumedParticleDensity = case when t.IsParticleDensityAssumed = 1 then 'Assumed' else 'Measured' end
@@ -2973,16 +3009,16 @@ as
        , Temperature_IP = dbo.uomTemperature(t.LabTemperature,'F')
        , Technician = ppl.Name
        , TestingApparatus = t.IncrementalOedometerMachineCode
-       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialWetDensity,'Mg/mÂ³')
+       , InitialBulkDensity_SI = dbo.uomDensity(t.InitialWetDensity,'Mg/m³')
        , InitialBulkDensity_IP = dbo.uomDensity(t.InitialWetDensity,'pcf')
        , InitialDryDensity_SI = dbo.uomDensity(t.InitialDryDensity,'Mg/m3')
        , InitialDryDensity_IP = dbo.uomDensity(t.InitialDryDensity,'pcf')
        , InitialVoidRatio = t.InitialVoidRatio
        , InitialSaturation = t.InitialSaturation
        , InitialMoistureContent = t.InitialMoistureContentForCalculation
-       , FinalBulkDensity_SI = dbo.uomDensity(t.FinalWetDensity,'Mg/mÂ³')
+       , FinalBulkDensity_SI = dbo.uomDensity(t.FinalWetDensity,'Mg/m³')
        , FinalBulkDensity_IP = dbo.uomDensity(t.FinalWetDensity,'pcf')
-       , FinalDryDensity_SI = dbo.uomDensity(t.FinalDryDensity,'Mg/mÂ³')
+       , FinalDryDensity_SI = dbo.uomDensity(t.FinalDryDensity,'Mg/m³')
        , FinalDryDensity_IP = dbo.uomDensity(t.FinalDryDensity,'pcf')
        , FinalVoidRatio = t.FinalVoidRatio
        , FinalSaturation = t.FinalSaturation
@@ -3009,10 +3045,10 @@ order by s.BoreholeCode, s.Depth, s.SampleArticleID, t.QestUUID
     , InvertYAxis = case when t.MethodTimeFitting = 'Log Time' then cc.InvertYAxis when t.MethodTimeFitting = 'Root Time' then ct.InvertYAxis else null end
     , Pressure_SI = dbo.uomPressure(ls.FinalLoad, 'kPa')
     , Pressure_IP = dbo.uomPressure(ls.FinalLoad, 'ksf')
-    , ConsolidationCoefficient_SI = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'mÂ²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'mÂ²/yr') else null end
-    , ConsolidationCoefficient_IP = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'ftÂ²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'ftÂ²/yr') else null end
-    , VolumeCoefficient_SI = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'mÂ²/MN')
-    , VolumeCoefficient_IP = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'ftÂ²/lbf')
+    , ConsolidationCoefficient_SI = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'m²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'m²/yr') else null end
+    , ConsolidationCoefficient_IP = case when t.MethodTimeFitting = 'Log Time' then dbo.uomMiscellaneous(cc.CoefficientConsolidation,'ft²/yr') when t.MethodTimeFitting = 'Root Time' then dbo.uomMiscellaneous(ct.CoefficientConsolidation,'ft²/yr') else null end
+    , VolumeCoefficient_SI = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'m²/MN')
+    , VolumeCoefficient_IP = dbo.uomMiscellaneous(ls.CoefficientVolumeCompressibility,'ft²/lbf')
     , SecondaryConsolidationCoefficient = case when t.MethodTimeFitting = 'Log Time' then cc.CoefficientSecondaryConsolidation when t.MethodTimeFitting = 'Root Time' then ct.CoefficientSecondaryConsolidation else null end
     , WorkPerUnitVolume_SI = dbo.uomPressure(ls.WorkPerUnitVolume,'kPa')
     , WorkPerUnitVolume_IP = dbo.uomPressure(ls.WorkPerUnitVolume,'ksf')
