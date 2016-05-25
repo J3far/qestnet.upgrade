@@ -17,6 +17,7 @@ upgrade/upgrade.activities.qn.sql
 upgrade/upgrade.lists.qn.sql
 upgrade/upgrade.documents.qn.sql
 upgrade/upgrade.user_documents.qn.sql
+upgrade/upgrade.finalise_qestreverselookup.qn.sql
 upgrade/upgrade.document_relationships.qn.sql
 upgrade/upgrade.report_mappings.qn.sql
 upgrade/upgrade.equipment_test_mapping.qn.sql
