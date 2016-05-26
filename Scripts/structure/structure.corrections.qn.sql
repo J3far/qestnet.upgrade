@@ -1164,6 +1164,12 @@ begin
 end
 go
 
+-- Change DocumentConcreteYield.MassPerUnitVolume to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'DocumentConcreteYield' AND COLUMN_NAME = 'MassPerUnitVolume' AND DATA_TYPE = 'smallint')
+BEGIN
+	ALTER TABLE [dbo].[DocumentConcreteYield] ALTER COLUMN [MassPerUnitVolume] real NULL
+END
+GO
 
 -- Remove incorrectly named Primary Key so that structure update can re-create it
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'PK_TestAnalysisTriaxial_1' AND CONSTRAINT_TYPE = 'PRIMARY KEY')
