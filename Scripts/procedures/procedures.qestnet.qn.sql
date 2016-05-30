@@ -305,7 +305,7 @@ BEGIN
 	SELECT @LOCSPECIFIC = ISNULL(LocationSpecific,0) FROM Counters WHERE QestUniqueID = @QestUniqueParentID
 	
 	-- Get existing value
-	SELECT TOP 1 @UID = QestUniqueID, @NN = NextNumber FROM CounterValues
+	SELECT TOP 1 @UID = QestUniqueID FROM CounterValues
 	WHERE QestUniqueParentID = @QestUniqueParentID AND
 		((QestOwnerLabNo IS NULL AND @LOCSPECIFIC = 0) OR (QestOwnerLabNo = @LabNo AND NOT @LOCSPECIFIC = 0)) AND
 		(GroupingFieldValue1 = @GroupingFieldValue1 OR (GroupingFieldValue1 IS NULL AND @GroupingFieldValue1 IS NULL)) AND
@@ -322,8 +322,8 @@ BEGIN
 		SET @NN = 1
 	
 	END ELSE BEGIN	
-		-- Increment NextNumber
-		UPDATE CounterValues SET NextNumber = @NN + 1 WHERE QestUniqueID = @UID			
+		-- Increment NextNumber	
+        UPDATE CounterValues SET NextNumber = NextNumber + 1, @NN = NextNumber WHERE QESTUniqueID = @UID
 	END
 	
 	SELECT @NN -- Return next number
