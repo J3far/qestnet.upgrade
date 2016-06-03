@@ -1776,3 +1776,10 @@ begin
 	alter table DocumentSteelReinforcing alter column NeckingTestType2_SideWithoutRupture nvarchar(10)
 end
 go
+
+-- Concrete Shrinkage: drop unused table
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DocumentConcreteShrinkageDryingReading')
+BEGIN
+	DROP TABLE dbo.DocumentConcreteShrinkageDryingReading
+END
+GO
