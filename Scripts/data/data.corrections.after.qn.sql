@@ -202,12 +202,12 @@ go
 UPDATE WorkOrders SET
 	Duration = Duration + 24
 WHERE Duration is not null and Duration < 0
+GO
 
--- Combine WorkDate and StartTime to get a datetime stamp for when work commences. Will not change date component of WorkDate or time component of StartTime.
--- Only apply when StartTime's date has not been set.
+-- Combine StartTime with date portion of WorkDate, then set FinishTime appropriately.
+-- Only applied when StartTime's date has not been set.
 UPDATE WorkOrders SET 
 	StartTime = DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime),
-	WorkDate = DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime),
 	FinishTime = CASE WHEN COALESCE(Duration,0) = 0 THEN
 					--If no Duration is stored, we must assume that FinishTime is
 						-- on the same day if FinishTime >= StartTime
@@ -218,10 +218,16 @@ UPDATE WorkOrders SET
 					DATEADD(hour, Duration, DATEADD(day, 0, DATEDIFF(day, 0, WorkDate)) + DATEADD(day, 0 - DATEDIFF(day, 0, StartTime), StartTime))
 				END
 where WorkDate is not null and StartTime is not null and StartTime <= '1901-01-01'
+GO
 
 -- Now we have StartTime/FinishTime sorted out, fix Duration where null or 0.
 UPDATE WorkOrders SET
 	Duration = CAST((FinishTime - StartTime) as real) * 24.0
 WHERE COALESCE(Duration,0) = 0 AND StartTime is not null AND FinishTime is not null
+GO
+
+-- Strip time component from WorkDate
+UPDATE WorkOrders SET WorkDate = convert(date, WorkDate) WHERE WorkDate is not null
+GO
 
 --- END WORK ORDER TIME STAMP PATCHES ---
