@@ -62,3 +62,22 @@ BEGIN
 	DROP TABLE dbo.UserDocumentBase
 END
 GO
+
+-- Change DocumentConcreteDockets.Fc to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteDockets' AND COLUMN_NAME = 'Fc' AND DATA_TYPE = 'smallint')
+BEGIN
+	IF EXISTS(SELECT 1 FROM sys.default_constraints WHERE name = 'DF_DocumentConcreteDockets_Fc')
+	BEGIN
+		ALTER TABLE dbo.DocumentConcreteDockets DROP DF_DocumentConcreteDockets_Fc
+	END
+	ALTER TABLE dbo.DocumentConcreteDockets ALTER COLUMN Fc real
+	ALTER TABLE dbo.DocumentConcreteDockets ADD CONSTRAINT DF_DocumentConcreteDockets_Fc default 0 for Fc
+END
+GO
+
+-- Change DocumentConcreteDockets.MaximumAggSize to real
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteDockets' AND COLUMN_NAME = 'MaximumAggSize' AND DATA_TYPE = 'smallint')
+BEGIN
+	ALTER TABLE dbo.DocumentConcreteDockets ALTER COLUMN MaximumAggSize real
+END
+GO
