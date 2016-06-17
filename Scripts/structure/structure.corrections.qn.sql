@@ -81,3 +81,22 @@ BEGIN
 	ALTER TABLE dbo.DocumentConcreteDockets ALTER COLUMN MaximumAggSize real
 END
 GO
+
+-- Change DocumentConcreteDestructive smallint to int
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'DocumentConcreteDestructive' AND COLUMN_NAME = 'AcceptanceAge' AND DATA_TYPE = 'smallint')
+BEGIN
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN AcceptanceAge int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType1 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType2 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType3 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType4 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType5 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType6 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType7 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType8 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType9 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType10 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType11 int
+	ALTER TABLE dbo.DocumentConcreteDestructive ALTER COLUMN MaterialType12 int
+END
+GO
