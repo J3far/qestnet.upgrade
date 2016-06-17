@@ -11,23 +11,6 @@ AS
 	INSERT INTO qestObjects (QestID, QestActive, QestExtra, [Property], [Value], [ValueText]) SELECT QestID, QestActive, QestExtra,[Property], [Value], [ValueText] FROM inserted
 GO
 
-
--- Ensures TestStageData have the correct QestUniqueParentID value
-IF OBJECT_ID('TR_TestStageData_Insert_ParentUniqueID', 'TR') IS NOT NULL
-	DROP TRIGGER TR_TestStageData_Insert_ParentUniqueID
-GO
-
-CREATE TRIGGER TR_TestStageData_Insert_ParentUniqueID
-ON TestStageData AFTER INSERT
-AS
-	-- Set QestUniqueParentID
-	UPDATE TestStageData SET QestUniqueParentID = RL.QestUniqueID, QestParentID = RL.QestID
-	FROM qestReverseLookup RL 
-	INNER JOIN inserted I ON I.QestParentUUID = RL.QestUUID 
-	INNER JOIN TestStageData D ON D.QestParentUUID = RL.QestUUID
-GO
-
-
 -- Remove uniqueid update trigger
 IF NOT OBJECT_ID('TR_qestReverseLookup_Update_UniqueID', 'TR') IS NULL
 	DROP TRIGGER TR_qestReverseLookup_Update_UniqueID

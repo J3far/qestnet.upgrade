@@ -62,6 +62,11 @@ BEGIN
 END
 GO
 
+-- Ensures TestStageData have the correct QestUniqueParentID value
+IF OBJECT_ID('TR_TestStageData_Insert_ParentUniqueID', 'TR') IS NOT NULL
+	DROP TRIGGER TR_TestStageData_Insert_ParentUniqueID
+GO
+
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'qest_UserDocumentBaseInitialise' AND ROUTINE_SCHEMA = 'dbo' AND ROUTINE_TYPE = 'PROCEDURE')
 BEGIN
 	DROP PROCEDURE [dbo].[qest_UserDocumentBaseInitialise]

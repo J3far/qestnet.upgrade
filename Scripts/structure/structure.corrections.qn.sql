@@ -34,6 +34,20 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'EquipmentQestUniqueID')
+BEGIN 
+	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_Equipment'
+	ALTER TABLE EquipmentTestMapping DROP COLUMN EquipmentQestUniqueID
+END
+GO
+
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'TestQestUniqueID')
+BEGIN 
+	EXEC qest_DropIndex 'EquipmentTestMapping', 'IX_EquipmentTestMapping_Test'
+	ALTER TABLE EquipmentTestMapping DROP COLUMN TestQestUniqueID
+END
+GO
+
 IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'EquipmentTestMapping' AND COLUMN_NAME = 'QestUniqueID')
 BEGIN 
 	EXEC qest_SetPrimaryKey 'EquipmentTestMapping', 'PK_EquipmentTestMapping', 'QestUUID'
@@ -41,6 +55,21 @@ BEGIN
 END
 GO
 
+-- Remove redundant UniqueID fields from TestStageData
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'QestUniqueID')
+BEGIN 
+	EXEC qest_DropIndex 'TestStageData', 'IX_TestStageData_QestUniqueID'
+	ALTER TABLE TestStageData DROP COLUMN QestUniqueID
+END
+GO
+
+-- Remove redundant UniqueID fields from TestStageData
+IF EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TestStageData' AND COLUMN_NAME = 'QestUniqueParentID')
+BEGIN 
+	EXEC qest_DropIndex 'TestStageData', 'IX_TestStageData_QestParentUniqueID'
+	ALTER TABLE TestStageData DROP COLUMN QestUniqueParentID
+END
+GO
 
 -- Remove redundant FK_qestView_qestEntity
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_qestView_qestEntity')
